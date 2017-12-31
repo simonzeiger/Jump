@@ -43,6 +43,7 @@
 		F4FCD37B1FF8A5F5009E9B3E /* graphics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = graphics.hpp; sourceTree = "<group>"; };
 		F4FCD37D1FF8A731009E9B3E /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		F4FCD37F1FF8B150009E9B3E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		F4FCD3841FF96627009E9B3E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +62,7 @@
 		F4FCD3541FF832F9009E9B3E = {
 			isa = PBXGroup;
 			children = (
+				F4FCD3841FF96627009E9B3E /* .gitignore */,
 				F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */,
 				F4FCD36E1FF8A220009E9B3E /* SDL2.framework */,
 				F4FCD37E1FF8AFFC009E9B3E /* Libraries */,
