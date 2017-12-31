@@ -6,9 +6,14 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include <iostream>
+#include "game.hpp"
+#include <SDL2/SDL.h>
 
-int main() {
+
+int main(int argc, char *argv[])
+{
+
+    Game game;
     
     return 0;
 }
