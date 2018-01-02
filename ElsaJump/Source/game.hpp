@@ -9,7 +9,8 @@
 #ifndef game_hpp
 #define game_hpp
 
-#include <stdio.h>
+#include "player.hpp"
+#include "background.hpp"
 
 class Graphics;
 
@@ -21,9 +22,9 @@ private:
     void gameLoop();
     void draw(Graphics &graphics);
     void update(float elsapedTime);
+    Player _player;
+    Background _background;
     
-    //Player
-    //background
 };
 
 #endif /* game_hpp */

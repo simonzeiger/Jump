@@ -24,11 +24,10 @@ Graphics::Graphics() {
     }
     
     
-    
     // Select the color for drawing. It is set to blue here.
-    SDL_SetRenderDrawColor(_renderer, 102, 102, 153, 255);
+    SDL_SetRenderDrawColor(_renderer, 130, 166, 233, 255);
     
-    SDL_SetWindowTitle(_window, "Elsa's Game");
+    SDL_SetWindowTitle(_window, "Elsa Jump");
     
     
 }
@@ -42,13 +41,16 @@ Graphics::~Graphics() {
 SDL_Surface* Graphics::loadImage(const std::string &filePath) {
     if (_spriteSheets.count(filePath) == 0) {
         _spriteSheets[filePath] = IMG_Load(filePath.c_str());
-        
     }
     return _spriteSheets[filePath];
 }
 
 void Graphics::blitSurface(SDL_Texture* source, SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle){
-    SDL_RenderCopy(_renderer, source, sourceRectangle, destinationRectangle);
+    if(SDL_RenderCopy(_renderer, source, sourceRectangle, destinationRectangle) < 0){
+        printf("%s", SDL_GetError());
+    }
+    
+    
 }
 
 
