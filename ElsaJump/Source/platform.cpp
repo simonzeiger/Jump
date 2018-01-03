@@ -17,7 +17,7 @@ Collidable(x, y)
 {
     _x = x;
     _y = y;
-    _prevPlayerPos = Vector2<float>{0,0};
+    _prevPlayerY = 0;
 }
 
 void Platform::update(){
@@ -31,19 +31,18 @@ void Platform::draw(Graphics &graphics){
 
 bool Platform::checkCollision(float playerX, float playerY) {
     
-    if(_prevPlayerPos.Y + 16 * globals::SPRITE_SCALE < _y){
-        _prevPlayerPos.X = playerX;
-        _prevPlayerPos.Y = playerY;
-        
+    if(_prevPlayerY + 16 * globals::SPRITE_SCALE < _y){
+        _prevPlayerY = playerY;
+
         if(playerY + 16 * globals::SPRITE_SCALE > _y){
-            // + and - 10 to account for hitbox
-            if(playerX + 10 > _x && playerX + 16 * globals::SPRITE_SCALE - 10 < _x + PLATFORM_WIDTH)
+            // + and - 15 to account for hitbox
+            if(playerX + 25 > _x && playerX + 16 * globals::SPRITE_SCALE - 25 < _x + PLATFORM_WIDTH)
                 return true;
         }
     }
+    _prevPlayerY = playerY;
+
     return false;
 }
 
-int Platform::getY() const{
-    return _y;
-}
+

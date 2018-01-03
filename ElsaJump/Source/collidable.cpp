@@ -24,5 +24,16 @@ bool Collidable::checkCollision(float playerX, float playerY){
 }
 
 int Collidable::getY() const{
-    return -1;
+    return _y;
+}
+
+void Collidable::setY(float y){
+    _y = y;
+}
+void Collidable::setX(float x){
+    _x = x;
+}
+
+void Collidable::shift(float y){
+    _y += y;
 }

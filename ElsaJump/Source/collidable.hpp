@@ -16,7 +16,10 @@ public:
     virtual void draw(Graphics &graphics);
     virtual void update(float elapsedTime);
     virtual bool checkCollision(float playerX, float playerY);
-    virtual int getY() const;
+    int getY() const;
+    void setY(float y);
+    void setX(float x);
+    void shift(float y);
 protected:
     float _x, _y;
 };

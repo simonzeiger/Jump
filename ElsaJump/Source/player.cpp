@@ -10,11 +10,12 @@
 #include "graphics.hpp"
 #include "globals.h"
 #include "game.hpp"
+#include <math.h>
 
 namespace player_constants {
-    const float GRAVITY = .0006f;
-    const float JUMP_SPEED = .6;
-    const float MOVE_SPEED = .1f;
+    const float GRAVITY = .0006f; //.0006
+    const float JUMP_SPEED = 0.5; //.6
+    const float MOVE_SPEED = .22f;
 }
 
 Player::Player(){}
@@ -55,15 +56,15 @@ float Player::getX() const {
 void Player::moveLeft() {
     _dx = -player_constants::MOVE_SPEED;
     _facing = LEFT;
-    if(!_hasShield) playAnimation("RunLeft");
-    else  playAnimation("RunLeftShield");
+    //if(!_hasShield) playAnimation("RunLeft");
+    //else  playAnimation("RunLeftShield");
 }
 
 void Player::moveRight() {
     _dx = player_constants::MOVE_SPEED;
     _facing = RIGHT;
-    if(!_hasShield)playAnimation("RunRight");
-    else  playAnimation("RunRightShield");
+   // if(!_hasShield)playAnimation("RunRight");
+    //else  playAnimation("RunRightShield");
 }
 
 
@@ -75,6 +76,9 @@ void Player::jump(float y) {
     _isJumping = true;
     _y = y - 16 * globals::SPRITE_SCALE;
     _dy = -player_constants::JUMP_SPEED;
+    
+    //some crazy shit
+    //_dy = -player_constants::JUMP_SPEED * (1 - (1/ (_dy * 7)));
 }
 
 
@@ -98,6 +102,12 @@ void Player::update(float elapsedTime) {
     //Move by dx
     _x += _dx * elapsedTime;
     
+    //screen edges
+    if(_x + 20 > globals::SCREEN_WIDTH && _dx > 0)
+        _x = -40;
+    else if(_x + 16 * globals::SPRITE_SCALE - 20 <= 0 && _dx < 0)
+        _x = globals::SCREEN_WIDTH - 20;
+    
     AnimatedSprite::update(elapsedTime);
 }
 
@@ -112,10 +122,10 @@ void Player::draw(Graphics &graphics) {
     AnimatedSprite::draw(graphics, _x, _y);
 }
 
-int Player::checkPlatformCollisions(std::vector<Platform> platforms){
-    for(int i = 0; i < platforms.size(); i++){
-        if(platforms[i].checkCollision(_x, _y))
-            return platforms[i].getY();
+int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
+    for(int i = 0; i < nPlatforms; i++){
+        if(platforms[i]->checkCollision(_x, _y))
+            return platforms[i]->getY();
     }
     return -1;
 }

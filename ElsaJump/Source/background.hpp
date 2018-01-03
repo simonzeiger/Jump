@@ -13,20 +13,23 @@
 #include "platform.hpp"
 #include "player.hpp"
 #include "globals.h"
-#include <vector>
 
-using std::vector;
 
 class Background {
 public:
     Background();
     void draw(Graphics &graphics);
     void update(float elapsedTime);
-    vector<Platform> platforms() const;
+    Platform** platforms();
+    int nPlatforms() const;
+    void shift();
 
 private:
-    vector<Platform> _platforms;
+    Platform* _platforms[10];
+    void addPlatform(float x, float y);
     int _nPlatforms;
+    bool _shifting;
+    float _shiftCount;
 };
 
 #endif /* background_hpp */

@@ -20,9 +20,8 @@ public:
     void update();
     bool checkCollision(float playerX, float playerY);
     const static int PLATFORM_WIDTH = 80;
-    int getY() const;
 
 private:
-    Vector2<float> _prevPlayerPos;
+    float _prevPlayerY;
 };
 #endif /* platform_hpp */

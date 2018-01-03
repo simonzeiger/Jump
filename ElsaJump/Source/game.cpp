@@ -10,6 +10,7 @@
 #include "globals.h"
 #include "graphics.hpp"
 #include "globals.h"
+#include "input.hpp"
 #include <SDL2/SDL.h>
 
 namespace {
@@ -32,24 +33,44 @@ Game::~Game(){
 
 void Game::gameLoop(){
     Graphics graphics;
-    _player = Player(graphics, 50, 50);
+    _player = Player(graphics, 50, 200);
     SDL_Event event;
+    Input input;
     
     int LAST_UPDATE_TIME = SDL_GetTicks();
+    
     //start game loop
+    
     for(;;){
-        
+        input.beginNewFrame();
+        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
             break;
         }
+        
+        //continuous-response keys
+        if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
+            _player.moveLeft();
+        }
+        if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+            _player.moveRight();
+        }
+        
       
         const int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_UPDATE_TIME;
         update(std::min(ELAPSED_TIME_MS, MAX_FRAME_TIME));
         LAST_UPDATE_TIME = CURRENT_TIME_MS;
+
+       
         
         draw(graphics);
+        
+      
+
+        
         
     }
 }
@@ -68,12 +89,13 @@ void Game::update(float elsapedTime){
     _player.update(elsapedTime);
     
     if(!_player._isJumping){
-        int y  = _player.checkPlatformCollisions(_background.platforms());
+        int y  = _player.checkPlatformCollisions(_background.platforms(), _background.nPlatforms());
         if(y >= 0){
             _player.jump(y);
-            printf("ya");
+            _background.shift();
         }
     }
+    
     
     _background.update(elsapedTime);
     

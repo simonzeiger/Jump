@@ -11,7 +11,6 @@
 
 #include "animatedsprite.hpp"
 #include "globals.h"
-#include <vector>
 #include "platform.hpp"
 
 class Graphics;
@@ -54,7 +53,7 @@ public:
     
     bool _isDead;
     
-    int checkPlatformCollisions(std::vector<Platform> platforms);
+    int checkPlatformCollisions(Platform** platforms, int nPlatforms);
     
     void killed();
     
