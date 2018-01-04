@@ -127,10 +127,10 @@ void Background::update(float elapsedTime){
         int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
         if(y >= 0){
             _player->jump(y);
-            if(_prevPlayerY > y) shift(y);
+            if(static_cast<int>(_prevPlayerY) > y) {
+                shift(y);
+            }
             _prevPlayerY = y;
-          
-
             
         }
     }
