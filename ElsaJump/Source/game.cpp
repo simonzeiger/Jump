@@ -23,7 +23,7 @@ Game::Game(){
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
-    
+
     gameLoop();
 }
 
@@ -33,7 +33,8 @@ Game::~Game(){
 
 void Game::gameLoop(){
     Graphics graphics;
-    _player = Player(graphics, 50, 200);
+    _player = Player(graphics, 150, 600);
+    _background = Background(&_player);
     SDL_Event event;
     Input input;
     
@@ -54,8 +55,10 @@ void Game::gameLoop(){
         if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
             _player.moveLeft();
         }
-        if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+        else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
             _player.moveRight();
+        } else {
+            _player.stopMoving();
         }
         
       
@@ -78,7 +81,6 @@ void Game::gameLoop(){
 void Game::draw(Graphics &graphics){
     graphics.clear();
 
-    _player.draw(graphics);
     _background.draw(graphics);
     
     graphics.flip();
@@ -86,18 +88,9 @@ void Game::draw(Graphics &graphics){
 
 void Game::update(float elsapedTime){
     
-    _player.update(elsapedTime);
-    
-    if(!_player._isJumping){
-        int y  = _player.checkPlatformCollisions(_background.platforms(), _background.nPlatforms());
-        if(y >= 0){
-            _player.jump(y);
-            _background.shift();
-        }
-    }
-    
-    
     _background.update(elsapedTime);
+    
+    
     
 }
 

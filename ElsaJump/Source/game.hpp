@@ -24,7 +24,6 @@ private:
     void update(float elsapedTime);
     Player _player;
     Background _background;
-    
 };
 
 #endif /* game_hpp */

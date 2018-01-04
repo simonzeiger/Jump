@@ -49,6 +49,8 @@ public:
     
     float getX() const;
     
+    float getDY() const;
+    
     //bool checkCollision(SDL_Rect rect, Collidables collidable);
     
     bool _isDead;
@@ -59,7 +61,7 @@ public:
     
     bool _isJumping;
 
-    
+    void shift(float amt);
 
     
 private:

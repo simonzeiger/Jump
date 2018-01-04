@@ -36,7 +36,7 @@ bool Platform::checkCollision(float playerX, float playerY) {
 
         if(playerY + 16 * globals::SPRITE_SCALE > _y){
             // + and - 15 to account for hitbox
-            if(playerX + 25 > _x && playerX + 16 * globals::SPRITE_SCALE - 25 < _x + PLATFORM_WIDTH)
+            if(playerX + 30 > _x && playerX + 15 < _x + PLATFORM_WIDTH)
                 return true;
         }
     }

@@ -10,28 +10,30 @@
 #include "graphics.hpp"
 #include "globals.h"
 #include "game.hpp"
+#include "background.hpp"
 #include <math.h>
 
 namespace player_constants {
-    const float GRAVITY = .0006f; //.0006
-    const float JUMP_SPEED = 0.5; //.6
+    const float GRAVITY = .0008f; //.0006
+    const float JUMP_SPEED = 0.6; //.5
     const float MOVE_SPEED = .22f;
 }
+
 
 Player::Player(){}
 
 Player::Player(Graphics &graphics, float x, float y) :
 AnimatedSprite(graphics,"Content/Sprites/ElsaChar.png", 0, 0, 16, 16, x, y, 100),
-_dy(0),
+_dy(-player_constants::JUMP_SPEED),
 _dx(0),
 _facing(RIGHT),
 _hasShield(false),
-_isJumping(false),
+_isJumping(true),
 _maxJumpHeightReached(false),
 _isDead(false)
 {
     setupAnimations();
-    playAnimation("RunRight");
+    playAnimation("IdleRight");
 }
 
 void Player::setupAnimations() {
@@ -69,32 +71,37 @@ void Player::moveRight() {
 
 
 void Player::stopMoving() {
-    playAnimation("IdleRight");
+   // playAnimation("IdleRight");
+    _dx = 0;
 }
 
 void Player::jump(float y) {
     _isJumping = true;
     _y = y - 16 * globals::SPRITE_SCALE;
-    _dy = -player_constants::JUMP_SPEED;
     
-    //some crazy shit
-    //_dy = -player_constants::JUMP_SPEED * (1 - (1/ (_dy * 7)));
+    _dy = -player_constants::JUMP_SPEED;
+    playAnimation("IdleRight");
+
 }
 
 
 void Player::update(float elapsedTime) {
     
     if(!_isDead){
-            //Apply gravity
-                _dy += player_constants::GRAVITY * elapsedTime;
         
-            
-            
-            //Move by dy
-            _y += _dy * elapsedTime;
         
-            if(_dy > 0)
-                _isJumping = false;
+        //Apply gravity
+        _dy += player_constants::GRAVITY * elapsedTime;
+        
+        
+        
+        //Move by dy
+        _y += _dy * elapsedTime;
+        
+        if(_dy > 0){
+            _isJumping = false;
+            
+        }
         
     }
     
@@ -133,4 +140,13 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
 void Player::killed(){
    
 }
+
+void Player::shift(float amt){
+    _y += amt;
+}
+
+float Player::getDY() const{
+    return _dy;
+}
+
 
