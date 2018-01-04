@@ -10,6 +10,7 @@
 #define globals_h
 
 #include <vector>
+#include <random>
 
 namespace globals {
     const int SCREEN_WIDTH = 480;
@@ -44,5 +45,11 @@ public:
     inline Vector3(){}
 };
 
+static int randInt(int min, int max){
+    static std::random_device rd;
+    static std::mt19937 generator(rd());
+    std::uniform_int_distribution<> distro(min, max);
+    return distro(generator);
+}
 
 #endif /* globals_h */

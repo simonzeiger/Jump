@@ -7,19 +7,30 @@
 //
 
 #include "collidable.hpp"
+#include "globals.h"
 
-Collidable::Collidable(float x, float y){
+Collidable::Collidable(float x, float y, int width, int height) :
+_width(width),
+_height(height)
+{
     _x = x;
     _y = y;
-}
+    _prevPlayerY = globals::SCREEN_HEIGHT;
+   }
 
-void Collidable::draw(Graphics &graphics){
-    
-}
-void Collidable::update(float elapsedTime){
-    
-}
 bool Collidable::checkCollision(float playerX, float playerY){
+    if(_prevPlayerY + 16 * globals::SPRITE_SCALE < _y){
+        _prevPlayerY = playerY;
+
+        if(playerY + 16 * globals::SPRITE_SCALE > _y){
+            // + and - 15 to account for hitbox
+            if(playerX + 30 > _x && playerX + 15 < _x + _width){
+                return true;
+            }
+        }
+    }
+    _prevPlayerY = playerY;
+    
     return false;
 }
 
@@ -37,3 +48,5 @@ void Collidable::setX(float x){
 void Collidable::shift(float y){
     _y += y;
 }
+
+

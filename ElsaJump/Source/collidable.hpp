@@ -12,16 +12,20 @@
 #include "graphics.hpp"
 class Collidable {
 public:
-    Collidable(float x, float y);
-    virtual void draw(Graphics &graphics);
-    virtual void update(float elapsedTime);
+    Collidable(float x, float y, int width, int height);
+    virtual void draw(Graphics &graphics) = 0;
     virtual bool checkCollision(float playerX, float playerY);
     int getY() const;
     void setY(float y);
     void setX(float x);
     void shift(float y);
+    static int getWidth();
 protected:
     float _x, _y;
+    int _width, _height;
+    float _prevPlayerY;
+    
+
 };
 
 #endif /* collidable_hpp */

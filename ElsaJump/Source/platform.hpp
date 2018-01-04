@@ -18,10 +18,8 @@ public:
     Platform(float x, float y);
     void draw(Graphics &graphics);
     void update();
-    bool checkCollision(float playerX, float playerY);
-    const static int PLATFORM_WIDTH = 80;
 
 private:
-    float _prevPlayerY;
+    
 };
 #endif /* platform_hpp */

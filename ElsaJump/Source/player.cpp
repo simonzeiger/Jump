@@ -15,7 +15,7 @@
 
 namespace player_constants {
     const float GRAVITY = .0008f; //.0008
-    const float JUMP_SPEED = 0.55; //.6
+    const float JUMP_SPEED = 0.55; //.55
     const float MOVE_SPEED = .3f;
 }
 
@@ -115,6 +115,7 @@ void Player::update(float elapsedTime) {
     else if(_x + 16 * globals::SPRITE_SCALE - 20 <= 0 && _dx < 0)
         _x = globals::SCREEN_WIDTH - 20;
     
+    
     AnimatedSprite::update(elapsedTime);
 }
 
@@ -138,7 +139,9 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
 }
    
 void Player::killed(){
-   
+    //_isDead = true;
+    _y = globals::SCREEN_HEIGHT + 40;
+    _dy = -player_constants::JUMP_SPEED;
 }
 
 void Player::shift(float amt){

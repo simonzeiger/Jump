@@ -18,12 +18,7 @@ Background::Background(Player* player) :
 _player(player)
 {
     _nPlatforms = 0;
-    addPlatform(150, 600);
-    addPlatform(150, 420);
-    addPlatform(150, 320);
-    addPlatform(150, 140);
-    addPlatform(150, 00);
-    addPlatform(150, -100);
+    initPlatforms();
 
     _shifting = false;
     _shiftCount = 0;
@@ -32,7 +27,6 @@ _player(player)
 }
 
 void Background::update(float elapsedTime){
-    
     //linear deacceleration
    /*if(_shifting){
     
@@ -106,12 +100,13 @@ void Background::update(float elapsedTime){
         
         _shiftCount += elapsedTime;
         
-        if(_shiftCount > _prevPlayerY / 5){
+        if(_shiftCount > _prevPlayerY / 4){
             _shiftDistance = -_player->getDY() * elapsedTime;
             for(int i = 0; i < _nPlatforms; i++){
                 _platforms[i]->shift(_shiftDistance);
-                if(_platforms[i]->getY() > globals::SCREEN_HEIGHT  + 50)
-                    _platforms[i]->shift(-globals::SCREEN_HEIGHT * 1.2);
+                if(_platforms[i]->getY() > globals::SCREEN_HEIGHT  + 50){
+                    resetPlatform(_platforms[i]);
+                }
             }
             
             _player->shift(_shiftDistance);
@@ -123,6 +118,7 @@ void Background::update(float elapsedTime){
             _shifting = false;
             _shiftCount = 0;
         }
+
     }
     
     _player->update(elapsedTime);
@@ -131,12 +127,19 @@ void Background::update(float elapsedTime){
         int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
         if(y >= 0){
             _player->jump(y);
-            //printf("Prev: %d Cuurr: %d\n", _prevPlayerY, y);
             if(_prevPlayerY > y) shift(y);
             _prevPlayerY = y;
+          
+
             
         }
     }
+    
+    if(_player->getY() > globals::SCREEN_HEIGHT + 100){
+        _player->killed();
+        resetAll();
+    }
+
     
    
 }
@@ -158,9 +161,44 @@ int Background::nPlatforms() const {
     return _nPlatforms;
 }
 
-void Background::addPlatform(float x, float y){
-    _platforms[_nPlatforms] = new Platform(x, y);
-    _nPlatforms++;
+void Background::addPlatform(int x, int y){
+    if(_nPlatforms < MAX_PLATFORMS){
+        _platforms[_nPlatforms] = new Platform(x, y);
+        _nPlatforms++;
+    } else {
+        printf("Exceeds max platforms");
+    }
+}
+
+void Background::initPlatforms(){
+    for(int i = 0; i < MAX_PLATFORMS; i++){
+        Vector2<int> nextPos = getNextPlatformPos();
+        addPlatform(nextPos.X, nextPos.Y);
+    }
+}
+
+Vector2<int> Background::getNextPlatformPos(){
+    int prevY = _nPlatforms == 0 ? globals::SCREEN_HEIGHT + 82 : _platforms[_nPlatforms - 1]->getY();
+    int randY = randInt(_nPlatforms == 0 ? 120 : MIN_DISTANCE, MAX_DISTANCE);
+    int randX = _nPlatforms == 0 ? 150: randInt(0, globals::SCREEN_WIDTH - 80);
+    return Vector2<int>{randX, prevY - randY};
+}
+
+void Background::resetPlatform(Platform* platform) {
+    Vector2<int> nextPos = getNextPlatformPos();
+    platform->setX(nextPos.X);
+    platform->setY(nextPos.Y);
+    Platform temp = *_platforms[_nPlatforms - 1];
+    *_platforms[_nPlatforms - 1] = *platform;
+    *platform = temp;
+}
+
+void Background::resetAll(){
+    for(int i = 0; i < _nPlatforms; i++){
+        delete _platforms[i];
+    }
+    _nPlatforms = 0;
+    initPlatforms();
 }
 
 void Background::shift(float y){

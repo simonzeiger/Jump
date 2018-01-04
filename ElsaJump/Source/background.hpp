@@ -26,13 +26,20 @@ public:
     void shift(float y);
     constexpr static float SHIFT_RATE = 1; //1
 private:
-    Platform* _platforms[10];
-    void addPlatform(float x, float y);
+    static const int MAX_PLATFORMS = 20;
+    Platform* _platforms[MAX_PLATFORMS];
+    static const int MAX_DISTANCE = 178;
+    static const int MIN_DISTANCE = 15;
+    void addPlatform(int x, int y);
+    void initPlatforms();
+    void resetPlatform(Platform* platform);
+    void resetAll();
+    Vector2<int> getNextPlatformPos();
     int _nPlatforms;
     bool _shifting;
     float _shiftCount;
     float _shiftDistance;
-    int _prevPlayerY;
+    float _prevPlayerY;
     Player* _player;
 };
 #endif /* background_hpp */

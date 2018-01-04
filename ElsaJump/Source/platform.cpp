@@ -13,36 +13,19 @@ using std::cout;
 using std::endl;
 
 Platform::Platform(float x, float y) :
-Collidable(x, y)
+Collidable(x, y, 80, 0)
 {
     _x = x;
     _y = y;
     _prevPlayerY = globals::SCREEN_HEIGHT;
 }
 
-void Platform::update(){
-    
-}
 
 void Platform::draw(Graphics &graphics){
     SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(graphics.renderer(), _x, _y, _x + PLATFORM_WIDTH, _y);
+    SDL_RenderDrawLine(graphics.renderer(), _x, _y, _x + _width, _y);
 }
 
-bool Platform::checkCollision(float playerX, float playerY) {
-    
-    if(_prevPlayerY + 16 * globals::SPRITE_SCALE < _y){
-        _prevPlayerY = playerY;
 
-        if(playerY + 16 * globals::SPRITE_SCALE > _y){
-            // + and - 15 to account for hitbox
-            if(playerX + 30 > _x && playerX + 15 < _x + PLATFORM_WIDTH)
-                return true;
-        }
-    }
-    _prevPlayerY = playerY;
-
-    return false;
-}
 
 
