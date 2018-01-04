@@ -17,7 +17,7 @@ Collidable(x, y)
 {
     _x = x;
     _y = y;
-    _prevPlayerY = 0;
+    _prevPlayerY = globals::SCREEN_HEIGHT;
 }
 
 void Platform::update(){

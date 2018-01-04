@@ -14,9 +14,9 @@
 #include <math.h>
 
 namespace player_constants {
-    const float GRAVITY = .0008f; //.0006
-    const float JUMP_SPEED = 0.6; //.5
-    const float MOVE_SPEED = .22f;
+    const float GRAVITY = .0008f; //.0008
+    const float JUMP_SPEED = 0.55; //.6
+    const float MOVE_SPEED = .3f;
 }
 
 

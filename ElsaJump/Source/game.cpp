@@ -33,7 +33,7 @@ Game::~Game(){
 
 void Game::gameLoop(){
     Graphics graphics;
-    _player = Player(graphics, 150, 600);
+    _player = Player(graphics, 150, 680);
     _background = Background(&_player);
     SDL_Event event;
     Input input;

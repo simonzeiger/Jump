@@ -7,6 +7,7 @@
 //
 
 #include "background.hpp"
+#include "globals.h"
 #include <iostream>
 #include <SDL2/SDL.h>
 
@@ -17,12 +18,12 @@ Background::Background(Player* player) :
 _player(player)
 {
     _nPlatforms = 0;
-    addPlatform(50, 600);
-    addPlatform(150, 500);
-    addPlatform(250, 300);
-    addPlatform(350, 150);
-    addPlatform(250, -10);
-    addPlatform(50, -100);
+    addPlatform(150, 600);
+    addPlatform(150, 420);
+    addPlatform(150, 320);
+    addPlatform(150, 140);
+    addPlatform(150, 00);
+    addPlatform(150, -100);
 
     _shifting = false;
     _shiftCount = 0;
@@ -105,11 +106,12 @@ void Background::update(float elapsedTime){
         
         _shiftCount += elapsedTime;
         
-        if(_shiftCount > _prevPlayerY / 3){
+        if(_shiftCount > _prevPlayerY / 5){
             _shiftDistance = -_player->getDY() * elapsedTime;
             for(int i = 0; i < _nPlatforms; i++){
                 _platforms[i]->shift(_shiftDistance);
-                
+                if(_platforms[i]->getY() > globals::SCREEN_HEIGHT  + 50)
+                    _platforms[i]->shift(-globals::SCREEN_HEIGHT * 1.2);
             }
             
             _player->shift(_shiftDistance);
