@@ -9,9 +9,9 @@
 #ifndef player_hpp
 #define player_hpp
 
-#include "animatedsprite.hpp"
+#include "animatedsprite.h"
 #include "globals.h"
-#include "platform.hpp"
+#include "platform.h"
 
 class Graphics;
 
@@ -51,7 +51,6 @@ public:
     
     float getDY() const;
     
-    //bool checkCollision(SDL_Rect rect, Collidables collidable);
     
     bool _isDead;
     
@@ -67,7 +66,6 @@ public:
 private:
     float _dx, _dy;
     bool _hasShield;
-    Direction _facing;
     bool _maxJumpHeightReached;
 
 };

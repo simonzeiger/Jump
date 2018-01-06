@@ -6,7 +6,7 @@
 //  Copyright © 2018 Simón Zeiger. All rights reserved.
 //
 
-#include "collidable.hpp"
+#include "collidable.h"
 #include "globals.h"
 
 Collidable::Collidable(float x, float y, int width, int height) :

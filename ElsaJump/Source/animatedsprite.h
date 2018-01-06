@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "sprite.hpp"
+#include "sprite.h"
 #include "globals.h"
 
 class Graphics;
@@ -81,7 +81,7 @@ protected:
     
     
 private:
-    std::map<std::string, std::vector<SDL_Rect>> _animations;
+    static std::map<std::string, std::vector<SDL_Rect>> _animations;
     
     int _frameIndex;
     double _timeElapsed;

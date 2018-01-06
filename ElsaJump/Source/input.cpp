@@ -6,7 +6,7 @@
 //  Copyright © 2018 Simón Zeiger. All rights reserved.
 //
 
-#include "input.hpp"
+#include "input.h"
 
 /* Input class
  * Keeps track of keyboard state

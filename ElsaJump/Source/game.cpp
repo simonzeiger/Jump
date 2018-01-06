@@ -6,11 +6,11 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include "game.hpp"
+#include "game.h"
 #include "globals.h"
-#include "graphics.hpp"
+#include "graphics.h"
 #include "globals.h"
-#include "input.hpp"
+#include "input.h"
 #include <SDL2/SDL.h>
 
 namespace {
@@ -34,7 +34,7 @@ Game::~Game(){
 void Game::gameLoop(){
     Graphics graphics;
     _player = Player(graphics, 150, 680);
-    _background = Background(&_player);
+    _background = World(&_player, &graphics);
     SDL_Event event;
     Input input;
     
@@ -67,13 +67,9 @@ void Game::gameLoop(){
         update(std::min(ELAPSED_TIME_MS, MAX_FRAME_TIME));
         LAST_UPDATE_TIME = CURRENT_TIME_MS;
 
-       
-        
         draw(graphics);
         
       
-
-        
         
     }
 }

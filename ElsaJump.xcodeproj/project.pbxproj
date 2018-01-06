@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F4BBABF31FFF6A3600ABB340 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4BBABF11FFF6A3600ABB340 /* spring.cpp */; };
 		F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
 		F4FCD3711FF8A220009E9B3E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */; };
 		F4FCD3721FF8A246009E9B3E /* Content in CopyFiles */ = {isa = PBXBuildFile; fileRef = F4FCD36C1FF8A19D009E9B3E /* Content */; };
@@ -17,7 +18,7 @@
 		F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3851FF98E38009E9B3E /* sprite.cpp */; };
 		F4FCD38A1FF9AF99009E9B3E /* animatedsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3881FF9AF99009E9B3E /* animatedsprite.cpp */; };
 		F4FCD38D1FF9CA07009E9B3E /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38B1FF9CA07009E9B3E /* player.cpp */; };
-		F4FCD3901FFB4AB2009E9B3E /* background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38E1FFB4AB2009E9B3E /* background.cpp */; };
+		F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38E1FFB4AB2009E9B3E /* world.cpp */; };
 		F4FCD3931FFB6A03009E9B3E /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3911FFB6A03009E9B3E /* platform.cpp */; };
 		F4FCD3961FFB85A0009E9B3E /* collidable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3941FFB85A0009E9B3E /* collidable.cpp */; };
 		F4FCD3991FFC071B009E9B3E /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3971FFC071B009E9B3E /* input.cpp */; };
@@ -38,6 +39,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F40FBD4E1FFF799700D403AC /* ElsaJump.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = ElsaJump.app; sourceTree = "<group>"; };
+		F4BBABF11FFF6A3600ABB340 /* spring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
+		F4BBABF21FFF6A3600ABB340 /* spring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
 		F4FCD35D1FF832F9009E9B3E /* Elsa Jump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Elsa Jump"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4FCD3691FF89FEF009E9B3E /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
 		F4FCD36C1FF8A19D009E9B3E /* Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Content; sourceTree = "<group>"; };
@@ -45,25 +49,25 @@
 		F4FCD36E1FF8A220009E9B3E /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		F4FCD3761FF8A427009E9B3E /* game.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
-		F4FCD3771FF8A427009E9B3E /* game.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = game.hpp; sourceTree = "<group>"; };
+		F4FCD3771FF8A427009E9B3E /* game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game.h; sourceTree = "<group>"; };
 		F4FCD37A1FF8A5F5009E9B3E /* graphics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graphics.cpp; sourceTree = "<group>"; };
-		F4FCD37B1FF8A5F5009E9B3E /* graphics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = graphics.hpp; sourceTree = "<group>"; };
+		F4FCD37B1FF8A5F5009E9B3E /* graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphics.h; sourceTree = "<group>"; };
 		F4FCD37D1FF8A731009E9B3E /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		F4FCD37F1FF8B150009E9B3E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F4FCD3851FF98E38009E9B3E /* sprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sprite.cpp; sourceTree = "<group>"; };
-		F4FCD3861FF98E38009E9B3E /* sprite.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sprite.hpp; sourceTree = "<group>"; };
+		F4FCD3861FF98E38009E9B3E /* sprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sprite.h; sourceTree = "<group>"; };
 		F4FCD3881FF9AF99009E9B3E /* animatedsprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = animatedsprite.cpp; sourceTree = "<group>"; };
-		F4FCD3891FF9AF99009E9B3E /* animatedsprite.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = animatedsprite.hpp; sourceTree = "<group>"; };
+		F4FCD3891FF9AF99009E9B3E /* animatedsprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = animatedsprite.h; sourceTree = "<group>"; };
 		F4FCD38B1FF9CA07009E9B3E /* player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
-		F4FCD38C1FF9CA07009E9B3E /* player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player.hpp; sourceTree = "<group>"; };
-		F4FCD38E1FFB4AB2009E9B3E /* background.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = background.cpp; sourceTree = "<group>"; };
-		F4FCD38F1FFB4AB2009E9B3E /* background.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = background.hpp; sourceTree = "<group>"; };
+		F4FCD38C1FF9CA07009E9B3E /* player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
+		F4FCD38E1FFB4AB2009E9B3E /* world.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = world.cpp; sourceTree = "<group>"; };
+		F4FCD38F1FFB4AB2009E9B3E /* world.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = world.h; sourceTree = "<group>"; };
 		F4FCD3911FFB6A03009E9B3E /* platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
-		F4FCD3921FFB6A03009E9B3E /* platform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
+		F4FCD3921FFB6A03009E9B3E /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		F4FCD3941FFB85A0009E9B3E /* collidable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = collidable.cpp; sourceTree = "<group>"; };
-		F4FCD3951FFB85A0009E9B3E /* collidable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collidable.hpp; sourceTree = "<group>"; };
+		F4FCD3951FFB85A0009E9B3E /* collidable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = collidable.h; sourceTree = "<group>"; };
 		F4FCD3971FFC071B009E9B3E /* input.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = input.cpp; sourceTree = "<group>"; };
-		F4FCD3981FFC071B009E9B3E /* input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = input.hpp; sourceTree = "<group>"; };
+		F4FCD3981FFC071B009E9B3E /* input.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,9 +83,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F40FBD4C1FFF6ECA00D403AC /* PSD */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PSD;
+			sourceTree = "<group>";
+		};
 		F4FCD3541FF832F9009E9B3E = {
 			isa = PBXGroup;
 			children = (
+				F40FBD4E1FFF799700D403AC /* ElsaJump.app */,
 				F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */,
 				F4FCD36E1FF8A220009E9B3E /* SDL2.framework */,
 				F4FCD37E1FF8AFFC009E9B3E /* Libraries */,
@@ -102,6 +114,7 @@
 		F4FCD35F1FF832F9009E9B3E /* ElsaJump */ = {
 			isa = PBXGroup;
 			children = (
+				F40FBD4C1FFF6ECA00D403AC /* PSD */,
 				F4FCD36C1FF8A19D009E9B3E /* Content */,
 				F4FCD3791FF8A43D009E9B3E /* Source */,
 			);
@@ -111,25 +124,27 @@
 		F4FCD3791FF8A43D009E9B3E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				F4FCD3771FF8A427009E9B3E /* game.hpp */,
+				F4FCD3771FF8A427009E9B3E /* game.h */,
 				F4FCD3761FF8A427009E9B3E /* game.cpp */,
-				F4FCD37B1FF8A5F5009E9B3E /* graphics.hpp */,
+				F4FCD37B1FF8A5F5009E9B3E /* graphics.h */,
 				F4FCD37A1FF8A5F5009E9B3E /* graphics.cpp */,
 				F4FCD37D1FF8A731009E9B3E /* globals.h */,
 				F4FCD37F1FF8B150009E9B3E /* main.cpp */,
-				F4FCD3861FF98E38009E9B3E /* sprite.hpp */,
+				F4FCD3861FF98E38009E9B3E /* sprite.h */,
 				F4FCD3851FF98E38009E9B3E /* sprite.cpp */,
-				F4FCD3891FF9AF99009E9B3E /* animatedsprite.hpp */,
+				F4FCD3891FF9AF99009E9B3E /* animatedsprite.h */,
 				F4FCD3881FF9AF99009E9B3E /* animatedsprite.cpp */,
-				F4FCD38C1FF9CA07009E9B3E /* player.hpp */,
+				F4FCD38C1FF9CA07009E9B3E /* player.h */,
 				F4FCD38B1FF9CA07009E9B3E /* player.cpp */,
-				F4FCD38F1FFB4AB2009E9B3E /* background.hpp */,
-				F4FCD38E1FFB4AB2009E9B3E /* background.cpp */,
-				F4FCD3921FFB6A03009E9B3E /* platform.hpp */,
+				F4FCD38F1FFB4AB2009E9B3E /* world.h */,
+				F4FCD38E1FFB4AB2009E9B3E /* world.cpp */,
+				F4FCD3921FFB6A03009E9B3E /* platform.h */,
 				F4FCD3911FFB6A03009E9B3E /* platform.cpp */,
-				F4FCD3951FFB85A0009E9B3E /* collidable.hpp */,
+				F4FCD3951FFB85A0009E9B3E /* collidable.h */,
 				F4FCD3941FFB85A0009E9B3E /* collidable.cpp */,
-				F4FCD3981FFC071B009E9B3E /* input.hpp */,
+				F4BBABF21FFF6A3600ABB340 /* spring.h */,
+				F4BBABF11FFF6A3600ABB340 /* spring.cpp */,
+				F4FCD3981FFC071B009E9B3E /* input.h */,
 				F4FCD3971FFC071B009E9B3E /* input.cpp */,
 			);
 			path = Source;
@@ -205,9 +220,10 @@
 				F4FCD3991FFC071B009E9B3E /* input.cpp in Sources */,
 				F4FCD3931FFB6A03009E9B3E /* platform.cpp in Sources */,
 				F4FCD38D1FF9CA07009E9B3E /* player.cpp in Sources */,
+				F4BBABF31FFF6A3600ABB340 /* spring.cpp in Sources */,
 				F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */,
 				F4FCD38A1FF9AF99009E9B3E /* animatedsprite.cpp in Sources */,
-				F4FCD3901FFB4AB2009E9B3E /* background.cpp in Sources */,
+				F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */,
 				F4FCD3961FFB85A0009E9B3E /* collidable.cpp in Sources */,
 				F4FCD37C1FF8A5F5009E9B3E /* graphics.cpp in Sources */,
 			);

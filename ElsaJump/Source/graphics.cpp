@@ -6,7 +6,7 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include "graphics.hpp"
+#include "graphics.h"
 #include <SDL2_image/SDL_image.h>
 #include "globals.h"
 

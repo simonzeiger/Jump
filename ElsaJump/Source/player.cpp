@@ -6,17 +6,18 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include "player.hpp"
-#include "graphics.hpp"
+#include "player.h"
+#include "graphics.h"
 #include "globals.h"
-#include "game.hpp"
-#include "background.hpp"
+#include "game.h"
+#include "world.h"
 #include <math.h>
 
 namespace player_constants {
     const float GRAVITY = .0008f; //.0008
     const float JUMP_SPEED = 0.55; //.55
-    const float MOVE_SPEED = .3f;
+    const float SPRING_SPEED = 1;
+    const float MOVE_SPEED = .26f;
 }
 
 
@@ -26,22 +27,19 @@ Player::Player(Graphics &graphics, float x, float y) :
 AnimatedSprite(graphics,"Content/Sprites/ElsaChar.png", 0, 0, 16, 16, x, y, 100),
 _dy(-player_constants::JUMP_SPEED),
 _dx(0),
-_facing(RIGHT),
 _hasShield(false),
 _isJumping(true),
 _maxJumpHeightReached(false),
 _isDead(false)
 {
     setupAnimations();
-    playAnimation("IdleRight");
+    playAnimation("JumpRight");
 }
 
 void Player::setupAnimations() {
-    //addAnimation(1, 0, 0, "IdleLeft", 16, 16);
-    addAnimation(1, 0, 16, "IdleRight", 16, 16);
-    addAnimation(1, 0, 32, "IdleRightShield", 16, 16);
-    addAnimation(3, 0, 32, "RunRightShield", 16, 16);
-    //addAnimation(3, 0, 0, "RunLeft", 16, 16);
+    addAnimation(1, 0, 0, "JumpLeft", 16, 16);
+    addAnimation(1, 0, 16, "JumpRight", 16, 16);
+    addAnimation(3, 0, 0, "RunLeft", 16, 16);
     addAnimation(3, 0, 16, "RunRight", 16, 16);
 }
 
@@ -57,16 +55,12 @@ float Player::getX() const {
 
 void Player::moveLeft() {
     _dx = -player_constants::MOVE_SPEED;
-    _facing = LEFT;
-    //if(!_hasShield) playAnimation("RunLeft");
-    //else  playAnimation("RunLeftShield");
+    playAnimation("JumpLeft");
 }
 
 void Player::moveRight() {
     _dx = player_constants::MOVE_SPEED;
-    _facing = RIGHT;
-   // if(!_hasShield)playAnimation("RunRight");
-    //else  playAnimation("RunRightShield");
+    playAnimation("JumpRight");
 }
 
 
@@ -77,10 +71,13 @@ void Player::stopMoving() {
 
 void Player::jump(float y) {
     _isJumping = true;
-    _y = y - 16 * globals::SPRITE_SCALE;
-    
-    _dy = -player_constants::JUMP_SPEED;
-    playAnimation("IdleRight");
+    if(y < 0){
+        y = -y;
+        _dy = -player_constants::SPRING_SPEED;
+    } else {
+        _dy = -player_constants::JUMP_SPEED;
+    }
+     _y = y - 16 * globals::SPRITE_SCALE;
 
 }
 
@@ -132,15 +129,20 @@ void Player::draw(Graphics &graphics) {
 
 int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
     for(int i = 0; i < nPlatforms; i++){
-        if(platforms[i]->checkCollision(_x, _y))
-            return platforms[i]->getY();
+        std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
+        //return neg number if hit a spring
+        if(collision.first){
+            printf("%d ", collision.second);
+            return !collision.second ? platforms[i]->getY() : -platforms[i]->getY();
+        }
     }
-    return -1;
+    return -10000;
 }
    
 void Player::killed(){
     //_isDead = true;
     _y = globals::SCREEN_HEIGHT + 40;
+    _x = globals::SCREEN_WIDTH / 2;
     _dy = -player_constants::JUMP_SPEED;
 }
 

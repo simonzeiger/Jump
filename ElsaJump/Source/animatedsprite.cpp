@@ -1,10 +1,12 @@
-#include "animatedsprite.hpp"
-#include "graphics.hpp"
-#include "sprite.hpp"
+#include "animatedsprite.h"
+#include "graphics.h"
+#include "sprite.h"
 
 /* AnimatedSprite class
  * Animates our sprites
  */
+
+std::map<std::string, std::vector<SDL_Rect>> AnimatedSprite::_animations;
 
 AnimatedSprite::AnimatedSprite(){}
 
@@ -20,12 +22,15 @@ _currentAnimation("")
 {}
 
 void AnimatedSprite::addAnimation(int frames, int x, int y, std::string name, int width, int height) {
-    std::vector<SDL_Rect> rectangles;
-    for (int i = 0; i < frames; i++) {
-        SDL_Rect newRect = { (i + x) * width, y, width, height };
-        rectangles.push_back(newRect);
+    if(_animations.count(name) == 0){
+        std::vector<SDL_Rect> rectangles;
+        for (int i = 0; i < frames; i++) {
+            SDL_Rect newRect = { i * width + x, y, width, height };
+            rectangles.push_back(newRect);
+        }
+        
+        _animations.insert(std::pair<std::string, std::vector<SDL_Rect>>(name, rectangles));
     }
-    _animations.insert(std::pair<std::string, std::vector<SDL_Rect> >(name, rectangles));
 }
 
 void AnimatedSprite::resetAnimations() {

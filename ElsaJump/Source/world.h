@@ -9,27 +9,26 @@
 #ifndef background_hpp
 #define background_hpp
 
-#include "graphics.hpp"
-#include "platform.hpp"
-#include "player.hpp"
+#include "graphics.h"
+#include "platform.h"
+#include "player.h"
 #include "globals.h"
 
 
-class Background {
+class World {
 public:
-    Background();
-    Background(Player *player);
+    World();
+    World(Player *player, Graphics* graphics);
     void draw(Graphics &graphics);
     void update(float elapsedTime);
     Platform** platforms();
     int nPlatforms() const;
     void shift(float y);
-    constexpr static float SHIFT_RATE = 1; //1
 private:
-    static const int MAX_PLATFORMS = 20;
+    static const int MAX_PLATFORMS = 15;
     Platform* _platforms[MAX_PLATFORMS];
     static const int MAX_DISTANCE = 178;
-    static const int MIN_DISTANCE = 15;
+    static const int MIN_DISTANCE = 25;
     void addPlatform(int x, int y);
     void initPlatforms();
     void resetPlatform(Platform* platform);
@@ -41,5 +40,6 @@ private:
     float _shiftDistance;
     float _prevPlayerY;
     Player* _player;
+    Graphics* _graphics;
 };
 #endif /* background_hpp */

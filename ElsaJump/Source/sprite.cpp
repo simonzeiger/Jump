@@ -6,8 +6,8 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include "sprite.hpp"
-#include "graphics.hpp"
+#include "sprite.h"
+#include "graphics.h"
 #include "globals.h"
 
 Sprite::Sprite(){}

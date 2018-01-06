@@ -9,7 +9,7 @@
 #ifndef collidable_hpp
 #define collidable_hpp
 
-#include "graphics.hpp"
+#include "graphics.h"
 class Collidable {
 public:
     Collidable(float x, float y, int width, int height);

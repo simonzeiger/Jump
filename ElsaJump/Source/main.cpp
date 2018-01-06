@@ -6,7 +6,7 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#include "game.hpp"
+#include "game.h"
 
 int main()
 {
