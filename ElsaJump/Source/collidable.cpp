@@ -16,7 +16,11 @@ _height(height)
     _x = x;
     _y = y;
     _prevPlayerY = globals::SCREEN_HEIGHT;
-   }
+}
+
+Collidable::~Collidable(){
+    
+}
 
 bool Collidable::checkCollision(float playerX, float playerY){
     if(_prevPlayerY + 16 * globals::SPRITE_SCALE < _y){
@@ -33,6 +37,8 @@ bool Collidable::checkCollision(float playerX, float playerY){
     
     return false;
 }
+
+
 
 int Collidable::getY() const{
     return _y;

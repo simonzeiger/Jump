@@ -14,10 +14,11 @@
 #include <math.h>
 
 namespace player_constants {
-    const float GRAVITY = .0008f; //.0008
-    const float JUMP_SPEED = 0.55; //.55
-    const float SPRING_SPEED = 1;
-    const float MOVE_SPEED = .26f;
+    const float MULTI = 1;
+    const float GRAVITY = .0008f * MULTI; //.0008
+    const float JUMP_SPEED = 0.55  * MULTI; //.55
+    const float SPRING_SPEED = 1  * MULTI;
+    const float MOVE_SPEED = .26f  * MULTI;
 }
 
 
@@ -86,15 +87,6 @@ void Player::update(float elapsedTime) {
     
     if(!_isDead){
         
-        
-        //Apply gravity
-        _dy += player_constants::GRAVITY * elapsedTime;
-        
-        
-        
-        //Move by dy
-        _y += _dy * elapsedTime;
-        
         if(_dy > 0){
             _isJumping = false;
             
@@ -102,9 +94,6 @@ void Player::update(float elapsedTime) {
         
     }
     
-    
-    //Move by dx
-    _x += _dx * elapsedTime;
     
     //screen edges
     if(_x + 20 > globals::SCREEN_WIDTH && _dx > 0)
@@ -116,13 +105,32 @@ void Player::update(float elapsedTime) {
     AnimatedSprite::update(elapsedTime);
 }
 
-void Player::draw(Graphics &graphics) {
-  /*  SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(graphics.renderer(), _x, _y, _x, _y + 16 * globals::SPRITE_SCALE);
-    SDL_RenderDrawLine(graphics.renderer(), _x, _y, _x + 16 * globals::SPRITE_SCALE, _y);
-    SDL_RenderDrawLine(graphics.renderer(), _x + 16 * globals::SPRITE_SCALE, _y , _x + 16 * globals::SPRITE_SCALE, _y + 16 * globals::SPRITE_SCALE);
-    SDL_RenderDrawLine(graphics.renderer(), _x, _y  + 16 * globals::SPRITE_SCALE, _x + 16 * globals::SPRITE_SCALE, _y + 16 * globals::SPRITE_SCALE);*/
+void Player::fixedUpdate(float fixedTime){
+    
+    if(!_isDead){
+        
+        
+        //Apply gravity
+        _dy += player_constants::GRAVITY * fixedTime;
+        
+        
+        
+        //Move by dy
+        _y += _dy * fixedTime;
+        
+        if(_dy > 0){
+            _isJumping = false;
+            
+        }
+        
+        //Move by dx
+        _x += _dx * fixedTime;
+        
+    }
+    
+}
 
+void Player::draw(Graphics &graphics) {
 
     AnimatedSprite::draw(graphics, _x, _y);
 }
@@ -132,7 +140,6 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
         std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
         //return neg number if hit a spring
         if(collision.first){
-            printf("%d ", collision.second);
             return !collision.second ? platforms[i]->getY() : -platforms[i]->getY();
         }
     }

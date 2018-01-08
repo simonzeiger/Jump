@@ -23,6 +23,9 @@ public:
     void animationDone(std::string currentAnimation);
     void setupAnimations();
     void shift(float y);
+    void setX(float x);
+    void setY(float y);
+    std::string getType();
     
 };
 

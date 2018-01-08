@@ -11,20 +11,25 @@
 
 #include "graphics.h"
 #include "collidable.h"
+#include "sprite.h"
 #include "globals.h"
 #include "spring.h"
 
-class Platform: public Collidable {
+class Platform: public Collidable, public Sprite {
 public:
-    Platform(float x, float y);
+    Platform(float x, float y, Graphics &graphics);
     ~Platform();
     void draw(Graphics &graphics);
     void update(float elapsedTime);
     void addSpring(bool lOrR, Graphics &graphics);
     void deleteSpring();
     void shift(float y);
+    void setY(float y);
+    void setX(float x);
+    bool hasSpring();
     std::pair<bool, bool> checkPlatformCollision(float playerX, float playerY);
+    std::string getType();
 private:
-    Spring* _spring;
+    Collidable* _spring;
 };
 #endif /* platform_hpp */

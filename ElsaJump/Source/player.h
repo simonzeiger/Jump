@@ -21,6 +21,7 @@ public:
     Player(Graphics &graphics, float x, float y);
     void draw(Graphics &graphics);
     void update(float elapsedTime);
+    void fixedUpdate(float fixedTime);
     
     /* void moveLeft
      * Moves the player by -dx (left)

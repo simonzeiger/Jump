@@ -22,8 +22,9 @@ private:
     void gameLoop();
     void draw(Graphics &graphics);
     void update(float elsapedTime);
+    void fixedUpdate(float fixedTime);
     Player _player;
-    World _background;
+    World _world;
 };
 
 #endif /* game_hpp */

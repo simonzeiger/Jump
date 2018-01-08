@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
 		F4BBABF31FFF6A3600ABB340 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4BBABF11FFF6A3600ABB340 /* spring.cpp */; };
 		F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
 		F4FCD3711FF8A220009E9B3E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */; };
@@ -21,7 +22,6 @@
 		F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38E1FFB4AB2009E9B3E /* world.cpp */; };
 		F4FCD3931FFB6A03009E9B3E /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3911FFB6A03009E9B3E /* platform.cpp */; };
 		F4FCD3961FFB85A0009E9B3E /* collidable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3941FFB85A0009E9B3E /* collidable.cpp */; };
-		F4FCD3991FFC071B009E9B3E /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3971FFC071B009E9B3E /* input.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +40,14 @@
 
 /* Begin PBXFileReference section */
 		F40FBD4E1FFF799700D403AC /* ElsaJump.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = ElsaJump.app; sourceTree = "<group>"; };
+		F40FBD4F20014AC800D403AC /* spring.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = spring.psd; sourceTree = "<group>"; };
+		F40FBD5020014AC800D403AC /* elsachar.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = elsachar.psd; sourceTree = "<group>"; };
+		F40FBD5120014AC800D403AC /* cloud.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud.psd; sourceTree = "<group>"; };
+		F40FBD5220014AC800D403AC /* coin.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = coin.psd; sourceTree = "<group>"; };
+		F40FBD5320014AC900D403AC /* numsheet.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = numsheet.psd; sourceTree = "<group>"; };
+		F40FBD5420014AC900D403AC /* startgametext.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = startgametext.psd; sourceTree = "<group>"; };
+		F40FBD552003133400D403AC /* input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = input.cpp; sourceTree = "<group>"; };
+		F40FBD562003133400D403AC /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 		F4BBABF11FFF6A3600ABB340 /* spring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
 		F4BBABF21FFF6A3600ABB340 /* spring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
 		F4FCD35D1FF832F9009E9B3E /* Elsa Jump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Elsa Jump"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,8 +74,6 @@
 		F4FCD3921FFB6A03009E9B3E /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		F4FCD3941FFB85A0009E9B3E /* collidable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = collidable.cpp; sourceTree = "<group>"; };
 		F4FCD3951FFB85A0009E9B3E /* collidable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = collidable.h; sourceTree = "<group>"; };
-		F4FCD3971FFC071B009E9B3E /* input.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = input.cpp; sourceTree = "<group>"; };
-		F4FCD3981FFC071B009E9B3E /* input.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +92,12 @@
 		F40FBD4C1FFF6ECA00D403AC /* PSD */ = {
 			isa = PBXGroup;
 			children = (
+				F40FBD5120014AC800D403AC /* cloud.psd */,
+				F40FBD5220014AC800D403AC /* coin.psd */,
+				F40FBD5020014AC800D403AC /* elsachar.psd */,
+				F40FBD5320014AC900D403AC /* numsheet.psd */,
+				F40FBD4F20014AC800D403AC /* spring.psd */,
+				F40FBD5420014AC900D403AC /* startgametext.psd */,
 			);
 			path = PSD;
 			sourceTree = "<group>";
@@ -144,8 +156,8 @@
 				F4FCD3941FFB85A0009E9B3E /* collidable.cpp */,
 				F4BBABF21FFF6A3600ABB340 /* spring.h */,
 				F4BBABF11FFF6A3600ABB340 /* spring.cpp */,
-				F4FCD3981FFC071B009E9B3E /* input.h */,
-				F4FCD3971FFC071B009E9B3E /* input.cpp */,
+				F40FBD552003133400D403AC /* input.cpp */,
+				F40FBD562003133400D403AC /* input.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -216,8 +228,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4FCD3781FF8A427009E9B3E /* game.cpp in Sources */,
+				F40FBD572003133400D403AC /* input.cpp in Sources */,
 				F4FCD3801FF8B150009E9B3E /* main.cpp in Sources */,
-				F4FCD3991FFC071B009E9B3E /* input.cpp in Sources */,
 				F4FCD3931FFB6A03009E9B3E /* platform.cpp in Sources */,
 				F4FCD38D1FF9CA07009E9B3E /* player.cpp in Sources */,
 				F4BBABF31FFF6A3600ABB340 /* spring.cpp in Sources */,

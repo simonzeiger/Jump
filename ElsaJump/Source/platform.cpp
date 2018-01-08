@@ -12,8 +12,9 @@
 using std::cout;
 using std::endl;
 
-Platform::Platform(float x, float y) :
-Collidable(x, y, 80, 0)
+Platform::Platform(float x, float y, Graphics &graphics) :
+Collidable(x, y, 65, 0),
+Sprite(graphics, "Content/Sprites/ElsaChar.png", 0, 0, 65, 0, x, y)
 {
     _spring = nullptr;
 }
@@ -26,7 +27,7 @@ Platform::~Platform(){
 
 void Platform::draw(Graphics &graphics){
     SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(graphics.renderer(), _x, _y, _x + _width, _y);
+    SDL_RenderDrawLine(graphics.renderer(), Sprite::_x, Sprite::_y, Sprite::_x + Sprite::_width, Sprite::_y);
     if(_spring != nullptr)
         _spring->draw(graphics);
 
@@ -39,8 +40,8 @@ void Platform::update(float elapsedTime){
 
 void Platform::addSpring(bool lOrR, Graphics &graphics) {
     if(_spring == nullptr){
-        float x = lOrR? _x : _x + _width - 32;
-        _spring = new Spring(x, _y - 32, graphics);
+        float x = lOrR? Collidable::_x : Collidable::_x + Collidable::_width - 32;
+        _spring = new Spring(x, Collidable::_y - 32, graphics);
     }
 }
 
@@ -59,8 +60,31 @@ std::pair<bool, bool> Platform::checkPlatformCollision(float playerX, float play
     return std::pair<bool, bool> (platform, spring);
 }
 
+std::string Platform::getType(){
+    return "Platform";
+}
+
 void Platform::shift(float y){
     Collidable::shift(y);
+    Sprite::_y += y;
     if(_spring != nullptr) _spring->shift(y);
     
+}
+
+bool Platform::hasSpring(){
+    return _spring != nullptr;
+}
+
+void Platform::setX(float x){
+    Collidable::setX(x);
+    Sprite::_x = x;
+    if(_spring != nullptr)
+        _spring->setX(x);
+}
+
+void Platform::setY(float y){
+    Collidable::setY(y);
+     Sprite::_y = y;
+    if(_spring != nullptr)
+        _spring->setY(y - 32);
 }

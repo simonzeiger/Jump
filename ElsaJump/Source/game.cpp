@@ -34,7 +34,7 @@ Game::~Game(){
 void Game::gameLoop(){
     Graphics graphics;
     _player = Player(graphics, 150, 680);
-    _background = World(&_player, &graphics);
+    _world = World(&_player, &graphics);
     SDL_Event event;
     Input input;
     
@@ -42,7 +42,13 @@ void Game::gameLoop(){
     
     //start game loop
     
+    
+   // int secondTimer = 0;
+    //int frames = 0;
+    
+
     for(;;){
+        
         input.beginNewFrame();
         const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
@@ -51,7 +57,7 @@ void Game::gameLoop(){
             break;
         }
         
-        //continuous-response keys
+        //movement
         if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
             _player.moveLeft();
         }
@@ -60,33 +66,55 @@ void Game::gameLoop(){
         } else {
             _player.stopMoving();
         }
-        
       
         const int CURRENT_TIME_MS = SDL_GetTicks();
-        int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_UPDATE_TIME;
-        update(std::min(ELAPSED_TIME_MS, MAX_FRAME_TIME));
-        LAST_UPDATE_TIME = CURRENT_TIME_MS;
-
+        const int ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
+        int elapsedTime = ELAPSED_TIME;
+        
+        
+        for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
+            float dt = std::min(elapsedTime, MAX_FRAME_TIME);
+            fixedUpdate(dt);
+            elapsedTime -= dt;
+        }
+       
+        //TODO:: this uses an outdated elapsedtime, so animations might be wack with low framerates?
+        update(ELAPSED_TIME);
         draw(graphics);
+
+        LAST_UPDATE_TIME = CURRENT_TIME_MS;
         
-      
+        //secondTimer += ELAPSED_TIME;
         
+       /* if(secondTimer > 1000){
+            printf("%d ", frames);
+            frames = 0;
+            secondTimer = 0;
+        }*/
+       
+        
+       \
     }
 }
 
 void Game::draw(Graphics &graphics){
     graphics.clear();
 
-    _background.draw(graphics);
+    _world.draw(graphics);
     
     graphics.flip();
 }
 
 void Game::update(float elsapedTime){
     
-    _background.update(elsapedTime);
+    _world.update(elsapedTime);
     
     
+}
+
+void Game::fixedUpdate(float fixedTime) {
+    
+    _world.fixedUpdate(fixedTime);
     
 }
 

@@ -50,10 +50,25 @@ void Spring::shift(float y){
     AnimatedSprite::_y += y;
 }
 
+void Spring::setX(float x){
+    playAnimation("Smoll");
+    Collidable::setX(x);
+    AnimatedSprite::_x = x;
+}
 
+void Spring::setY(float y){
+    playAnimation("Smoll");
+    Collidable::setY(y);
+    AnimatedSprite::_y = y;
+}
 void Spring::animationDone(std::string currentAnimation) {
     if(currentAnimation == "Springy") playAnimation("Yuge");
 }
+
+std::string Spring::getType(){
+    return "Spring";
+}
+
 
 
 
