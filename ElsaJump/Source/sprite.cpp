@@ -10,21 +10,25 @@
 #include "graphics.h"
 #include "globals.h"
 
+std::map<std::string, SDL_Texture*> Sprite::_spriteSheets;
+
 Sprite::Sprite(){}
 
-Sprite::Sprite(Graphics &graphics, const std::string &filePath, int sourceX, int sourceY, int width, int height,
+Sprite::Sprite(Graphics &graphics, const std::string name, int sourceX, int sourceY, int width, int height,
                float posX, float posY) :
 _x(posX),
 _width(width),
 _height(height),
 _y(posY)
 {
+   
+    _spriteSheet = _spriteSheets[name];
+    
     _sourceRect.x = sourceX;
     _sourceRect.y = sourceY;
     _sourceRect.w = width;
     _sourceRect.h = height;
     
-    _spriteSheet = SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage(filePath));
     if (_spriteSheet == NULL) {
         printf("Error: Unable to load image\n");
         
@@ -33,6 +37,10 @@ _y(posY)
 }
 
 Sprite::~Sprite() {}
+
+void Sprite::addTexture(std::string name, SDL_Texture* texture){
+    _spriteSheets[name] = texture;
+}
 
 void Sprite::draw(Graphics &graphics, int x, int y, int scale) {
     SDL_Rect destinationRectangle = { x, y, _sourceRect.w * scale,

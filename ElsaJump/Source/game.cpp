@@ -23,7 +23,8 @@ Game::Game(){
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
-
+    
+    
     gameLoop();
 }
 
@@ -33,6 +34,11 @@ Game::~Game(){
 
 void Game::gameLoop(){
     Graphics graphics;
+    
+    Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/ElsaChar.png")));
+    Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/Spring.png")));
+    // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/Platform")));
+    
     _player = Player(graphics, 150, 680);
     _world = World(&_player, &graphics);
     SDL_Event event;
@@ -78,7 +84,7 @@ void Game::gameLoop(){
             elapsedTime -= dt;
         }
        
-        //TODO:: this uses an outdated elapsedtime, so animations might be wack with low framerates?
+        //TODO: this uses an outdated elapsedtime, so animations might be wack with low framerates?
         update(ELAPSED_TIME);
         draw(graphics);
 

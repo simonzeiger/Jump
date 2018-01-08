@@ -25,12 +25,13 @@ namespace player_constants {
 Player::Player(){}
 
 Player::Player(Graphics &graphics, float x, float y) :
-AnimatedSprite(graphics,"Content/Sprites/ElsaChar.png", 0, 0, 16, 16, x, y, 100),
+AnimatedSprite(graphics, "Elsa", 0, 0, 16, 16, x, y, 200),
 _dy(-player_constants::JUMP_SPEED),
 _dx(0),
 _hasShield(false),
 _isJumping(true),
 _maxJumpHeightReached(false),
+_facing(RIGHT),
 _isDead(false)
 {
     setupAnimations();
@@ -38,10 +39,11 @@ _isDead(false)
 }
 
 void Player::setupAnimations() {
-    addAnimation(1, 0, 0, "JumpLeft", 16, 16);
-    addAnimation(1, 0, 16, "JumpRight", 16, 16);
-    addAnimation(3, 0, 0, "RunLeft", 16, 16);
-    addAnimation(3, 0, 16, "RunRight", 16, 16);
+    addAnimation(3, 0, 48, "JumpLeft", 16, 16);
+    addAnimation(3, 0, 32, "JumpRight", 16, 16);
+    addAnimation(3, 0, 0, "ChillLeft", 16, 16);
+    addAnimation(3, 0, 16, "ChillRight", 16, 16);
+  
 }
 
 void Player::animationDone(std::string currentAnimation) {}
@@ -56,17 +58,17 @@ float Player::getX() const {
 
 void Player::moveLeft() {
     _dx = -player_constants::MOVE_SPEED;
-    playAnimation("JumpLeft");
+    _facing = LEFT;
+   
 }
 
 void Player::moveRight() {
     _dx = player_constants::MOVE_SPEED;
-    playAnimation("JumpRight");
+    _facing = RIGHT;
 }
 
 
 void Player::stopMoving() {
-   // playAnimation("IdleRight");
     _dx = 0;
 }
 
@@ -79,6 +81,12 @@ void Player::jump(float y) {
         _dy = -player_constants::JUMP_SPEED;
     }
      _y = y - 16 * globals::SPRITE_SCALE;
+    
+    if(_facing == RIGHT)
+        playAnimation("JumpRight");
+    else
+        playAnimation("JumpLeft");
+    
 
 }
 
@@ -120,8 +128,15 @@ void Player::fixedUpdate(float fixedTime){
         
         if(_dy > 0){
             _isJumping = false;
-            
         }
+        
+        if(_dy > -.25){
+            if(_facing == LEFT)
+                playAnimation("ChillLeft");
+            else
+                 playAnimation("ChillRight");
+        }
+            
         
         //Move by dx
         _x += _dx * fixedTime;

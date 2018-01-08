@@ -25,7 +25,7 @@ class Graphics;
 class AnimatedSprite : public Sprite {
 public:
     AnimatedSprite();
-    AnimatedSprite(Graphics &graphics, const std::string &filePath, int sourceX, int sourceY, int width, int height,
+    AnimatedSprite(Graphics &graphics, std::string name, int sourceX, int sourceY, int width, int height,
                    float posX, float posY, float timeToUpdate);
     
     /* void playAnimation

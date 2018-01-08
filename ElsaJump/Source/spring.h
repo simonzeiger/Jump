@@ -26,6 +26,8 @@ public:
     void setX(float x);
     void setY(float y);
     std::string getType();
+private:
+    static  SDL_Texture* spriteSheet;
     
 };
 

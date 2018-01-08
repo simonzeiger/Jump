@@ -31,5 +31,6 @@ public:
     std::string getType();
 private:
     Collidable* _spring;
+    static SDL_Texture* _platformSpriteSheet;
 };
 #endif /* platform_hpp */

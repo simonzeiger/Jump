@@ -8,9 +8,11 @@
 
 #include "spring.h"
 
+SDL_Texture* Spring::spriteSheet;
+
 Spring::Spring(float x, float y, Graphics &graphics) :
 Collidable(x, y, 32, 32),
-AnimatedSprite(graphics, "Content/Sprites/Spring.png", 0, 0, 32, 32, x, y, 100)
+AnimatedSprite(graphics, "Spring", 0, 0, 32, 32, x, y, 100)
 {
     Collidable::_x = x;
     Collidable::_y = y;

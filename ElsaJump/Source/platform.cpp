@@ -14,7 +14,7 @@ using std::endl;
 
 Platform::Platform(float x, float y, Graphics &graphics) :
 Collidable(x, y, 65, 0),
-Sprite(graphics, "Content/Sprites/ElsaChar.png", 0, 0, 65, 0, x, y)
+Sprite(graphics, "Elsa", 0, 0, 65, 0, x, y)
 {
     _spring = nullptr;
 }

@@ -68,6 +68,7 @@ private:
     float _dx, _dy;
     bool _hasShield;
     bool _maxJumpHeightReached;
+    Direction _facing;
 
 };
 

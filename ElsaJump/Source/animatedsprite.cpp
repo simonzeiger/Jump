@@ -10,9 +10,9 @@ std::map<std::string, std::vector<SDL_Rect>> AnimatedSprite::_animations;
 
 AnimatedSprite::AnimatedSprite(){}
 
-AnimatedSprite::AnimatedSprite(Graphics &graphics, const std::string &filePath, int sourceX, int sourceY,
+AnimatedSprite::AnimatedSprite(Graphics &graphics, std::string name, int sourceX, int sourceY,
                                int width, int height, float posX, float posY, float timeToUpdate) :
-Sprite(graphics, filePath, sourceX, sourceY, width, height, posX, posY),
+Sprite(graphics, name, sourceX, sourceY, width, height, posX, posY),
 _frameIndex(0),
 _timeElapsed(0),
 _timeToUpdate(timeToUpdate),
