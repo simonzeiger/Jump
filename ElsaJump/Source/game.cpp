@@ -23,6 +23,14 @@ Game::Game(){
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
+    _graphics = new Graphics;
+    Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
+    Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
+    // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics.renderer(), _graphics.loadImage( "Content/Sprites/Platform")));
+    
+    _player = new Player(*_graphics, 150, 680);
+    _world = new World(_player, _graphics);
+    
     
     
     gameLoop();
@@ -33,14 +41,9 @@ Game::~Game(){
 }
 
 void Game::gameLoop(){
-    Graphics graphics;
     
-    Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/ElsaChar.png")));
-    Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/Spring.png")));
-    // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(graphics.renderer(), graphics.loadImage( "Content/Sprites/Platform")));
+   
     
-    _player = Player(graphics, 150, 680);
-    _world = World(&_player, &graphics);
     SDL_Event event;
     Input input;
     
@@ -49,8 +52,8 @@ void Game::gameLoop(){
     //start game loop
     
     
-   // int secondTimer = 0;
-    //int frames = 0;
+    /* int secondTimer = 0;
+     int frames = 0;*/
     
 
     for(;;){
@@ -65,12 +68,12 @@ void Game::gameLoop(){
         
         //movement
         if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
-            _player.moveLeft();
+            _player->moveLeft();
         }
         else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
-            _player.moveRight();
+            _player->moveRight();
         } else {
-            _player.stopMoving();
+            _player->stopMoving();
         }
       
         const int CURRENT_TIME_MS = SDL_GetTicks();
@@ -86,41 +89,46 @@ void Game::gameLoop(){
        
         //TODO: this uses an outdated elapsedtime, so animations might be wack with low framerates?
         update(ELAPSED_TIME);
-        draw(graphics);
-
         LAST_UPDATE_TIME = CURRENT_TIME_MS;
+
+       // frames++;
+        
+        draw();
         
         //secondTimer += ELAPSED_TIME;
         
        /* if(secondTimer > 1000){
-            printf("%d ", frames);
+            printf("%d\n", frames);
             frames = 0;
             secondTimer = 0;
-        }*/
-       
+        }
+        */
+
         
-       \
+      
+        
+       
     }
 }
 
-void Game::draw(Graphics &graphics){
-    graphics.clear();
+void Game::draw(){
+    _graphics->clear();
 
-    _world.draw(graphics);
+    _world->draw(*_graphics);
     
-    graphics.flip();
+    _graphics->flip();
 }
 
 void Game::update(float elsapedTime){
     
-    _world.update(elsapedTime);
+    _world->update(elsapedTime);
     
     
 }
 
 void Game::fixedUpdate(float fixedTime) {
-    
-    _world.fixedUpdate(fixedTime);
+   
+    _world->fixedUpdate(fixedTime);
     
 }
 

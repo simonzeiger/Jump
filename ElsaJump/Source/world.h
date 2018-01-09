@@ -17,7 +17,6 @@
 
 class World {
 public:
-    World();
     World(Player *player, Graphics* graphics);
     void draw(Graphics &graphics);
     void update(float elapsedTime);

@@ -8,7 +8,6 @@
 
 std::map<std::string, std::vector<SDL_Rect>> AnimatedSprite::_animations;
 
-AnimatedSprite::AnimatedSprite(){}
 
 AnimatedSprite::AnimatedSprite(Graphics &graphics, std::string name, int sourceX, int sourceY,
                                int width, int height, float posX, float posY, float timeToUpdate) :

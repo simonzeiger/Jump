@@ -11,9 +11,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
-World::World(){}
-
-
 World::World(Player* player, Graphics* graphics) :
 _player(player),
 _graphics(graphics)
@@ -116,8 +113,8 @@ int World::nPlatforms() const {
 void World::addPlatform(int x, int y){
     if(_nPlatforms < MAX_PLATFORMS){
         _platforms[_nPlatforms] = new Platform(x, y, *_graphics);
-        if(randInt(1, SPRING_PROBABILITY) == 1)
-            _platforms[_nPlatforms]->addSpring(randInt(0, 1), *_graphics);
+        if(globals::randInt(1, SPRING_PROBABILITY) == 1)
+            _platforms[_nPlatforms]->addSpring(globals::randInt(0, 1), *_graphics);
         _nPlatforms++;
     } else {
         printf("Exceeds max platforms\n");
@@ -138,13 +135,13 @@ Vector2<int> World::getNextPlatformPos(){
     
     int randY;
     if (_nPlatforms == 0)
-        randY = randInt(120, MAX_DISTANCE);
+        randY = globals::randInt(120, MAX_DISTANCE);
     else if(_topPlatform->hasSpring())
-        randY = randInt(MIN_DISTANCE, randInt(0,1) ? MAX_SPRING_DISTANCE : MAX_DISTANCE);
+        randY = globals::randInt(MIN_DISTANCE, globals::randInt(0,2) == 1 ? MAX_SPRING_DISTANCE : MAX_DISTANCE);
     else
-        randY = randInt(MIN_DISTANCE, MAX_DISTANCE);
+        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE);
     
-    int randX = _nPlatforms == 0 ? randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : randInt(0, globals::SCREEN_WIDTH - 80);
+    int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH - 80);
     
     return Vector2<int>{randX, prevY - randY};
 }
@@ -155,8 +152,8 @@ void World::resetPlatform(Platform* platform) {
     Vector2<int> nextPos = getNextPlatformPos();
     platform->setX(nextPos.X);
     platform->setY(nextPos.Y);
-    if(randInt(1, SPRING_PROBABILITY) == 1){
-        platform->addSpring(randInt(0, 1), *_graphics);
+    if(globals::randInt(1, SPRING_PROBABILITY) == 1){
+        platform->addSpring(globals::randInt(0, 1), *_graphics);
     }
     _topPlatform = platform;
 }

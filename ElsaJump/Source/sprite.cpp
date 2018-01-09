@@ -12,7 +12,6 @@
 
 std::map<std::string, SDL_Texture*> Sprite::_spriteSheets;
 
-Sprite::Sprite(){}
 
 Sprite::Sprite(Graphics &graphics, const std::string name, int sourceX, int sourceY, int width, int height,
                float posX, float posY) :

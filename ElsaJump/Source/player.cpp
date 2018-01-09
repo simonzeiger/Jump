@@ -22,8 +22,7 @@ namespace player_constants {
 }
 
 
-Player::Player(){}
-
+ 
 Player::Player(Graphics &graphics, float x, float y) :
 AnimatedSprite(graphics, "Elsa", 0, 0, 16, 16, x, y, 200),
 _dy(-player_constants::JUMP_SPEED),

@@ -11,6 +11,7 @@
 
 #include "player.h"
 #include "world.h"
+#include "graphics.h"
 
 class Graphics;
 
@@ -20,11 +21,12 @@ public:
     ~Game();
 private:
     void gameLoop();
-    void draw(Graphics &graphics);
+    void draw();
     void update(float elsapedTime);
     void fixedUpdate(float fixedTime);
-    Player _player;
-    World _world;
+    Player* _player;
+    World* _world;
+    Graphics* _graphics;
 };
 
 #endif /* game_hpp */

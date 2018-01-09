@@ -8,7 +8,6 @@
 
 #include "spring.h"
 
-SDL_Texture* Spring::spriteSheet;
 
 Spring::Spring(float x, float y, Graphics &graphics) :
 Collidable(x, y, 32, 32),
