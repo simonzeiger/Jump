@@ -19,6 +19,8 @@ const int MIN_DISTANCE = 25;
 const int SPRING_PROBABILITY = 10;
 
 
+//TODO:Implement platforms who move left to right faster and faster as score goes up
+
 World::World(Player* player, Graphics* graphics) :
 _player(player),
 _graphics(graphics)
@@ -190,9 +192,9 @@ Vector2<int> World::getNextPlatformPos(){
     if (_nPlatforms == 0)
         randY = globals::randInt(120, MAX_DISTANCE);
     else if(_topPlatform->hasSpring())
-        randY = globals::randInt(MIN_DISTANCE, globals::randInt(0,2) == 1 ? MAX_SPRING_DISTANCE : MAX_DISTANCE);
+        randY = globals::randInt(MIN_DISTANCE, globals::randInt(1,6) == 1 ? MAX_SPRING_DISTANCE * .7 : MAX_DISTANCE * 1.4);
     else
-        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE); //TODO: farther away as score goes up
+        randY = globals::randInt(MIN_DISTANCE, globals::randInt(1,4) == 1 ? MAX_DISTANCE: MAX_DISTANCE / 2); //TODO: farther away as score goes up
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
     
@@ -238,11 +240,9 @@ void World::resetAll(){
     }
     
     _nPlatforms = 0;
-    _score = 0;
     initPlatforms();
     _topCloud = nullptr;
     initClouds();
-    _player->revive();
 
 }
 
@@ -251,6 +251,10 @@ void World::shift(){
     _shiftCount = 0;
     
     
+}
+
+void World::resetScore() {
+    _score = 0;
 }
 
 

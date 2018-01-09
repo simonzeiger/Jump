@@ -138,6 +138,8 @@
 			children = (
 				F4FCD3771FF8A427009E9B3E /* game.h */,
 				F4FCD3761FF8A427009E9B3E /* game.cpp */,
+				F4FCD38F1FFB4AB2009E9B3E /* world.h */,
+				F4FCD38E1FFB4AB2009E9B3E /* world.cpp */,
 				F4FCD37B1FF8A5F5009E9B3E /* graphics.h */,
 				F4FCD37A1FF8A5F5009E9B3E /* graphics.cpp */,
 				F4FCD37D1FF8A731009E9B3E /* globals.h */,
@@ -148,8 +150,6 @@
 				F4FCD3881FF9AF99009E9B3E /* animatedsprite.cpp */,
 				F4FCD38C1FF9CA07009E9B3E /* player.h */,
 				F4FCD38B1FF9CA07009E9B3E /* player.cpp */,
-				F4FCD38F1FFB4AB2009E9B3E /* world.h */,
-				F4FCD38E1FFB4AB2009E9B3E /* world.cpp */,
 				F4FCD3951FFB85A0009E9B3E /* collidables.h */,
 				F4FCD3941FFB85A0009E9B3E /* collidables.cpp */,
 				F4D89BED2004808000073BB0 /* cloud.h */,

@@ -25,6 +25,7 @@ public:
     Platform** platforms();
     int nPlatforms() const;
     int score();
+    void resetScore();
 private:
     void shift();
     void addPlatform(int x, int y);

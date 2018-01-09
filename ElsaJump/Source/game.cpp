@@ -11,12 +11,15 @@
 #include "graphics.h"
 #include "globals.h"
 #include "input.h"
+#include <fstream>
 #include <SDL2/SDL.h>
 
 namespace {
     const int FPS = 60;
     const int MAX_FRAME_TIME = 1000 / FPS;
 }
+
+std::string Game::_path;
 
 Game::Game(){
    
@@ -32,6 +35,7 @@ Game::Game(){
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
+    _playerName = "Elsa";
     
     for(int i = 0; i < _nNumSprites; i++){
         _numSprites[i] = new NumSprite(*_graphics, globals::SCREEN_WIDTH - 40 - 32 * i, 16);
@@ -40,6 +44,18 @@ Game::Game(){
             _numSprites[i]->num = 0;
     }
     
+    _path = SDL_GetBasePath();
+    _path += "Content/high_score.txt";
+    printf("%s\n", _path.c_str());
+    
+    std::ifstream load( _path);
+    std::string scoreString;
+    std::string name;
+    
+    while( load >> scoreString >> name){
+        printf("%s %s\n", scoreString.c_str(), name.c_str());
+        _highScores.push_back(std::pair<std::string, int>( name, stoi(scoreString)));
+    }
     
     gameLoop();
 }
@@ -54,18 +70,13 @@ void Game::gameLoop(){
     
     int lastUpdateTime = SDL_GetTicks();
     
-    //start game loop
     
     
      int secondTimer = 0;
      int frames = 0;
     
-
+    //start game loop
     for(;;){
-        
-       
-
-       
         
         const int CURRENT_TIME = SDL_GetTicks();
         int elapsedTime = CURRENT_TIME - lastUpdateTime;
@@ -130,8 +141,9 @@ void Game::update(){
         _player->stopMoving();
     }
     
-    if(_world->score() > 0){
-        for (int i = 0; i < ((int)(log10(_world->score())+1)); i++){
+    if(!_player->isDead()){
+        int decimalPlaces = ((int)(log10(_world->score())+1));
+        for (int i = 0; i < decimalPlaces; i++){
             _numSprites[i]->num = ((int)( _world->score() / pow(10 , i)) % 10);
         }
     } else {
@@ -140,6 +152,18 @@ void Game::update(){
             if(i ==0)
                 _numSprites[i]->num = 0;
         }
+        
+        std::ofstream myfile (_path, std::ios_base::app);
+        if (myfile.is_open()){
+            myfile << _world->score() << " " << _playerName << "\n";
+            myfile.close();
+        }
+        else
+            printf("Unable to open file\n");
+        
+        _player->revive();
+        _world->resetScore();
+        
     }
     
     

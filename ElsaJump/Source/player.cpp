@@ -196,9 +196,7 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
    
 void Player::killed(){
     _isDead = true;
-    _y = globals::SCREEN_HEIGHT + 40;
-    _x = globals::SCREEN_WIDTH / 2;
-    _dy = -player_constants::JUMP_SPEED;
+   
 }
 
 void Player::shift(float amt){
@@ -210,6 +208,10 @@ float Player::getDY() const{
 }
 
 void Player::revive(){
+    _y = globals::SCREEN_HEIGHT + 40;
+    _x = globals::SCREEN_WIDTH / 2;
+    _dy = -player_constants::JUMP_SPEED;
+    
     _isDead = false;
 }
 

@@ -13,6 +13,7 @@
 #include "numsprite.h"
 #include "world.h"
 #include "graphics.h"
+#include <vector>
 
 class Graphics;
 
@@ -20,6 +21,7 @@ class Game {
 public:
     Game();
     ~Game();
+    static std::string _path;
 private:
     void gameLoop();
     void draw();
@@ -28,8 +30,10 @@ private:
     Player* _player;
     World* _world;
     Graphics* _graphics;
+    std::string _playerName;
     static const int _nNumSprites = 10;
     NumSprite* _numSprites[_nNumSprites];
+    std::vector<std::pair<std::string, int>> _highScores;
 };
 
 #endif /* game_hpp */
