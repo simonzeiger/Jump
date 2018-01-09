@@ -53,10 +53,9 @@ void AnimatedSprite::stopAnimation() {
     animationDone(_currentAnimation);
 }
 
-void AnimatedSprite::update(int elapsedTime) {
-    Sprite::update();
-    
-    _timeElapsed += elapsedTime;
+void AnimatedSprite::fixedUpdate(float fixedTime) {
+        
+    _timeElapsed += fixedTime;
     if (_timeElapsed > _timeToUpdate) {
         _timeElapsed -= _timeToUpdate;
         if (_frameIndex < _animations[_currentAnimation].size() - 1) {

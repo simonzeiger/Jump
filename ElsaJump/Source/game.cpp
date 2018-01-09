@@ -26,6 +26,7 @@ Game::Game(){
     _graphics = new Graphics;
     Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
     Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
+    Sprite::addTexture("Cloud",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Cloud.png")));
     // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics.renderer(), _graphics.loadImage( "Content/Sprites/Platform")));
     
     _player = new Player(*_graphics, 150, 680);
@@ -45,13 +46,13 @@ void Game::gameLoop(){
     SDL_Event event;
     Input input;
     
-    long long LAST_UPDATE_TIME = SDL_GetPerformanceCounter();
+    int LAST_UPDATE_TIME = SDL_GetTicks();
     
     //start game loop
     
     
-    /* int secondTimer = 0;
-     int frames = 0;*/
+     int secondTimer = 0;
+     int frames = 0;
     
 
     for(;;){
@@ -74,36 +75,33 @@ void Game::gameLoop(){
             _player->stopMoving();
         }
       
-        const long long CURRENT_TIME_MS = SDL_GetPerformanceCounter();
-        const long long ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
-        long long elapsedTime = ELAPSED_TIME;
-        long freq = SDL_GetPerformanceFrequency();
+        const int CURRENT_TIME_MS = SDL_GetTicks();
+        const int ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
+        int elapsedTime = ELAPSED_TIME;
         
         for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
-            elapsedTime = 1000 * elapsedTime / freq;
-            float dt = elapsedTime < MAX_FRAME_TIME ? elapsedTime : MAX_FRAME_TIME; // std::min(elapsedTime, MAX_FRAME_TIME);
+           
+            float dt = std::min(elapsedTime,MAX_FRAME_TIME); // std::min(elapsedTime, MAX_FRAME_TIME);
             fixedUpdate(dt);
             elapsedTime -= dt;
+            //secondTimer += dt;
         }
        
-        //TODO: this uses an outdated elapsedtime, so animations might be wack with low framerates?
-        update(1000 * ELAPSED_TIME / freq);
-        LAST_UPDATE_TIME = CURRENT_TIME_MS;
+        update();
 
        // frames++;
         
         draw();
-        
-        //secondTimer += ELAPSED_TIME;
-        
+                
        /* if(secondTimer > 1000){
             printf("%d\n", frames);
             frames = 0;
             secondTimer = 0;
-        }
-        */
-
+        }*/
         
+
+        LAST_UPDATE_TIME = CURRENT_TIME_MS;
+
       
         
        
@@ -113,20 +111,20 @@ void Game::gameLoop(){
 void Game::draw(){
     _graphics->clear();
 
-    _world->draw(*_graphics);
+    _world->draw();
     
     _graphics->flip();
 }
 
-void Game::update(float elsapedTime){
+void Game::update(){
     
-    _world->update(elsapedTime);
+    _world->update();
     
     
 }
 
 void Game::fixedUpdate(float fixedTime) {
-   
+  
     _world->fixedUpdate(fixedTime);
     
 }

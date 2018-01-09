@@ -26,9 +26,10 @@ void Spring::draw(Graphics &graphics){
 
 }
 
-void Spring::update(float elapsedTime){
-    AnimatedSprite::update(elapsedTime);
 
+void Spring::fixedUpdate(float fixedTime){
+    AnimatedSprite::fixedUpdate(fixedTime);
+    
 }
 
 bool Spring::checkCollision(float playerX, float playerY){

@@ -35,7 +35,7 @@ public:
     /* void update
      * Updates the animated sprite (timer)
      */
-    void update(int elapsedTime); //TODO: figure out why is int and not float
+    void fixedUpdate(float elapsedTime); //TODO: figure out why is int and not float
     
     /* void draw
      * Draws the sprite to the screen

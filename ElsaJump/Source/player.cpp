@@ -50,14 +50,6 @@ void Player::setupAnimations() {
 
 void Player::animationDone(std::string currentAnimation) {}
 
-float Player::getY() const {
-    return _y;
-}
-
-float Player::getX() const {
-    return _x;
-}
-
 void Player::moveLeft() {
     _dx = -player_constants::MOVE_SPEED;
     _facing = LEFT;
@@ -117,27 +109,24 @@ void Player::animationStateMachine(){
             playAnimation("ChillLeft");
         
     } else if (_currentAnimation == "NoHairAnimRight" || _currentAnimation == "NoHairAnimLeft") {
-        if(_facing == RIGHT){
-            if(_dy > .25)
-                playAnimation("ChillRight");
-            else
-                playAnimation("NoHairAnimRight");
+       
+        if(_facing == RIGHT)
+            playAnimation("NoHairAnimRight");
+        else {
             
-        } else {
-            if(_dy > .25)
-                playAnimation("ChillLeft");
-            else
-                playAnimation("NoHairAnimLeft");
+            playAnimation("NoHairAnimLeft");
+        }
+
+            
         }
         
         
-    }
     
 
     
 }
 
-void Player::update(float elapsedTime) {
+void Player::update( ) {
     
     
     if(_dy > 0){
@@ -160,7 +149,6 @@ void Player::update(float elapsedTime) {
     
     
   
-    AnimatedSprite::update(elapsedTime);
 }
 
 
@@ -179,7 +167,9 @@ void Player::fixedUpdate(float fixedTime){
         
         //Move by dx
         _x += _dx * fixedTime;
-        
+    
+        AnimatedSprite::fixedUpdate(fixedTime);
+
     
     
 }

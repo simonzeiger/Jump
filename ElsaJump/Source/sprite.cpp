@@ -50,5 +50,23 @@ void Sprite::draw(Graphics &graphics, int x, int y, int scale) {
     }
 }
 
-void Sprite::update() {}
+int Sprite::width() {
+    return _width;
+}
+
+int Sprite::getX() const{
+    return _x;
+}
+
+int Sprite::getY() const{
+    return _y;
+}
+
+void Sprite::setX(float x) {
+    _x = x;
+}
+
+void Sprite::setY(float y) {
+    _y = y;
+}
 

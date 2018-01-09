@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
 		F4BBABF31FFF6A3600ABB340 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4BBABF11FFF6A3600ABB340 /* spring.cpp */; };
+		F4D89BEE2004808000073BB0 /* cloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEC2004808000073BB0 /* cloud.cpp */; };
 		F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
 		F4FCD3711FF8A220009E9B3E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */; };
 		F4FCD3721FF8A246009E9B3E /* Content in CopyFiles */ = {isa = PBXBuildFile; fileRef = F4FCD36C1FF8A19D009E9B3E /* Content */; };
@@ -50,6 +51,8 @@
 		F40FBD562003133400D403AC /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 		F4BBABF11FFF6A3600ABB340 /* spring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
 		F4BBABF21FFF6A3600ABB340 /* spring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
+		F4D89BEC2004808000073BB0 /* cloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cloud.cpp; sourceTree = "<group>"; };
+		F4D89BED2004808000073BB0 /* cloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cloud.h; sourceTree = "<group>"; };
 		F4FCD35D1FF832F9009E9B3E /* Elsa Jump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Elsa Jump"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4FCD3691FF89FEF009E9B3E /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
 		F4FCD36C1FF8A19D009E9B3E /* Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Content; sourceTree = "<group>"; };
@@ -150,12 +153,14 @@
 				F4FCD38B1FF9CA07009E9B3E /* player.cpp */,
 				F4FCD38F1FFB4AB2009E9B3E /* world.h */,
 				F4FCD38E1FFB4AB2009E9B3E /* world.cpp */,
-				F4FCD3921FFB6A03009E9B3E /* platform.h */,
-				F4FCD3911FFB6A03009E9B3E /* platform.cpp */,
 				F4FCD3951FFB85A0009E9B3E /* collidable.h */,
 				F4FCD3941FFB85A0009E9B3E /* collidable.cpp */,
+				F4FCD3921FFB6A03009E9B3E /* platform.h */,
+				F4FCD3911FFB6A03009E9B3E /* platform.cpp */,
 				F4BBABF21FFF6A3600ABB340 /* spring.h */,
 				F4BBABF11FFF6A3600ABB340 /* spring.cpp */,
+				F4D89BED2004808000073BB0 /* cloud.h */,
+				F4D89BEC2004808000073BB0 /* cloud.cpp */,
 				F40FBD562003133400D403AC /* input.h */,
 				F40FBD552003133400D403AC /* input.cpp */,
 			);
@@ -236,6 +241,7 @@
 				F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */,
 				F4FCD38A1FF9AF99009E9B3E /* animatedsprite.cpp in Sources */,
 				F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */,
+				F4D89BEE2004808000073BB0 /* cloud.cpp in Sources */,
 				F4FCD3961FFB85A0009E9B3E /* collidable.cpp in Sources */,
 				F4FCD37C1FF8A5F5009E9B3E /* graphics.cpp in Sources */,
 			);

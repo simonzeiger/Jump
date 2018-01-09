@@ -19,7 +19,7 @@ class Player : public AnimatedSprite {
 public:
     Player(Graphics &graphics, float x, float y);
     void draw(Graphics &graphics);
-    void update(float elapsedTime);
+    void update();
     void fixedUpdate(float fixedTime);
     
     /* void moveLeft
@@ -44,10 +44,6 @@ public:
     
     void animationDone(std::string currentAnimation);
     void setupAnimations(); 
-    
-    float getY() const;
-    
-    float getX() const;
     
     float getDY() const;
     

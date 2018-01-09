@@ -39,11 +39,6 @@ bool Collidable::checkCollision(float playerX, float playerY){
 }
 
 
-
-int Collidable::getY() const{
-    return _y;
-}
-
 void Collidable::setY(float y){
     _y = y;
 }

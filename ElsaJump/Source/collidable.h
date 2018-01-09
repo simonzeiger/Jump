@@ -15,14 +15,13 @@ public:
     Collidable(float x, float y, int width, int height);
     virtual ~Collidable();
     virtual void draw(Graphics &graphics) = 0;
-    virtual void update(float elapsedTime) = 0;
+    virtual void fixedUpdate(float fixedUpdate) = 0;
     virtual bool checkCollision(float playerX, float playerY);
     virtual void setY(float y);
     virtual void setX(float x);
     virtual void shift(float y);
     virtual std::string getType() = 0;
     
-    int getY() const;
     int getWidth();
 protected:
     float _x, _y;

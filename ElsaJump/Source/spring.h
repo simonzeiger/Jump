@@ -18,7 +18,7 @@ class Spring: public Collidable, public AnimatedSprite {
 public:
     Spring(float x, float y, Graphics &graphics);
     void draw(Graphics &graphics);
-    void update(float elapsedTime);
+    void fixedUpdate(float fixedTime);
     bool checkCollision(float playerX, float playerY);
     void animationDone(std::string currentAnimation);
     void setupAnimations();

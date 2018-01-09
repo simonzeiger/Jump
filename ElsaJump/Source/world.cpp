@@ -8,14 +8,16 @@
 
 #include "world.h"
 #include "globals.h"
+#include "cloud.h"
 #include <iostream>
 #include <SDL2/SDL.h>
 
-const int SHIFT_DELAY = 3; // 3.5
+const int SHIFT_DELAY = 3.5; // 3.5
 const int MAX_DISTANCE = 178;
 const int MAX_SPRING_DISTANCE = 600;
 const int MIN_DISTANCE = 25;
 const int SPRING_PROBABILITY = 10;
+
 
 World::World(Player* player, Graphics* graphics) :
 _player(player),
@@ -28,13 +30,17 @@ _graphics(graphics)
     _shiftDistance = 100;
     _prevPlayerY = globals::SCREEN_HEIGHT;
     _topPlatform = nullptr;
+    _topCloud = nullptr;
+    _score = 0;
     
     initPlatforms();
+    initClouds();
 }
 
-void World::update(float elapsedTime){
+void World::update( ){
     
-    _player->update(elapsedTime);
+    
+    _player->update();
     
     if(!_player->_isJumping){
         int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
@@ -56,29 +62,48 @@ void World::update(float elapsedTime){
         _prevPlayerY = globals::SCREEN_HEIGHT;
         resetAll();
     }
-    
-    for(int i = 0; i < _nPlatforms; i++){
-        _platforms[i]->update(elapsedTime);
-    }
+  
 
 }
 
 void World::fixedUpdate(float fixedTime){
+    
+    
+  
+    for(int i = 0; i < MAX_CLOUDS; i++){
+        _clouds[i]->fixedUpdate(fixedTime);
+        if(_clouds[i]->getX() <= 0 || _clouds[i]->getX() + _clouds[i]->width() * globals::SPRITE_SCALE >= globals::SCREEN_WIDTH)
+            getNextCloudPos();
+        
+
+    }
+    
+    for(int i = 0; i < _nPlatforms; i++){
+        _platforms[i]->fixedUpdate(fixedTime);
+    }
     
     //lerpy but actually simple
     if(_shifting){
         
         
         _shiftCount += fixedTime;
-        
+        _shiftDistance = -_player->getDY() * fixedTime;
+        _score += _shiftDistance / 10;
+
         if(_shiftCount > _prevPlayerY / SHIFT_DELAY){
-            _shiftDistance = -_player->getDY() * fixedTime;
             
             
             for(int i = 0; i < _nPlatforms; i++){
                 _platforms[i]->shift(_shiftDistance);
                 if(_platforms[i]->getY() > globals::SCREEN_HEIGHT + 50){
                     resetPlatform(_platforms[i]);
+                }
+            }
+            
+            for(int i = 0; i < MAX_CLOUDS; i++){
+                _clouds[i]->shift(_shiftDistance/2);
+                if(_clouds[i]->getY() > globals::SCREEN_HEIGHT + 50){
+                    resetCloud(_clouds[i]);
                 }
             }
             
@@ -95,15 +120,19 @@ void World::fixedUpdate(float fixedTime){
     }
     
     _player->fixedUpdate(fixedTime);
+    
 }
 
-void World::draw(Graphics &graphics){
-
-    for(int i = 0; i < _nPlatforms; i++){
-        _platforms[i]->draw(graphics);
+void World::draw(){
+    for(int i = 0; i < MAX_CLOUDS; i++){
+        _clouds[i]->draw(*_graphics);
     }
     
-    _player->draw(graphics);
+    for(int i = 0; i < _nPlatforms; i++){
+        _platforms[i]->draw(*_graphics);
+    }
+    
+    _player->draw(*_graphics);
 
     
 }
@@ -136,6 +165,19 @@ void World::initPlatforms(){
     }
 }
 
+void World::initClouds() {
+    for(int i = 0; i < MAX_CLOUDS; i++){
+        Vector2<int> nextPos = getNextCloudPos();
+        
+        _clouds[i] = new Cloud(*_graphics, nextPos.X, nextPos.Y);
+        if(globals::randInt(0, 1) == 1)
+            _clouds[i]->changeDir();
+        
+        _topCloud = _clouds[i];
+        
+    }
+}
+
 Vector2<int> World::getNextPlatformPos(){
     int prevY = _nPlatforms == 0 ? globals::SCREEN_HEIGHT + 82 : _topPlatform->getY();
     
@@ -145,9 +187,17 @@ Vector2<int> World::getNextPlatformPos(){
     else if(_topPlatform->hasSpring())
         randY = globals::randInt(MIN_DISTANCE, globals::randInt(0,2) == 1 ? MAX_SPRING_DISTANCE : MAX_DISTANCE);
     else
-        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE); //farther away as score goes up
+        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE); //TODO: farther away as score goes up
     
-    int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH - 80);
+    int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
+    
+    return Vector2<int>{randX, prevY - randY};
+}
+
+Vector2<int> World::getNextCloudPos() {
+    int prevY = _topCloud == nullptr ? globals::SCREEN_HEIGHT - 50 : _topCloud->getY();
+    int randY = globals::randInt(MAX_DISTANCE / 2.5, globals::randInt(1,3) == 1 ? MAX_DISTANCE * 2 : globals::SCREEN_HEIGHT * 2);
+    int randX =  globals::randInt(0, globals::SCREEN_WIDTH - 16 * globals::SPRITE_SCALE);
     
     return Vector2<int>{randX, prevY - randY};
 }
@@ -164,13 +214,28 @@ void World::resetPlatform(Platform* platform) {
     _topPlatform = platform;
 }
 
+void World::resetCloud(Cloud* cloud) {
+    Vector2<int> nextPos = getNextCloudPos();
+    cloud->setX(nextPos.X);
+    cloud->setY(nextPos.Y);
+    _topCloud = cloud;
+
+}
+
 void World::resetAll(){
     for(int i = 0; i < _nPlatforms; i++){
         _platforms[i]->deleteSpring();
         delete _platforms[i];
     }
+    
+    for(int i = 0; i < MAX_CLOUDS; i++){
+        delete _clouds[i];
+    }
+    
     _nPlatforms = 0;
     initPlatforms();
+    _topCloud = nullptr;
+    initClouds();
 }
 
 void World::shift(float y){

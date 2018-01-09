@@ -19,14 +19,16 @@ class Platform: public Collidable, public Sprite {
 public:
     Platform(float x, float y, Graphics &graphics);
     ~Platform();
+    
     void draw(Graphics &graphics);
-    void update(float elapsedTime);
+    void fixedUpdate(float fixedTime);
     void addSpring(bool lOrR, Graphics &graphics);
     void deleteSpring();
     void shift(float y);
     void setY(float y);
     void setX(float x);
     bool hasSpring();
+    
     std::pair<bool, bool> checkPlatformCollision(float playerX, float playerY);
     std::string getType();
 private:

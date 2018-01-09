@@ -22,7 +22,7 @@ public:
 private:
     void gameLoop();
     void draw();
-    void update(float elsapedTime);
+    void update( );
     void fixedUpdate(float fixedTime);
     Player* _player;
     World* _world;

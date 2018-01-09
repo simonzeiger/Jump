@@ -27,11 +27,14 @@ public:
     Sprite(Graphics &graphics, const std::string filePath, int sourceX, int sourceY, int width, int height,
            float posX, float posY);
     virtual ~Sprite();
-    
-    virtual void update();
-    
     void draw(Graphics &graphics, int x, int y, int scale);
     static void addTexture(std::string name, SDL_Texture* texture);
+    int width();
+    int getX() const;
+    int getY() const;
+    void setX(float x);
+    void setY(float y);
+    
 protected:
 
     SDL_Rect _sourceRect;

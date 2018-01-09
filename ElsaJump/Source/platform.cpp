@@ -36,9 +36,9 @@ void Platform::draw(Graphics &graphics){
 
 }
 
-void Platform::update(float elapsedTime){
+void Platform::fixedUpdate(float elapsedTime){
     if(_spring != nullptr)
-        _spring->update(elapsedTime);
+        _spring->fixedUpdate(elapsedTime);
 }
 
 void Platform::addSpring(bool lOrR, Graphics &graphics) {
