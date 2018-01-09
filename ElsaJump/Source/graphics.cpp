@@ -19,11 +19,18 @@ Graphics::Graphics() {
     
     IMG_Init(IMG_INIT_PNG);
     
-    if (SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 0, &_window, &_renderer)) {
+    _window = SDL_CreateWindow("Elsa Jump", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+    
+    _glContext = SDL_GL_CreateContext(_window);
+    SDL_GL_SetSwapInterval(1);
+    
+    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    
+    /*if (SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_OPENGL, &_window, &_renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
-    }
+    }*/
     
-    
+
     // Select the color for drawing. It is set to blue here.
     SDL_SetRenderDrawColor(_renderer, 130, 166, 233, 255);
     

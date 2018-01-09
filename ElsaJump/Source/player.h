@@ -6,12 +6,12 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#ifndef player_hpp
-#define player_hpp
+#ifndef player_h
+#define player_h
 
 #include "animatedsprite.h"
 #include "globals.h"
-#include "platform.h"
+#include "collidables.h"
 
 class Graphics;
 
@@ -48,7 +48,6 @@ public:
     float getDY() const;
     
     
-    bool _isDead;
     
     int checkPlatformCollisions(Platform** platforms, int nPlatforms);
     
@@ -60,10 +59,16 @@ public:
     
     void animationStateMachine();
     
+    bool isDead();
+    
+    void revive();
+    
 private:
     float _dx, _dy;
     bool _hasShield;
     bool _maxJumpHeightReached;
+    bool _isDead;
+
     Direction _facing;
 
 };

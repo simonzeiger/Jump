@@ -6,8 +6,8 @@
 //  Copyright © 2018 Simón Zeiger. All rights reserved.
 //
 
-#ifndef input_hpp
-#define input_hpp
+#ifndef input_h
+#define input_h
 
 #include <map>
 #include <SDL2/SDL.h>

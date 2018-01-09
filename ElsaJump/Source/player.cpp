@@ -179,6 +179,10 @@ void Player::draw(Graphics &graphics) {
     AnimatedSprite::draw(graphics, _x, _y);
 }
 
+bool Player::isDead() {
+    return _isDead;
+}
+
 int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
     for(int i = 0; i < nPlatforms; i++){
         std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
@@ -191,7 +195,7 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
 }
    
 void Player::killed(){
-    //_isDead = true;
+    _isDead = true;
     _y = globals::SCREEN_HEIGHT + 40;
     _x = globals::SCREEN_WIDTH / 2;
     _dy = -player_constants::JUMP_SPEED;
@@ -203,6 +207,10 @@ void Player::shift(float amt){
 
 float Player::getDY() const{
     return _dy;
+}
+
+void Player::revive(){
+    _isDead = false;
 }
 
 

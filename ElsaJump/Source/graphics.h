@@ -6,8 +6,8 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#ifndef graphics_hpp
-#define graphics_hpp
+#ifndef graphics_h
+#define graphics_h
 
 /* Graphics class
  * Holds all information dealing with graphics for the game
@@ -56,6 +56,7 @@ public:
 private:
     SDL_Window* _window;
     SDL_Renderer* _renderer;
+    SDL_GLContext _glContext;
     
     std::map<std::string, SDL_Surface*> _spriteSheets;
 };

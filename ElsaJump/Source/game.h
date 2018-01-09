@@ -6,10 +6,11 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#ifndef game_hpp
-#define game_hpp
+#ifndef game_h
+#define game_h
 
 #include "player.h"
+#include "numsprite.h"
 #include "world.h"
 #include "graphics.h"
 
@@ -27,6 +28,8 @@ private:
     Player* _player;
     World* _world;
     Graphics* _graphics;
+    static const int _nNumSprites = 10;
+    NumSprite* _numSprites[_nNumSprites];
 };
 
 #endif /* game_hpp */

@@ -6,8 +6,8 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-#ifndef animatedsprite_hpp
-#define animatedsprite_hpp
+#ifndef animatedsprite_h
+#define animatedsprite_h
 
 #include <map>
 #include <string>

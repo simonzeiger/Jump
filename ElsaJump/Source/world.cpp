@@ -48,11 +48,13 @@ void World::update( ){
             _player->jump(y);
             if(y < 0){
                 y*= -1;
-                shift(y);
+                shift();
+                _prevPlayerY = y;
             } else if(static_cast<int>(_prevPlayerY) > y) {
-                shift(y);
+                shift();
+                _prevPlayerY = y;
             }
-            _prevPlayerY = y;
+            
             
         }
     }
@@ -74,7 +76,6 @@ void World::fixedUpdate(float fixedTime){
         _clouds[i]->fixedUpdate(fixedTime);
         if(_clouds[i]->getX() <= 0 || _clouds[i]->getX() + _clouds[i]->width() * globals::SPRITE_SCALE >= globals::SCREEN_WIDTH)
             getNextCloudPos();
-        
 
     }
     
@@ -101,7 +102,7 @@ void World::fixedUpdate(float fixedTime){
             }
             
             for(int i = 0; i < MAX_CLOUDS; i++){
-                _clouds[i]->shift(_shiftDistance/2);
+                _clouds[i]->shift(_shiftDistance/3);
                 if(_clouds[i]->getY() > globals::SCREEN_HEIGHT + 50){
                     resetCloud(_clouds[i]);
                 }
@@ -135,6 +136,10 @@ void World::draw(){
     _player->draw(*_graphics);
 
     
+}
+
+int World::score() {
+    return static_cast<int>(_score);
 }
 
 Platform** World::platforms() {
@@ -233,12 +238,15 @@ void World::resetAll(){
     }
     
     _nPlatforms = 0;
+    _score = 0;
     initPlatforms();
     _topCloud = nullptr;
     initClouds();
+    _player->revive();
+
 }
 
-void World::shift(float y){
+void World::shift(){
     _shifting = true;
     _shiftCount = 0;
     

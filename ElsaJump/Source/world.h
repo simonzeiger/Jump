@@ -6,11 +6,11 @@
 //  Copyright © 2018 Simón Zeiger. All rights reserved.
 //
 
-#ifndef background_hpp
-#define background_hpp
+#ifndef background_h
+#define background_h
 
 #include "graphics.h"
-#include "platform.h"
+#include "collidables.h"
 #include "player.h"
 #include "cloud.h"
 #include "globals.h"
@@ -24,9 +24,9 @@ public:
     void fixedUpdate(float fixedTime);
     Platform** platforms();
     int nPlatforms() const;
-    void shift(float y);
+    int score();
 private:
-    
+    void shift();
     void addPlatform(int x, int y);
     void initPlatforms();
     void resetPlatform(Platform* platform);
@@ -41,7 +41,7 @@ private:
     static const int MAX_CLOUDS = 10;
     Cloud* _clouds[MAX_CLOUDS];
     
-    int _score;
+    float _score;
     int _nPlatforms;
     bool _shifting;
     float _shiftCount;

@@ -8,8 +8,8 @@
 
 //TODO: Figure out if a defualt constructor is necessary
 
-#ifndef sprite_hpp
-#define sprite_hpp
+#ifndef sprite_h
+#define sprite_h
 
 #include <SDL2/SDL.h>
 
@@ -24,7 +24,7 @@ class Graphics;
 
 class Sprite {
 public:
-    Sprite(Graphics &graphics, const std::string filePath, int sourceX, int sourceY, int width, int height,
+    Sprite(Graphics &graphics, const std::string name, int sourceX, int sourceY, int width, int height,
            float posX, float posY);
     virtual ~Sprite();
     void draw(Graphics &graphics, int x, int y, int scale);

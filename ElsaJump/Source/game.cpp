@@ -27,11 +27,18 @@ Game::Game(){
     Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
     Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
     Sprite::addTexture("Cloud",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Cloud.png")));
+    Sprite::addTexture("Nums",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/NumSheet.png")));
     // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics.renderer(), _graphics.loadImage( "Content/Sprites/Platform")));
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
     
+    for(int i = 0; i < _nNumSprites; i++){
+        _numSprites[i] = new NumSprite(*_graphics, globals::SCREEN_WIDTH - 40 - 32 * i, 16);
+        _numSprites[i]->num = -1;
+        if(i == 0)
+            _numSprites[i]->num = 0;
+    }
     
     
     gameLoop();
@@ -44,9 +51,8 @@ Game::~Game(){
 void Game::gameLoop(){
 
     SDL_Event event;
-    Input input;
     
-    int LAST_UPDATE_TIME = SDL_GetTicks();
+    int lastUpdateTime = SDL_GetTicks();
     
     //start game loop
     
@@ -57,50 +63,40 @@ void Game::gameLoop(){
 
     for(;;){
         
-        input.beginNewFrame();
-        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+       
 
-        SDL_PollEvent(&event);
-        if (event.type == SDL_QUIT) {
-            break;
-        }
+       
         
-        //movement
-        if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
-            _player->moveLeft();
-        }
-        else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
-            _player->moveRight();
-        } else {
-            _player->stopMoving();
-        }
-      
-        const int CURRENT_TIME_MS = SDL_GetTicks();
-        const int ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
-        int elapsedTime = ELAPSED_TIME;
+        const int CURRENT_TIME = SDL_GetTicks();
+        int elapsedTime = CURRENT_TIME - lastUpdateTime;
         
         for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
-           
+            SDL_PollEvent(&event);
+            if (event.type == SDL_QUIT) {
+                return;
+            }
+            
             float dt = std::min(elapsedTime,MAX_FRAME_TIME); // std::min(elapsedTime, MAX_FRAME_TIME);
             fixedUpdate(dt);
             elapsedTime -= dt;
+            lastUpdateTime += dt;
             //secondTimer += dt;
+
         }
-       
+        
         update();
 
-       // frames++;
-        
         draw();
                 
        /* if(secondTimer > 1000){
             printf("%d\n", frames);
             frames = 0;
             secondTimer = 0;
-        }*/
-        
+        } else {
+            //frames++;
+        }
+        */
 
-        LAST_UPDATE_TIME = CURRENT_TIME_MS;
 
       
         
@@ -113,10 +109,41 @@ void Game::draw(){
 
     _world->draw();
     
+    for(int i = 0; i < _nNumSprites; i++){
+        _numSprites[i]->draw(*_graphics);
+    }
+    
     _graphics->flip();
 }
 
 void Game::update(){
+    
+     const Uint8* keystate = SDL_GetKeyboardState(NULL);
+    
+    //movement
+    if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
+        _player->moveLeft();
+    }
+    else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+        _player->moveRight();
+    } else {
+        _player->stopMoving();
+    }
+    
+    if(_world->score() > 0){
+        for (int i = 0; i < ((int)(log10(_world->score())+1)); i++){
+            _numSprites[i]->num = ((int)( _world->score() / pow(10 , i)) % 10);
+        }
+    } else {
+        for (int i = 0; i < _nNumSprites; i++){
+            _numSprites[i]->num = -1;
+            if(i ==0)
+                _numSprites[i]->num = 0;
+        }
+    }
+    
+    
+    
     
     _world->update();
     
@@ -124,8 +151,11 @@ void Game::update(){
 }
 
 void Game::fixedUpdate(float fixedTime) {
-  
+    
+    //SDL_Delay(10); //for reducing fps for testing
     _world->fixedUpdate(fixedTime);
+    
+   
     
 }
 
