@@ -156,8 +156,8 @@
 				F4FCD3941FFB85A0009E9B3E /* collidable.cpp */,
 				F4BBABF21FFF6A3600ABB340 /* spring.h */,
 				F4BBABF11FFF6A3600ABB340 /* spring.cpp */,
-				F40FBD552003133400D403AC /* input.cpp */,
 				F40FBD562003133400D403AC /* input.h */,
+				F40FBD552003133400D403AC /* input.cpp */,
 			);
 			path = Source;
 			sourceTree = "<group>";

@@ -73,7 +73,8 @@ void AnimatedSprite::update(int elapsedTime) {
 }
 
 void AnimatedSprite::draw(Graphics &graphics, int x, int y, int scale) {
-    if (_visible) {
+    
+    if (_visible && _y + _height * scale > -20) {
         SDL_Rect destinationRectangle;
         destinationRectangle.x = x;
         destinationRectangle.y = y;

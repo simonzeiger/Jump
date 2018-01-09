@@ -26,11 +26,7 @@ public:
     void shift(float y);
 private:
     static const int MAX_PLATFORMS = 15;
-    static const int MAX_DISTANCE = 178;
-    static const int MAX_SPRING_DISTANCE = 600;
-    static const int MIN_DISTANCE = 25;
-    static const int SPRING_PROBABILITY = 10;
-    
+
     Platform* _platforms[MAX_PLATFORMS];
     int _nPlatforms;
     bool _shifting;

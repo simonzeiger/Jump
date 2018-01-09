@@ -11,6 +11,12 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
+const int SHIFT_DELAY = 3; // 3.5
+const int MAX_DISTANCE = 178;
+const int MAX_SPRING_DISTANCE = 600;
+const int MIN_DISTANCE = 25;
+const int SPRING_PROBABILITY = 10;
+
 World::World(Player* player, Graphics* graphics) :
 _player(player),
 _graphics(graphics)
@@ -27,7 +33,6 @@ _graphics(graphics)
 }
 
 void World::update(float elapsedTime){
-    //lerpy but actually simple
     
     _player->update(elapsedTime);
     
@@ -60,12 +65,13 @@ void World::update(float elapsedTime){
 
 void World::fixedUpdate(float fixedTime){
     
+    //lerpy but actually simple
     if(_shifting){
         
         
         _shiftCount += fixedTime;
         
-        if(_shiftCount > _prevPlayerY / 3.5){
+        if(_shiftCount > _prevPlayerY / SHIFT_DELAY){
             _shiftDistance = -_player->getDY() * fixedTime;
             
             
@@ -139,7 +145,7 @@ Vector2<int> World::getNextPlatformPos(){
     else if(_topPlatform->hasSpring())
         randY = globals::randInt(MIN_DISTANCE, globals::randInt(0,2) == 1 ? MAX_SPRING_DISTANCE : MAX_DISTANCE);
     else
-        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE);
+        randY = globals::randInt(MIN_DISTANCE, MAX_DISTANCE); //farther away as score goes up
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH - 80);
     

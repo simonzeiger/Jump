@@ -41,13 +41,11 @@ Game::~Game(){
 }
 
 void Game::gameLoop(){
-    
-   
-    
+
     SDL_Event event;
     Input input;
     
-    int LAST_UPDATE_TIME = SDL_GetTicks();
+    long long LAST_UPDATE_TIME = SDL_GetPerformanceCounter();
     
     //start game loop
     
@@ -76,19 +74,20 @@ void Game::gameLoop(){
             _player->stopMoving();
         }
       
-        const int CURRENT_TIME_MS = SDL_GetTicks();
-        const int ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
-        int elapsedTime = ELAPSED_TIME;
-        
+        const long long CURRENT_TIME_MS = SDL_GetPerformanceCounter();
+        const long long ELAPSED_TIME = CURRENT_TIME_MS - LAST_UPDATE_TIME;
+        long long elapsedTime = ELAPSED_TIME;
+        long freq = SDL_GetPerformanceFrequency();
         
         for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
-            float dt = std::min(elapsedTime, MAX_FRAME_TIME);
+            elapsedTime = 1000 * elapsedTime / freq;
+            float dt = elapsedTime < MAX_FRAME_TIME ? elapsedTime : MAX_FRAME_TIME; // std::min(elapsedTime, MAX_FRAME_TIME);
             fixedUpdate(dt);
             elapsedTime -= dt;
         }
        
         //TODO: this uses an outdated elapsedtime, so animations might be wack with low framerates?
-        update(ELAPSED_TIME);
+        update(1000 * ELAPSED_TIME / freq);
         LAST_UPDATE_TIME = CURRENT_TIME_MS;
 
        // frames++;

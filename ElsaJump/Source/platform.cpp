@@ -13,7 +13,7 @@ using std::cout;
 using std::endl;
 
 Platform::Platform(float x, float y, Graphics &graphics) :
-Collidable(x, y, 65, 0),
+Collidable(x, y, 64, 0),
 Sprite(graphics, "Elsa", 0, 0, 65, 0, x, y)
 {
     _spring = nullptr;
@@ -26,10 +26,13 @@ Platform::~Platform(){
 }
 
 void Platform::draw(Graphics &graphics){
-    SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(graphics.renderer(), Sprite::_x, Sprite::_y, Sprite::_x + Sprite::_width, Sprite::_y);
-    if(_spring != nullptr)
-        _spring->draw(graphics);
+    if(Collidable::_y + Collidable::_height > -20){
+        SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderDrawLine(graphics.renderer(), Sprite::_x, Sprite::_y, Sprite::_x + Sprite::_width, Sprite::_y);
+        if(_spring != nullptr)
+            _spring->draw(graphics);
+    }
+    
 
 }
 

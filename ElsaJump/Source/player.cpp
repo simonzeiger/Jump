@@ -42,6 +42,9 @@ void Player::setupAnimations() {
     addAnimation(3, 0, 32, "JumpRight", 16, 16);
     addAnimation(3, 0, 0, "ChillLeft", 16, 16);
     addAnimation(3, 0, 16, "ChillRight", 16, 16);
+    addAnimation(1, 48, 0, "NoHairAnimRight", 16, 16);
+    addAnimation(1, 48, 16, "NoHairAnimLeft", 16, 16);
+
   
 }
 
@@ -89,17 +92,60 @@ void Player::jump(float y) {
 
 }
 
+void Player::animationStateMachine(){
+    
+    if(_currentAnimation == "JumpLeft" || _currentAnimation == "JumpRight"){
+        if(_facing == LEFT){
+            if(_dy > -.25)
+                playAnimation("NoHairAnimLeft");
+            else
+                playAnimation("JumpLeft");
+            
+        } else {
+            if(_dy > -.25)
+                playAnimation("NoHairAnimRight");
+            else
+                playAnimation("JumpRight");
+        }
+        
+    } else if(_currentAnimation == "ChillLeft") {
+        if(_facing == RIGHT)
+            playAnimation("ChillRight");
+        
+    } else if(_currentAnimation == "ChillRight") {
+        if(_facing == LEFT)
+            playAnimation("ChillLeft");
+        
+    } else if (_currentAnimation == "NoHairAnimRight" || _currentAnimation == "NoHairAnimLeft") {
+        if(_facing == RIGHT){
+            if(_dy > .25)
+                playAnimation("ChillRight");
+            else
+                playAnimation("NoHairAnimRight");
+            
+        } else {
+            if(_dy > .25)
+                playAnimation("ChillLeft");
+            else
+                playAnimation("NoHairAnimLeft");
+        }
+        
+        
+    }
+    
+
+    
+}
 
 void Player::update(float elapsedTime) {
     
-    if(!_isDead){
-        
-        if(_dy > 0){
-            _isJumping = false;
-            
-        }
+    
+    if(_dy > 0){
+        _isJumping = false;
         
     }
+    
+    animationStateMachine();
     
     
     //screen edges
@@ -109,13 +155,18 @@ void Player::update(float elapsedTime) {
         _x = globals::SCREEN_WIDTH - 20;
     
     
+    
+    
+    
+    
+  
     AnimatedSprite::update(elapsedTime);
 }
 
+
 void Player::fixedUpdate(float fixedTime){
     
-    if(!_isDead){
-        
+    
         
         //Apply gravity
         _dy += player_constants::GRAVITY * fixedTime;
@@ -124,23 +175,12 @@ void Player::fixedUpdate(float fixedTime){
         
         //Move by dy
         _y += _dy * fixedTime;
-        
-        if(_dy > 0){
-            _isJumping = false;
-        }
-        
-        if(_dy > -.25){
-            if(_facing == LEFT)
-                playAnimation("ChillLeft");
-            else
-                 playAnimation("ChillRight");
-        }
             
         
         //Move by dx
         _x += _dx * fixedTime;
         
-    }
+    
     
 }
 

@@ -61,7 +61,8 @@ public:
     bool _isJumping;
 
     void shift(float amt);
-
+    
+    void animationStateMachine();
     
 private:
     float _dx, _dy;
