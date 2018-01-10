@@ -158,8 +158,9 @@ int World::nPlatforms() const {
 void World::addPlatform(int x, int y){
     if(_nPlatforms < MAX_PLATFORMS){
         _platforms[_nPlatforms] = new Platform(x, y, *_graphics);
-        if(globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1)
+        if(globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1){
             _platforms[_nPlatforms]->addSpring(globals::randInt(0, 1), *_graphics);
+        }
         _nPlatforms++;
     } else {
         printf("Exceeds max platforms\n");
@@ -167,12 +168,17 @@ void World::addPlatform(int x, int y){
 }
 
 void World::initPlatforms(){
-    for(int i = 0; i < MAX_PLATFORMS; i++){
+    for(int i = 0; i < 1; i++){
         Vector2<int> nextPos = getNextPlatformPos();
-        if(i == 0)
-            printf("X: %d Y:%d\n", nextPos.X, nextPos.Y);
+        if(i == 0){
+            nextPos.Y = 551;
+        }
+        
         addPlatform(nextPos.X, nextPos.Y);
         _topPlatform = _platforms[_nPlatforms - 1];
+        if(i == 0 ){
+            
+        }
 
     }
 }

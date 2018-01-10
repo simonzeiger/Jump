@@ -51,7 +51,9 @@ public:
     bool isMoving();
     void setupAnimations();
     void animationDone(std::string currentAnimation);
-    
+    bool isReal();
+    bool isOnlyOnce();
+
     void enableOnlyOnce();
     void enableMoving(float speed);
     void makeFake();

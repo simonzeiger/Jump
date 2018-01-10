@@ -102,7 +102,7 @@ void Game::gameLoop(){
             }
             
             float dt = std::min(elapsedTime,MAX_FRAME_TIME); // std::min(elapsedTime, MAX_FRAME_TIME);
-            fixedUpdate(dt);
+            fixedUpdate(dt * 1.5);
             elapsedTime -= dt;
             lastUpdateTime += dt;
             //secondTimer += dt;

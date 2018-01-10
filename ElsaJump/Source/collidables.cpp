@@ -74,6 +74,7 @@ AnimatedSprite(graphics, "Platform", 0, 0, 64, 64, x, y, 100)
     _spring = nullptr;
     _isMoving = false;
     _onlyOnce = false;
+    _destroyOnce = false;
     _fake = false;
     setupAnimations();
     playAnimation("Normal");
@@ -99,10 +100,12 @@ void Platform::animationDone(std::string currentAnimation){
 }
 
 void Platform::draw(Graphics &graphics){
-    if(!_destroyOnce && Collidable::_y + Collidable::_height > -Sprite::_height){
+    if(!_destroyOnce && Collidable::_y + Collidable::_height > -AnimatedSprite::_height){
         AnimatedSprite::draw(graphics, Collidable::_x, Collidable::_y, globals::PLATFORM_SCALE);
         if(_spring != nullptr)
             _spring->draw(graphics);
+    } else {
+        printf("No draw %d\n", _destroyOnce);
     }
     
     
@@ -136,6 +139,16 @@ void Platform::enableMoving(float speed){
     _isMoving = true;
     _dx = globals::randInt(0, 1) ? -speed : speed;
 }
+
+bool Platform::isReal() {
+    return !_fake;
+}
+
+bool Platform::isOnlyOnce() {
+    return _onlyOnce;
+}
+
+
 
 void Platform::disableMoving(){
     _isMoving = false;
