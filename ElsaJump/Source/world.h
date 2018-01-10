@@ -37,7 +37,7 @@ private:
     void resetCloud(Cloud* cloud);
     Vector2<int> getNextCloudPos();
     
-    static const int MAX_PLATFORMS = 15;
+    static const int MAX_PLATFORMS = 25;
     Platform* _platforms[MAX_PLATFORMS];
     static const int MAX_CLOUDS = 10;
     Cloud* _clouds[MAX_CLOUDS];

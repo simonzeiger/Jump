@@ -19,10 +19,11 @@ public:
     virtual bool checkCollision(float playerX, float playerY);
     virtual void setY(float y);
     virtual void setX(float x);
+    float getX();
     virtual void shift(float y);
     virtual std::string getType() = 0;
     
-    int getWidth();
+    int getCollidableWidth();
 protected:
     float _x, _y;
     int _width, _height;
@@ -40,19 +41,27 @@ public:
     ~Platform();
     
     void draw(Graphics &graphics);
-    void fixedUpdate(float fixedTime);
+    virtual void fixedUpdate(float fixedTime);
     void addSpring(bool lOrR, Graphics &graphics);
     void deleteSpring();
     void shift(float y);
     void setY(float y);
     void setX(float x);
     bool hasSpring();
+    bool isMoving();
+
+    void enableMoving(float speed);
+    void disableMoving();
     
     std::pair<bool, bool> checkPlatformCollision(float playerX, float playerY);
-    std::string getType();
+    virtual std::string getType();
 private:
     Collidable* _spring;
+    bool _isMoving;
+    float _dx;
 };
+
+
 
 #include "animatedsprite.h"
 
@@ -67,6 +76,7 @@ public:
     void shift(float y);
     void setX(float x);
     void setY(float y);
+    void getX();
     std::string getType();
 private:
     

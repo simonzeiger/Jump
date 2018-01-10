@@ -52,6 +52,14 @@ void Collidable::shift(float y){
     _y += y;
 }
 
+int Collidable::getCollidableWidth() {
+    return _width;
+}
+
+float Collidable::getX() {
+    return _x;
+}
+
 
 //Platform
 #include <iostream>
@@ -61,9 +69,10 @@ using std::endl;
 
 Platform::Platform(float x, float y, Graphics &graphics) :
 Collidable(x, y, 64, 0),
-Sprite(graphics, "Elsa", 0, 0, 65, 0, x, y)
+Sprite(graphics, "Platform", 0, 0, 64, 64, x, y)
 {
     _spring = nullptr;
+    _isMoving = false;
 }
 
 
@@ -73,9 +82,8 @@ Platform::~Platform(){
 }
 
 void Platform::draw(Graphics &graphics){
-    if(Collidable::_y + Collidable::_height > -20){
-        SDL_SetRenderDrawColor(graphics.renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawLine(graphics.renderer(), Sprite::_x, Sprite::_y, Sprite::_x + Sprite::_width, Sprite::_y);
+    if(Collidable::_y + Collidable::_height > -Sprite::_height){
+        Sprite::draw(graphics, Collidable::_x, Collidable::_y, globals::PLATFORM_SCALE);
         if(_spring != nullptr)
             _spring->draw(graphics);
     }
@@ -83,9 +91,41 @@ void Platform::draw(Graphics &graphics){
     
 }
 
-void Platform::fixedUpdate(float elapsedTime){
+void Platform::fixedUpdate(float fixedTime){
+    if(_isMoving){
+        float end = globals::SCREEN_WIDTH - getCollidableWidth();
+        if(Collidable::_x >= end) {
+            _dx *= -1;
+            Collidable::_x = end - 1;
+            Sprite::_x = end - 1;
+        } else if  (Collidable::_x <= 0) {
+            _dx *= -1;
+            Collidable::_x = 1;
+            Sprite::_x = 1;
+            
+        }
+        Collidable::_x += _dx * fixedTime;
+        Sprite::_x += _dx * fixedTime;
+         if(_spring != nullptr)
+             _spring->setX( _spring->getX() + _dx * fixedTime);
+    }
+    
     if(_spring != nullptr)
-        _spring->fixedUpdate(elapsedTime);
+        _spring->fixedUpdate(fixedTime);
+}
+
+void Platform::enableMoving(float speed){
+    _isMoving = true;
+    _dx = globals::randInt(0, 1) ? -speed : speed;
+}
+
+void Platform::disableMoving(){
+    _isMoving = false;
+    
+}
+
+bool Platform::isMoving() {
+    return _isMoving;
 }
 
 void Platform::addSpring(bool lOrR, Graphics &graphics) {
@@ -144,7 +184,7 @@ void Platform::setY(float y){
 
 Spring::Spring(float x, float y, Graphics &graphics) :
 Collidable(x, y, 32, 32),
-AnimatedSprite(graphics, "Spring", 0, 0, 32, 32, x, y, 100)
+AnimatedSprite(graphics, "Spring", 0, 0, 32, 32, x, y, 50)
 {
     Collidable::_x = x;
     Collidable::_y = y;
@@ -186,7 +226,6 @@ void Spring::shift(float y){
 }
 
 void Spring::setX(float x){
-    playAnimation("Smoll");
     Collidable::setX(x);
     AnimatedSprite::_x = x;
 }

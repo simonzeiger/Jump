@@ -16,6 +16,7 @@ namespace globals {
     const int SCREEN_WIDTH = 480;
     const int SCREEN_HEIGHT = 640;
     const int SPRITE_SCALE = 3;
+    const int PLATFORM_SCALE = 1;
     static int randInt(int min, int max);
 }
 
@@ -47,6 +48,9 @@ public:
 };
 
 static int globals::randInt(int min, int max){
+    if( min > max){
+        std::swap(min, max);
+    }
     static std::random_device rd;
     static std::mt19937 generator(rd());
     std::uniform_int_distribution<> distro(min, max);

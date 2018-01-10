@@ -14,6 +14,11 @@
 #include <fstream>
 #include <SDL2/SDL.h>
 
+using std::string;
+using std::vector;
+using std::pair;
+
+
 namespace {
     const int FPS = 60;
     const int MAX_FRAME_TIME = 1000 / FPS;
@@ -27,11 +32,12 @@ Game::Game(){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
     _graphics = new Graphics;
+    
     Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
     Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
     Sprite::addTexture("Cloud",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Cloud.png")));
     Sprite::addTexture("Nums",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/NumSheet.png")));
-    // Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics.renderer(), _graphics.loadImage( "Content/Sprites/Platform")));
+    Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Platform.png")));
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
@@ -49,12 +55,17 @@ Game::Game(){
     printf("%s\n", _path.c_str());
     
     std::ifstream load( _path);
-    std::string scoreString;
-    std::string name;
+    string scoreString;
+    string name;
     
     while( load >> scoreString >> name){
-        printf("%s %s\n", scoreString.c_str(), name.c_str());
-        _highScores.push_back(std::pair<std::string, int>( name, stoi(scoreString)));
+        _highScores.push_back(pair<string, int>( name, stoi(scoreString)));
+    }
+    std::sort(_highScores.begin(), _highScores.end());
+    
+    for(int i = 0; i < _highScores.size(); i++){
+        printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
+
     }
     
     gameLoop();
@@ -155,8 +166,11 @@ void Game::update(){
         
         std::ofstream myfile (_path, std::ios_base::app);
         if (myfile.is_open()){
-            myfile << _world->score() << " " << _playerName << "\n";
-            myfile.close();
+            if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
+                _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
+                myfile << _world->score() << " " << _playerName << "\n";
+                myfile.close();
+            }
         }
         else
             printf("Unable to open file\n");
@@ -166,9 +180,7 @@ void Game::update(){
         
     }
     
-    
-    
-    
+
     _world->update();
     
     

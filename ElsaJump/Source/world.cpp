@@ -13,9 +13,9 @@
 #include <SDL2/SDL.h>
 
 const int SHIFT_DELAY = 3.5; // 3.5
-const int MAX_DISTANCE = 178;
+const int MAX_DISTANCE = 178    ;
 const int MAX_SPRING_DISTANCE = 600;
-const int MIN_DISTANCE = 25;
+const int MIN_DISTANCE = 35;
 const int SPRING_PROBABILITY = 10;
 
 
@@ -155,6 +155,7 @@ int World::nPlatforms() const {
 void World::addPlatform(int x, int y){
     if(_nPlatforms < MAX_PLATFORMS){
         _platforms[_nPlatforms] = new Platform(x, y, *_graphics);
+        _platforms[_nPlatforms]->enableMoving(.1);
         if(globals::randInt(1, SPRING_PROBABILITY) == 1)
             _platforms[_nPlatforms]->addSpring(globals::randInt(0, 1), *_graphics);
         _nPlatforms++;
@@ -192,13 +193,53 @@ Vector2<int> World::getNextPlatformPos(){
     if (_nPlatforms == 0)
         randY = globals::randInt(120, MAX_DISTANCE);
     else if(_topPlatform->hasSpring())
-        randY = globals::randInt(MIN_DISTANCE, globals::randInt(1,6) == 1 ? MAX_SPRING_DISTANCE * .7 : MAX_DISTANCE * 1.4);
+        randY = globals::randInt(0, globals::randInt(1,6) == 1 ? MAX_SPRING_DISTANCE * .7 : MAX_DISTANCE * 1.4);
     else
-        randY = globals::randInt(MIN_DISTANCE, globals::randInt(1,4) == 1 ? MAX_DISTANCE: MAX_DISTANCE / 2); //TODO: farther away as score goes up
+        randY = globals::randInt(0, globals::randInt(1,4) == 1 ? MAX_DISTANCE: MAX_DISTANCE / 2); //TODO: farther away as score goes up
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
     
-    return Vector2<int>{randX, prevY - randY};
+    if(randY < MIN_DISTANCE){
+        
+        //TODO: Figure out when randX to be invalid can be negative and stop it from happening (everytime randInt swaps)
+        int prevX;
+        
+        if(_topPlatform != nullptr)
+            prevX = static_cast<Collidable*>(_topPlatform)->getX();
+        else
+            prevX = globals::SCREEN_WIDTH / 2;
+        
+        if(globals::SCREEN_WIDTH - prevX < 2 * _topPlatform->getCollidableWidth()){
+           randX = globals::randInt(0, prevX - _topPlatform->getCollidableWidth() - 10);
+            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0)
+                printf("1 Bad plat: Randx %d prevX %d\n", randX, prevX);
+            
+        }else if(prevX < _topPlatform->getCollidableWidth() + 13){
+            randX = globals::randInt(prevX + _topPlatform->getCollidableWidth()  + 10, globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth() - 10);
+            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0)
+                printf("2 Bad plat: Randx %d prevX %d\n", randX, prevX);
+            
+        }else{
+            bool isLeft = globals::randInt(0, 1);
+            randX = isLeft ?  globals::randInt(0, prevX - _topPlatform->getCollidableWidth() -11) : globals::randInt(prevX + _topPlatform->getCollidableWidth() + 10, globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth() - 10);
+            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0){
+               if(isLeft) printf("3L Bad plat: Randx %d prevX %d\n", randX, prevX);
+               else
+                   printf("3L Bad plat: Randx %d prevX %d\n", randX, prevX);
+            }
+           
+        }
+        
+       
+
+        
+    }
+    
+   
+    
+    randY = prevY - randY;
+        
+    return Vector2<int>{randX, randY};
 }
 
 Vector2<int> World::getNextCloudPos() {

@@ -185,10 +185,12 @@ bool Player::isDead() {
 
 int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
     for(int i = 0; i < nPlatforms; i++){
-        std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
-        //return neg number if hit a spring
-        if(collision.first){
-            return !collision.second ? platforms[i]->getY() : -platforms[i]->getY();
+        if(platforms[i]->getY() > 0){
+            std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
+            //return neg number if hit a spring
+            if(collision.first){
+                return !collision.second ? platforms[i]->getY() : -platforms[i]->getY();
+            }
         }
     }
     return -10000;
