@@ -69,10 +69,14 @@ using std::endl;
 
 Platform::Platform(float x, float y, Graphics &graphics) :
 Collidable(x, y, 64, 0),
-Sprite(graphics, "Platform", 0, 0, 64, 64, x, y)
+AnimatedSprite(graphics, "Platform", 0, 0, 64, 64, x, y, 100)
 {
     _spring = nullptr;
     _isMoving = false;
+    _onlyOnce = false;
+    _fake = false;
+    setupAnimations();
+    playAnimation("Normal");
 }
 
 
@@ -81,9 +85,22 @@ Platform::~Platform(){
     
 }
 
+void Platform::setupAnimations() {
+    addAnimation(1, 0, 0, "Normal", 64, 64);
+    addAnimation(1, 0, 64, "Cracked", 64, 64);
+    addAnimation(2, 64, 64, "Break", 64, 64);
+    addAnimation(1, 128, 64, "FullyBroken", 64, 64);
+}
+
+void Platform::animationDone(std::string currentAnimation){
+    if(currentAnimation == "Break")
+        playAnimation("FullyBroken");
+        
+}
+
 void Platform::draw(Graphics &graphics){
-    if(Collidable::_y + Collidable::_height > -Sprite::_height){
-        Sprite::draw(graphics, Collidable::_x, Collidable::_y, globals::PLATFORM_SCALE);
+    if(!_destroyOnce && Collidable::_y + Collidable::_height > -Sprite::_height){
+        AnimatedSprite::draw(graphics, Collidable::_x, Collidable::_y, globals::PLATFORM_SCALE);
         if(_spring != nullptr)
             _spring->draw(graphics);
     }
@@ -92,6 +109,7 @@ void Platform::draw(Graphics &graphics){
 }
 
 void Platform::fixedUpdate(float fixedTime){
+    AnimatedSprite::fixedUpdate(fixedTime);
     if(_isMoving){
         float end = globals::SCREEN_WIDTH - getCollidableWidth();
         if(Collidable::_x >= end) {
@@ -128,6 +146,33 @@ bool Platform::isMoving() {
     return _isMoving;
 }
 
+void Platform::enableOnlyOnce() {
+    _onlyOnce = true;
+    _destroyOnce = false;
+}
+
+void Platform::disableOnlyOnce() {
+    _onlyOnce = false;
+    _destroyOnce = false;
+}
+
+void Platform::makeFake() {
+    _fake = true;
+    playAnimation("Cracked");
+}
+
+void Platform::reset() {
+    deleteSpring();
+    disableMoving();
+    disableOnlyOnce();
+    makeReal();
+}
+
+void Platform::makeReal(){
+    _fake = false;
+    playAnimation("Normal");
+}
+
 void Platform::addSpring(bool lOrR, Graphics &graphics) {
     if(_spring == nullptr){
         float x = lOrR? Collidable::_x : Collidable::_x + Collidable::_width - 32;
@@ -141,13 +186,17 @@ void Platform::deleteSpring() {
 }
 
 std::pair<bool, bool> Platform::checkPlatformCollision(float playerX, float playerY) {
-    bool spring = _spring != nullptr;
-    bool platform = Collidable::checkCollision(playerX, playerY);
-    if(spring)
-        spring = _spring->checkCollision(playerX, playerY);
-    //if(platform && spring) printf("%d ", spring);
-    
-    return std::pair<bool, bool> (platform, spring);
+    if(!_destroyOnce && !_fake){
+        
+        bool spring = _spring != nullptr;
+        bool platform = Collidable::checkCollision(playerX, playerY);
+        if(spring)
+            spring = _spring->checkCollision(playerX, playerY);
+        if(_onlyOnce && platform) _destroyOnce = true;
+        return std::pair<bool, bool> (platform, spring);
+    } else {
+        return std::pair<bool, bool> (false, false);
+    }
 }
 
 std::string Platform::getType(){

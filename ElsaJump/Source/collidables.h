@@ -32,10 +32,10 @@ protected:
 
 };
 
-#include "sprite.h"
+#include "animatedsprite.h"
 #include "globals.h"
 
-class Platform: public Collidable, public Sprite {
+class Platform: public Collidable, public AnimatedSprite {
 public:
     Platform(float x, float y, Graphics &graphics);
     ~Platform();
@@ -49,16 +49,28 @@ public:
     void setX(float x);
     bool hasSpring();
     bool isMoving();
-
+    void setupAnimations();
+    void animationDone(std::string currentAnimation);
+    
+    void enableOnlyOnce();
     void enableMoving(float speed);
-    void disableMoving();
+    void makeFake();
+    void reset();
     
     std::pair<bool, bool> checkPlatformCollision(float playerX, float playerY);
     virtual std::string getType();
 private:
+    void disableMoving();
+    void disableOnlyOnce();
+    void makeReal();
+    
     Collidable* _spring;
     bool _isMoving;
     float _dx;
+    bool _onlyOnce;
+    bool _destroyOnce;
+    bool _fake;
+   
 };
 
 

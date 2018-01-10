@@ -21,6 +21,7 @@ _currentAnimation("")
 {}
 
 void AnimatedSprite::addAnimation(int frames, int x, int y, std::string name, int width, int height) {
+    
     if(_animations.count(name) == 0){
         std::vector<SDL_Rect> rectangles;
         for (int i = 0; i < frames; i++) {

@@ -73,6 +73,9 @@ Game::Game(){
 
 Game::~Game(){
     SDL_Quit();
+    delete _player;
+    delete _world;
+    delete _graphics;
 }
 
 void Game::gameLoop(){
