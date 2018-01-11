@@ -69,7 +69,7 @@ using std::endl;
 
 Platform::Platform(float x, float y, Graphics &graphics) :
 Collidable(x, y, 64, 0),
-AnimatedSprite(graphics, "Platform", 0, 0, 64, 64, x, y, 100)
+AnimatedSprite(graphics, "Platform", 0, 0, 64, 64, x, y, 70)
 {
     _spring = nullptr;
     _isMoving = false;

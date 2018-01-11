@@ -18,8 +18,9 @@ namespace world_constants {
     const int MAX_SPRING_DISTANCE = 600;
     const int MIN_DISTANCE = 35;
     const int SPRING_PROBABILITY = 10;
-    const int ONLY_ONCE_PLAT_PROBABILITY = 15;
-    const int FAKE_PLAT_PROBABILITY = 10;
+    const int ONLY_ONCE_PLAT_PROBABILITY = 14;
+    const int FAKE_PLAT_PROBABILITY = 6;
+    const int MOVING_PLAT_PROBABILITY = 16;
 }
 
 
@@ -36,7 +37,7 @@ _graphics(graphics)
     _prevPlayerY = globals::SCREEN_HEIGHT;
     _topPlatform = nullptr;
     _topCloud = nullptr;
-    _score = 10000;
+    _score = 12000;
     
     initPlatforms();
     initClouds();
@@ -216,7 +217,7 @@ Vector2<int> World::getNextPlatformPos(){
     
     } else{
           //difficulty scaling
-        randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : 0, globals::randInt(0, 400 - _score / 20)  <= 200 && _topPlatform->isReal() ? world_constants::MAX_DISTANCE : world_constants::MAX_DISTANCE / 2.5); 
+        randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : 0, globals::randInt(0, 500 - _score / 40) <= 100 && _topPlatform->isReal() ? world_constants::MAX_DISTANCE : world_constants::MAX_DISTANCE / 2.5);
     }
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
@@ -279,9 +280,12 @@ void World::resetPlatform(Platform* platform) {
     platform->setX(nextPos.X);
     platform->setY(nextPos.Y);
     
+    int scoreDifficult = _score / 40;
+    if(scoreDifficult > 800)
+        scoreDifficult = 800;
     //difficulty scaling
-    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(0, 1200 - _score / 10) <= 200 && _topPlatform->isReal())
-        platform->enableMoving(.06 + _score / 35000);
+    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(0, world_constants::MOVING_PLAT_PROBABILITY * 100 - scoreDifficult) <= 200 && _topPlatform->isReal())
+        platform->enableMoving(.08 + _score / 70000);
     
     
 
@@ -289,7 +293,7 @@ void World::resetPlatform(Platform* platform) {
         platform->addSpring(globals::randInt(0, 1), *_graphics);
     } else {
         //difficulty scaling
-        if(globals::randInt(0, world_constants::ONLY_ONCE_PLAT_PROBABILITY * 100 - _score / 10) <= 200)
+        if(globals::randInt(0, world_constants::ONLY_ONCE_PLAT_PROBABILITY * 100 - scoreDifficult) <= 200)
             platform->enableOnlyOnce();
         else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
              platform->makeFake();
