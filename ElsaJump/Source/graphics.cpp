@@ -60,6 +60,13 @@ void Graphics::blitSurface(SDL_Texture* source, SDL_Rect* sourceRectangle, SDL_R
     
 }
 
+void Graphics::flush(){
+    std::map<std::string, SDL_Surface*>::iterator i = _spriteSheets.begin();
+    for(; i != _spriteSheets.end();++i)
+        SDL_free(i->second);
+    _spriteSheets.clear();
+}
+
 
 void Graphics::flip() {
     SDL_RenderPresent(_renderer);

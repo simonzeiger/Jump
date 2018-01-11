@@ -19,6 +19,7 @@
 class World {
 public:
     World(Player *player, Graphics* graphics);
+    ~World();
     void draw();
     void update();
     void fixedUpdate(float fixedTime);

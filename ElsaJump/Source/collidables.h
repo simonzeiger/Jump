@@ -72,6 +72,7 @@ private:
     bool _onlyOnce;
     bool _destroyOnce;
     bool _fake;
+    float _dy;
    
 };
 

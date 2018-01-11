@@ -48,6 +48,8 @@
 		F40FBD5420014AC900D403AC /* startgametext.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = startgametext.psd; sourceTree = "<group>"; };
 		F40FBD552003133400D403AC /* input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = input.cpp; sourceTree = "<group>"; };
 		F40FBD562003133400D403AC /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
+		F48F42AB2006E7670012621C /* PlatformSpriteSheet.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlatformSpriteSheet.psd; sourceTree = "<group>"; };
+		F48F42AC2006E7740012621C /* ThinPlatform.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThinPlatform.psd; sourceTree = "<group>"; };
 		F4D89BEC2004808000073BB0 /* cloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cloud.cpp; sourceTree = "<group>"; };
 		F4D89BED2004808000073BB0 /* cloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cloud.h; sourceTree = "<group>"; };
 		F4D89BEF2005542C00073BB0 /* numsprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = numsprite.cpp; sourceTree = "<group>"; };
@@ -96,6 +98,8 @@
 				F40FBD5220014AC800D403AC /* coin.psd */,
 				F40FBD5020014AC800D403AC /* elsachar.psd */,
 				F40FBD5320014AC900D403AC /* numsheet.psd */,
+				F48F42AB2006E7670012621C /* PlatformSpriteSheet.psd */,
+				F48F42AC2006E7740012621C /* ThinPlatform.psd */,
 				F40FBD4F20014AC800D403AC /* spring.psd */,
 				F40FBD5420014AC900D403AC /* startgametext.psd */,
 			);

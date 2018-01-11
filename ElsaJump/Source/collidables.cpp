@@ -76,6 +76,7 @@ AnimatedSprite(graphics, "Platform", 0, 0, 64, 64, x, y, 100)
     _onlyOnce = false;
     _destroyOnce = false;
     _fake = false;
+    _dy = .1;
     setupAnimations();
     playAnimation("Normal");
 }
@@ -91,6 +92,8 @@ void Platform::setupAnimations() {
     addAnimation(1, 0, 64, "Cracked", 64, 64);
     addAnimation(2, 64, 64, "Break", 64, 64);
     addAnimation(1, 128, 64, "FullyBroken", 64, 64);
+    addAnimation(1, 0 , 128, "OnlyOnce", 64, 64);
+    addAnimation(1, 0 , 192, "Moving", 64, 64);
 }
 
 void Platform::animationDone(std::string currentAnimation){
@@ -100,14 +103,11 @@ void Platform::animationDone(std::string currentAnimation){
 }
 
 void Platform::draw(Graphics &graphics){
-    if(!_destroyOnce && Collidable::_y + Collidable::_height > -AnimatedSprite::_height){
+    if((!_destroyOnce || _fake) && Collidable::_y + Collidable::_height > -AnimatedSprite::_height){
         AnimatedSprite::draw(graphics, Collidable::_x, Collidable::_y, globals::PLATFORM_SCALE);
         if(_spring != nullptr)
             _spring->draw(graphics);
-    } else {
-        printf("No draw %d\n", _destroyOnce);
     }
-    
     
 }
 
@@ -131,6 +131,10 @@ void Platform::fixedUpdate(float fixedTime){
              _spring->setX( _spring->getX() + _dx * fixedTime);
     }
     
+    if(_destroyOnce && _fake){
+        setY(AnimatedSprite::_y + (_dy += .01) * fixedTime);
+    }
+    
     if(_spring != nullptr)
         _spring->fixedUpdate(fixedTime);
 }
@@ -138,6 +142,7 @@ void Platform::fixedUpdate(float fixedTime){
 void Platform::enableMoving(float speed){
     _isMoving = true;
     _dx = globals::randInt(0, 1) ? -speed : speed;
+    playAnimation("Moving");
 }
 
 bool Platform::isReal() {
@@ -162,6 +167,8 @@ bool Platform::isMoving() {
 void Platform::enableOnlyOnce() {
     _onlyOnce = true;
     _destroyOnce = false;
+    playAnimation("OnlyOnce");
+    
 }
 
 void Platform::disableOnlyOnce() {
@@ -179,6 +186,8 @@ void Platform::reset() {
     disableMoving();
     disableOnlyOnce();
     makeReal();
+    _dy = 0;
+    playAnimation("Normal");
 }
 
 void Platform::makeReal(){
@@ -199,17 +208,27 @@ void Platform::deleteSpring() {
 }
 
 std::pair<bool, bool> Platform::checkPlatformCollision(float playerX, float playerY) {
-    if(!_destroyOnce && !_fake){
-        
+    
+    if(!_destroyOnce){
         bool spring = _spring != nullptr;
         bool platform = Collidable::checkCollision(playerX, playerY);
         if(spring)
             spring = _spring->checkCollision(playerX, playerY);
-        if(_onlyOnce && platform) _destroyOnce = true;
+        if(platform){
+            if (_fake){
+                playAnimation("Break");
+                _destroyOnce = true;
+                _dx = 0;
+                return std::pair<bool, bool> (false, false);
+            } else if(_onlyOnce)
+                _destroyOnce = true;
+        }
+      
         return std::pair<bool, bool> (platform, spring);
-    } else {
-        return std::pair<bool, bool> (false, false);
     }
+        
+    return std::pair<bool, bool> (false, false);
+    
 }
 
 std::string Platform::getType(){
@@ -240,7 +259,6 @@ void Platform::setY(float y){
     if(_spring != nullptr)
         _spring->setY(y - 32);
 }
-
 
 //Spring
 

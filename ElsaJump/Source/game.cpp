@@ -75,6 +75,7 @@ Game::~Game(){
     SDL_Quit();
     delete _player;
     delete _world;
+    _graphics->flush();
     delete _graphics;
 }
 
@@ -84,7 +85,7 @@ void Game::gameLoop(){
     
     int lastUpdateTime = SDL_GetTicks();
     
-    
+    int mouseX, mouseY;
     
      int secondTimer = 0;
      int frames = 0;
@@ -101,13 +102,22 @@ void Game::gameLoop(){
                 return;
             }
             
-            float dt = std::min(elapsedTime,MAX_FRAME_TIME); // std::min(elapsedTime, MAX_FRAME_TIME);
-            fixedUpdate(dt * 1.5);
+            float dt = std::min(elapsedTime,MAX_FRAME_TIME); 
+            fixedUpdate(dt);
             elapsedTime -= dt;
             lastUpdateTime += dt;
             //secondTimer += dt;
 
         }
+        
+        SDL_PollEvent(&event);
+        if (event.type == SDL_QUIT) {
+            return;
+        } else if (event.type == SDL_MOUSEBUTTONDOWN){
+            SDL_GetMouseState(&mouseX, &mouseY);
+            printf("x %d y %d\n", mouseX, mouseY);
+        }
+            
         
         update();
 
@@ -144,6 +154,8 @@ void Game::draw(){
 void Game::update(){
     
      const Uint8* keystate = SDL_GetKeyboardState(NULL);
+    
+    
     
     //movement
     if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){

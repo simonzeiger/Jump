@@ -36,10 +36,21 @@ _graphics(graphics)
     _prevPlayerY = globals::SCREEN_HEIGHT;
     _topPlatform = nullptr;
     _topCloud = nullptr;
-    _score = 0;
+    _score = 10000;
     
     initPlatforms();
     initClouds();
+}
+
+World::~World(){
+    for(int i = 0; i < MAX_PLATFORMS; i++){
+        _platforms[i]->deleteSpring();
+        delete _platforms[i];
+    }
+    for(int i = 0; i < MAX_CLOUDS; i++){
+        delete _clouds[i];
+    }
+ 
 }
 
 void World::update( ){
@@ -96,7 +107,7 @@ void World::fixedUpdate(float fixedTime){
         _shiftDistance = -_player->getDY() * fixedTime;
         _score += _shiftDistance / 10;
 
-        if(_shiftCount > _prevPlayerY / world_constants::SHIFT_DELAY){
+        if(_shiftCount > _prevPlayerY / world_constants::SHIFT_DELAY){    //   if(_player->getY() <= globals::SCREEN_HEIGHT / 2){
             
             
             for(int i = 0; i < _nPlatforms; i++){
@@ -168,17 +179,12 @@ void World::addPlatform(int x, int y){
 }
 
 void World::initPlatforms(){
-    for(int i = 0; i < 1; i++){
+    for(int i = 0; i < MAX_PLATFORMS; i++){
         Vector2<int> nextPos = getNextPlatformPos();
-        if(i == 0){
-            nextPos.Y = 551;
-        }
         
         addPlatform(nextPos.X, nextPos.Y);
         _topPlatform = _platforms[_nPlatforms - 1];
-        if(i == 0 ){
-            
-        }
+       
 
     }
 }
@@ -203,13 +209,15 @@ Vector2<int> World::getNextPlatformPos(){
     if (_nPlatforms == 0)
         randY = globals::randInt(120, world_constants::MAX_DISTANCE);
     else if(_topPlatform->hasSpring()){
-        /*if(globals::randInt(1, 12) == 1)
+       /* if(globals::randInt(1, 12) == 1) //long distnat springs cool in theoru but annoying in practice
             randY = globals::randInt(world_constants::MAX_SPRING_DISTANCE * .6,world_constants:: MAX_SPRING_DISTANCE);
         else*/
         randY = globals::randInt(0, globals::randInt(1,6) == 1 ? world_constants::MAX_SPRING_DISTANCE * .7 : world_constants::MAX_DISTANCE * 1.4);
     
-    } else
-        randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : 0, globals::randInt(1,4) == 1 ? world_constants::MAX_DISTANCE: world_constants::MAX_DISTANCE / 2); //TODO: farther away as score goes up
+    } else{
+          //difficulty scaling
+        randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : 0, globals::randInt(0, 400 - _score / 20)  <= 200 && _topPlatform->isReal() ? world_constants::MAX_DISTANCE : world_constants::MAX_DISTANCE / 2.5); 
+    }
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
     
@@ -271,16 +279,20 @@ void World::resetPlatform(Platform* platform) {
     platform->setX(nextPos.X);
     platform->setY(nextPos.Y);
     
-    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(1, 12) == 1) platform->enableMoving(.1);
+    //difficulty scaling
+    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(0, 1200 - _score / 10) <= 200 && _topPlatform->isReal())
+        platform->enableMoving(.06 + _score / 35000);
+    
     
 
     if(globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1){
         platform->addSpring(globals::randInt(0, 1), *_graphics);
     } else {
-        if(globals::randInt(1, world_constants::ONLY_ONCE_PLAT_PROBABILITY) == 1)
+        //difficulty scaling
+        if(globals::randInt(0, world_constants::ONLY_ONCE_PLAT_PROBABILITY * 100 - _score / 10) <= 200)
             platform->enableOnlyOnce();
-       // else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1)
-            //platform->makeFake();
+        else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
+             platform->makeFake();
             
 
     }

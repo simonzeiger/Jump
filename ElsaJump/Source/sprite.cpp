@@ -54,6 +54,8 @@ int Sprite::width() {
     return _width;
 }
 
+
+
 int Sprite::getX() const{
     return _x;
 }
