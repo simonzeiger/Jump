@@ -52,9 +52,7 @@ public:
      * Returns the renderer
      */
     SDL_Renderer* renderer() const;
-    
-    void flush();
-    
+        
 private:
     SDL_Window* _window;
     SDL_Renderer* _renderer;

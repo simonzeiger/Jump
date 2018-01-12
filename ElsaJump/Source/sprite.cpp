@@ -50,17 +50,23 @@ void Sprite::draw(Graphics &graphics, int x, int y, int scale) {
     }
 }
 
+void Sprite::flush() {
+    std::map<std::string, SDL_Texture*>::iterator i = _spriteSheets.begin();
+    for(; i != _spriteSheets.end();++i)
+        SDL_DestroyTexture(i->second);
+}
+
 int Sprite::width() {
     return _width;
 }
 
 
 
-int Sprite::getX() const{
+float Sprite::getX() const{
     return _x;
 }
 
-int Sprite::getY() const{
+float Sprite::getY() const{
     return _y;
 }
 

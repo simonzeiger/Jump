@@ -119,15 +119,19 @@ void Platform::fixedUpdate(float fixedTime){
             _dx *= -1;
             Collidable::_x = end - 1;
             Sprite::_x = end - 1;
+             if(_spring != nullptr)
+                 _spring->setX( _spring->getX() - 1);
         } else if  (Collidable::_x <= 0) {
             _dx *= -1;
             Collidable::_x = 1;
             Sprite::_x = 1;
+             if(_spring != nullptr)
+                 _spring->setX( _spring->getX() + 1);
             
         }
         Collidable::_x += _dx * fixedTime;
         Sprite::_x += _dx * fixedTime;
-         if(_spring != nullptr)
+        if(_spring != nullptr)
              _spring->setX( _spring->getX() + _dx * fixedTime);
     }
     
@@ -152,7 +156,6 @@ bool Platform::isReal() {
 bool Platform::isOnlyOnce() {
     return _onlyOnce;
 }
-
 
 
 void Platform::disableMoving(){
@@ -229,10 +232,6 @@ std::pair<bool, bool> Platform::checkPlatformCollision(float playerX, float play
         
     return std::pair<bool, bool> (false, false);
     
-}
-
-std::string Platform::getType(){
-    return "Platform";
 }
 
 void Platform::shift(float y){
@@ -319,9 +318,7 @@ void Spring::animationDone(std::string currentAnimation) {
     if(currentAnimation == "Springy") playAnimation("Yuge");
 }
 
-std::string Spring::getType(){
-    return "Spring";
-}
+
 
 
 

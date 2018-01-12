@@ -10,8 +10,11 @@
 #include "globals.h"
 #include "graphics.h"
 #include "globals.h"
+#include "projectile.h"
 #include "input.h"
+#include <cstring>
 #include <fstream>
+#include <cstring>
 #include <SDL2/SDL.h>
 
 using std::string;
@@ -24,7 +27,8 @@ namespace {
     const int MAX_FRAME_TIME = 1000 / FPS;
 }
 
-std::string Game::_path;
+
+
 
 Game::Game(){
    
@@ -33,11 +37,13 @@ Game::Game(){
     }
     _graphics = new Graphics;
     
+    //TODO: Only add texture to corresponding sprite
     Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
     Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
     Sprite::addTexture("Cloud",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Cloud.png")));
     Sprite::addTexture("Nums",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/NumSheet.png")));
     Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Platform.png")));
+    Sprite::addTexture("Ball", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Ball.png")));
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
@@ -50,9 +56,10 @@ Game::Game(){
             _numSprites[i]->num = 0;
     }
     
-    _path = SDL_GetBasePath();
+    char* temp = SDL_GetBasePath();
+    _path = temp;
+    SDL_free(temp);
     _path += "Content/high_score.txt";
-    printf("%s\n", _path.c_str());
     
     std::ifstream load( _path);
     string scoreString;
@@ -68,18 +75,21 @@ Game::Game(){
 
     }
     
+
     gameLoop();
 }
 
 Game::~Game(){
-    SDL_Quit();
     delete _player;
     delete _world;
-    _graphics->flush();
     delete _graphics;
+    Sprite::flush();
+    SDL_Quit();
 }
 
 void Game::gameLoop(){
+    
+
 
     SDL_Event event;
     
@@ -90,16 +100,31 @@ void Game::gameLoop(){
      int secondTimer = 0;
      int frames = 0;
     
+    bool ballLoaded = false;
+    
+   // std::string inputText;
+    //SDL_StartTextInput();
+    
     //start game loop
     for(;;){
         
         const int CURRENT_TIME = SDL_GetTicks();
         int elapsedTime = CURRENT_TIME - lastUpdateTime;
         
+      //  bool renderText = false;
+        
         for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
+            
             SDL_PollEvent(&event);
             if (event.type == SDL_QUIT) {
                 return;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded){
+                _player->loadBall();
+                ballLoaded = true;
+            } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded){
+                SDL_GetMouseState(&mouseX, &mouseY);
+                _player->throwBall(mouseX, mouseY);
+                ballLoaded = false;
             }
             
             float dt = std::min(elapsedTime,MAX_FRAME_TIME); 
@@ -110,14 +135,83 @@ void Game::gameLoop(){
 
         }
         
+        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+        
+        
+        //movement
+        if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
+            _player->moveLeft();
+        }
+        else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+            _player->moveRight();
+        }
+        else {
+            _player->stopMoving();
+        }
+      
+
+        
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
             return;
-        } else if (event.type == SDL_MOUSEBUTTONDOWN){
+        } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded){
+            _player->loadBall();
+            ballLoaded = true;
+        } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded){
             SDL_GetMouseState(&mouseX, &mouseY);
+            _player->throwBall(mouseX, mouseY);
+            ballLoaded = false;
             printf("x %d y %d\n", mouseX, mouseY);
+        } else if (keystate[SDL_SCANCODE_SPACE] && !ballLoaded){
+            _player->loadBall();
+            ballLoaded = true;
+        } else if(event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_SPACE && ballLoaded){
+            _player->throwBall(_player->getX(), -300);
+            ballLoaded = false;
         }
-            
+        /*//Special key input
+        else if( event.type == SDL_KEYDOWN )
+        {
+            //Handle backspace
+            if( event.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0 )
+            {
+                //lop off character
+                inputText.pop_back();
+                renderText = true;
+
+            }
+            //Handle copy
+            else if( event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+            {
+                SDL_SetClipboardText( inputText.c_str() );
+            }
+            //Handle paste
+            else if( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+            {
+                inputText = SDL_GetClipboardText();
+                renderText = true;
+
+            }
+        }
+        //Special text input event
+        else if( event.type == SDL_TEXTINPUT )
+        {
+            //Not copy or pasting
+            if( !( ( event.text.text[ 0 ] == 'c' || event.text.text[ 0 ] == 'C' ) && ( event.text.text[ 0 ] == 'v' || event.text.text[ 0 ] == 'V' ) && SDL_GetModState() & KMOD_CTRL ) )
+            {
+                //Append character
+                inputText += event.text.text;
+                renderText = true;
+
+            }
+        }
+        
+        //Rerender text if needed
+        if( renderText )
+        {
+            printf("%s \n", inputText.c_str());
+
+        }*/
         
         update();
 
@@ -137,6 +231,9 @@ void Game::gameLoop(){
         
        
     }
+    //TODO:
+    //  SDL_StopTextInput();
+
 }
 
 void Game::draw(){
@@ -148,24 +245,13 @@ void Game::draw(){
         _numSprites[i]->draw(*_graphics);
     }
     
+    
     _graphics->flip();
 }
 
 void Game::update(){
     
-     const Uint8* keystate = SDL_GetKeyboardState(NULL);
     
-    
-    
-    //movement
-    if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
-        _player->moveLeft();
-    }
-    else if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
-        _player->moveRight();
-    } else {
-        _player->stopMoving();
-    }
     
     if(!_player->isDead()){
         int decimalPlaces = ((int)(log10(_world->score())+1));

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
+		F48F42AF2007673E0012621C /* projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F42AD2007673E0012621C /* projectile.cpp */; };
 		F4D89BEE2004808000073BB0 /* cloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEC2004808000073BB0 /* cloud.cpp */; };
 		F4D89BF12005542C00073BB0 /* numsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEF2005542C00073BB0 /* numsprite.cpp */; };
 		F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
@@ -50,6 +51,8 @@
 		F40FBD562003133400D403AC /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 		F48F42AB2006E7670012621C /* PlatformSpriteSheet.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlatformSpriteSheet.psd; sourceTree = "<group>"; };
 		F48F42AC2006E7740012621C /* ThinPlatform.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThinPlatform.psd; sourceTree = "<group>"; };
+		F48F42AD2007673E0012621C /* projectile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = projectile.cpp; sourceTree = "<group>"; };
+		F48F42AE2007673E0012621C /* projectile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = projectile.h; sourceTree = "<group>"; };
 		F4D89BEC2004808000073BB0 /* cloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cloud.cpp; sourceTree = "<group>"; };
 		F4D89BED2004808000073BB0 /* cloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cloud.h; sourceTree = "<group>"; };
 		F4D89BEF2005542C00073BB0 /* numsprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = numsprite.cpp; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				F4FCD38B1FF9CA07009E9B3E /* player.cpp */,
 				F4FCD3951FFB85A0009E9B3E /* collidables.h */,
 				F4FCD3941FFB85A0009E9B3E /* collidables.cpp */,
+				F48F42AE2007673E0012621C /* projectile.h */,
+				F48F42AD2007673E0012621C /* projectile.cpp */,
 				F4D89BED2004808000073BB0 /* cloud.h */,
 				F4D89BEC2004808000073BB0 /* cloud.cpp */,
 				F4D89BF02005542C00073BB0 /* numsprite.h */,
@@ -235,6 +240,7 @@
 				F40FBD572003133400D403AC /* input.cpp in Sources */,
 				F4FCD3801FF8B150009E9B3E /* main.cpp in Sources */,
 				F4FCD38D1FF9CA07009E9B3E /* player.cpp in Sources */,
+				F48F42AF2007673E0012621C /* projectile.cpp in Sources */,
 				F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */,
 				F4FCD38A1FF9AF99009E9B3E /* animatedsprite.cpp in Sources */,
 				F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */,

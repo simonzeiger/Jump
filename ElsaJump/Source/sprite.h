@@ -30,10 +30,11 @@ public:
     void draw(Graphics &graphics, int x, int y, int scale);
     static void addTexture(std::string name, SDL_Texture* texture);
     int width();
-    int getX() const;
-    int getY() const;
+    float getX() const;
+    float getY() const;
     void setX(float x);
     void setY(float y);
+    static void flush();
     
 protected:
 

@@ -11,6 +11,7 @@
 #include "globals.h"
 #include "game.h"
 #include "world.h"
+#include "projectile.h"
 #include <math.h>
 
 namespace player_constants {
@@ -18,7 +19,7 @@ namespace player_constants {
     const float GRAVITY = .0008f * MULTI; //.0008
     const float JUMP_SPEED = 0.55  * MULTI; //.55
     const float SPRING_SPEED = 1  * MULTI;
-    const float MOVE_SPEED = .26f  * MULTI;
+    const float MOVE_SPEED = .28f  * MULTI;
 }
 
 
@@ -35,6 +36,15 @@ _isDead(false)
 {
     setupAnimations();
     playAnimation("JumpRight");
+    for(int i = 0; i < MAX_BALLS; i++){
+        _balls[i] = new Projectile(graphics, this);
+    }
+
+}
+
+Player::~Player(){
+    for(int i = 0; i < MAX_BALLS; i++)
+        delete _balls[i];
 }
 
 void Player::setupAnimations() {
@@ -100,12 +110,10 @@ void Player::animationStateMachine(){
                 playAnimation("JumpRight");
         }
         
-    } else if(_currentAnimation == "ChillLeft") {
+    } else if(_currentAnimation == "ChillLeft" || _currentAnimation == "ChillRight") {
         if(_facing == RIGHT)
             playAnimation("ChillRight");
-        
-    } else if(_currentAnimation == "ChillRight") {
-        if(_facing == LEFT)
+        else
             playAnimation("ChillLeft");
         
     } else if (_currentAnimation == "NoHairAnimRight" || _currentAnimation == "NoHairAnimLeft") {
@@ -118,13 +126,10 @@ void Player::animationStateMachine(){
         }
 
             
-        }
-        
-        
-    
-
+    }
     
 }
+
 
 void Player::update( ) {
     
@@ -143,19 +148,15 @@ void Player::update( ) {
     else if(_x + 16 * globals::SPRITE_SCALE - 20 <= 0 && _dx < 0)
         _x = globals::SCREEN_WIDTH - 20;
     
-    
-    
-    
-    
-    
   
 }
 
 
 void Player::fixedUpdate(float fixedTime){
     
+
     
-        
+    
         //Apply gravity
         _dy += player_constants::GRAVITY * fixedTime;
         
@@ -169,14 +170,30 @@ void Player::fixedUpdate(float fixedTime){
         _x += _dx * fixedTime;
     
         AnimatedSprite::fixedUpdate(fixedTime);
+    
+        for(int i = 0; i < MAX_BALLS; i++)
+            if(_balls[i]->isLoaded())
+                _balls[i]->fixedUpdate(fixedTime);
 
     
     
 }
 
-void Player::draw(Graphics &graphics) {
+Direction Player::facing(){
+    return _facing;
+}
 
+bool Player::isJumping() {
+    return _isJumping;
+}
+
+void Player::draw(Graphics &graphics) {
+    
     AnimatedSprite::draw(graphics, _x, _y);
+    
+    for(int i = 0; i < MAX_BALLS; i++)
+        if(_balls[i]->isLoaded())
+            _balls[i]->draw(graphics);
 }
 
 bool Player::isDead() {
@@ -201,6 +218,8 @@ void Player::killed(){
    
 }
 
+
+
 void Player::shift(float amt){
     _y += amt;
 }
@@ -215,6 +234,22 @@ void Player::revive(){
     _dy = -player_constants::JUMP_SPEED;
     
     _isDead = false;
+}
+
+void Player::loadBall(){
+    _balls[MAX_BALLS - 1]->load();
+    
+}
+
+void Player::throwBall(int mouseX, int mouseY){
+        _balls[MAX_BALLS - 1]->addTarget(mouseX, mouseY);
+        Projectile* temp = _balls[0];
+        
+        for(int i = 0; i < MAX_BALLS - 1; i++){
+            _balls[i] = _balls[i + 1];
+        }
+        _balls[MAX_BALLS - 1] = temp;
+    
 }
 
 

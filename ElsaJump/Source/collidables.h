@@ -21,7 +21,6 @@ public:
     virtual void setX(float x);
     float getX();
     virtual void shift(float y);
-    virtual std::string getType() = 0;
     
     int getCollidableWidth();
 protected:
@@ -60,7 +59,6 @@ public:
     void reset();
     
     std::pair<bool, bool> checkPlatformCollision(float playerX, float playerY);
-    virtual std::string getType();
 private:
     void disableMoving();
     void disableOnlyOnce();
@@ -92,7 +90,6 @@ public:
     void setX(float x);
     void setY(float y);
     void getX();
-    std::string getType();
 private:
     
 };

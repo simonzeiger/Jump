@@ -14,10 +14,12 @@
 #include "collidables.h"
 
 class Graphics;
+class Projectile;
 
 class Player : public AnimatedSprite {
 public:
     Player(Graphics &graphics, float x, float y);
+    ~Player();
     void draw(Graphics &graphics);
     void update();
     void fixedUpdate(float fixedTime);
@@ -47,14 +49,14 @@ public:
     
     float getDY() const;
     
+    bool isJumping();
     
+    Direction facing();
     
     int checkPlatformCollisions(Platform** platforms, int nPlatforms);
     
     void killed();
     
-    bool _isJumping;
-
     void shift(float amt);
     
     void animationStateMachine();
@@ -63,12 +65,20 @@ public:
     
     void revive();
     
+    void loadBall();
+    
+    void throwBall(int mouseX, int mouseY);
+    
 private:
     float _dx, _dy;
     bool _hasShield;
     bool _maxJumpHeightReached;
     bool _isDead;
-
+    bool _isJumping;
+    static const int MAX_BALLS = 14;
+    Projectile* _balls[MAX_BALLS];
+    
+    
     Direction _facing;
 
 };

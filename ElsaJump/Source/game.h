@@ -21,7 +21,7 @@ class Game {
 public:
     Game();
     ~Game();
-    static std::string _path;
+    std::string _path;
 private:
     void gameLoop();
     void draw();
