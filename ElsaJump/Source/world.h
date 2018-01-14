@@ -17,6 +17,7 @@
 #include <vector>
 #include <SDL2_ttf/SDL_ttf.h>
 
+class Enemy;
 
 class World {
 public:
@@ -45,7 +46,7 @@ private:
     static const int MAX_CLOUDS = 10;
     Cloud* _clouds[MAX_CLOUDS];
     std::vector<Sprite> _scoreSprites;
-    bool _existsEnemy;
+    Platform* _enemyPlatform;
 
     
     float _score;

@@ -23,7 +23,8 @@ public:
     void addTarget(int targetX, int targetY);
     void load();
     bool isLoaded();
-    
+    bool checkCollision(float playerX, float playerY);
+
 private:
     float _dx;
     float _dy;

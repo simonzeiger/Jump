@@ -40,6 +40,7 @@ void Projectile::fixedUpdate(float fixedTime){
         _x += _dx * fixedTime;
         _y -= _dy * fixedTime;
         
+        
         if(_x > globals::SCREEN_WIDTH || _x + _width < 0 || _y > globals::SCREEN_HEIGHT || _y + _height < 0){
             _loaded = false;
             _dx = 0;
@@ -54,12 +55,35 @@ void Projectile::fixedUpdate(float fixedTime){
 void Projectile::draw(Graphics &graphics){
     if(_loaded){
         Sprite::draw(graphics, _x, _y, 1);
-        if(_dx != 0 && _dy != 0){
-            
-        }
+      
             
     }
 }
+
+bool Projectile::checkCollision(float enemyX, float enemyY){
+    /*SDL_Rect rect1 = {(int)enemyX, (int) enemyY, 64, 48};
+    SDL_Rect rect2 = {(int)Sprite::_x, (int) Sprite::_y, 16, 16};
+    
+    printf("%f %f %f %f \n", _x, _y, enemyX, enemyY);
+    
+    if (rect1.x < rect2.x + rect2.w &&
+        rect1.x + rect1.w > rect2.x &&
+        rect1.y < rect2.y + rect2.h &&
+        rect1.h + rect1.y > rect2.y)
+        return 1;
+    
+    return 0; */
+    
+    if(_x + 16 > enemyX && _x < enemyX + 64){
+        printf("%f %f %f %f \n", _x, _y, enemyX, enemyY + 48);
+        if(_y < enemyY && _y + 16 < enemyY + 48){
+            
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void Projectile::addTarget(int targetX, int targetY){
     

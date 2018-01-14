@@ -223,8 +223,9 @@ void Platform::deleteSpring() {
     _spring = nullptr;
 }
 
-void  Platform::addEnemy(Graphics &graphics){
+Enemy*  Platform::addEnemy(Graphics &graphics){
     _enemy = new Enemy(Sprite::_x, Sprite::_y - 48, graphics);
+    return _enemy;
 }
 void  Platform::deleteEnemy(){
     delete _enemy;
@@ -238,7 +239,7 @@ bool Platform::hasEnemy(){
 int Platform::checkEnemyCollision(float playerX, float playerY){
     if(_enemy == nullptr)
         return -10000;
-    return _enemy->checkCollision(playerX, playerY);
+    return _enemy->checkCollision( playerX, playerY);
     
 }
 
@@ -259,8 +260,10 @@ std::pair<int, bool> Platform::checkPlatformCollision(float playerX, float playe
             if(playerY + 16 * globals::SPRITE_SCALE > y){
                 // + and - 15 to account for hitbox
                 if(playerX + 30 > Collidable::_x && playerX + 15 < Collidable::_x + Collidable::_width){
-                    if(hasEnemy()) platform = -1;
-                    else
+                    if(hasEnemy()) {
+                        platform = -1;
+                        deleteEnemy();
+                    } else
                         platform = 1;
                 }
             }
@@ -294,6 +297,10 @@ void Platform::shift(float y){
     if(_enemy != nullptr) _enemy->shift(y);
 
     
+}
+
+Enemy& Platform::enemy() {
+    return *_enemy;
 }
 
 bool Platform::hasSpring(){

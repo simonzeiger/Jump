@@ -128,10 +128,10 @@ void Game::gameLoop(){
             SDL_PollEvent(&event);
             if (event.type == SDL_QUIT) {
                 return;
-            } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded){
+            } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded  && !_player->isDead()){
                 _player->loadBall();
                 ballLoaded = true;
-            } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded){
+            } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded  && !_player->isDead()){
                 SDL_GetMouseState(&mouseX, &mouseY);
                 _player->throwBall(mouseX, mouseY);
                 ballLoaded = false;
@@ -169,15 +169,15 @@ void Game::gameLoop(){
         } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded){
             _player->loadBall();
             ballLoaded = true;
-        } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded){
+        } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded && !_player->isDead()){
             SDL_GetMouseState(&mouseX, &mouseY);
             _player->throwBall(mouseX, mouseY);
             ballLoaded = false;
             printf("x %d y %d\n", mouseX, mouseY);
-        } else if (keystate[SDL_SCANCODE_SPACE] && !ballLoaded){
+        } else if (keystate[SDL_SCANCODE_SPACE] && !ballLoaded  && !_player->isDead()){
             _player->loadBall();
             ballLoaded = true;
-        } else if(event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_SPACE && ballLoaded){
+        } else if(event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_SPACE && ballLoaded  && !_player->isDead()){
             _player->throwBall(_player->getX(), -300);
             ballLoaded = false;
         }

@@ -52,6 +52,8 @@ public:
     
     bool isJumping();
     
+    Projectile** balls();
+    
     Direction facing();
     
     int checkPlatformCollisions(Platform** platforms, int nPlatforms);

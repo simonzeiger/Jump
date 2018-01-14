@@ -11,6 +11,8 @@
 #include "game.h"
 #include "enemy.h"
 #include "cloud.h"
+#include "enemy.h"
+#include "projectile.h"
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
@@ -45,7 +47,7 @@ _graphics(graphics)
     _topCloud = nullptr;
     _score = 0;
     _highScoreCounter = 0;
-    _existsEnemy = false;
+    _enemyPlatform = nullptr;
     
     TTF_Init();
 
@@ -81,22 +83,7 @@ void World::update( ){
     _player->update();
     
     
-    if(!_player->isJumping()){
-        int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
-        if(y >= -globals::SCREEN_HEIGHT){
-            _player->jump(y);
-            if(y < 0){
-                y*= -1;
-                shift();
-                _prevPlayerY = y;
-            } else if(static_cast<int>(_prevPlayerY) > y) {
-                shift();
-                _prevPlayerY = y;
-            }
-            
-            
-        }
-    }
+    
     
     if(_highScoreCounter < _highScores.size() && score() + _player->getY() / 10 + 20 >= _highScores[_highScoreCounter].second){
         
@@ -142,7 +129,41 @@ void World::update( ){
 
 void World::fixedUpdate(float fixedTime){
     
+    //could go in update but seeing if this is more responsive
+    if(!_player->isJumping()){
+        int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
+        if(y >= -globals::SCREEN_HEIGHT){
+            _player->jump(y);
+            if(y < 0){
+                y*= -1;
+                shift();
+                _prevPlayerY = y;
+            } else if(static_cast<int>(_prevPlayerY) > y) {
+                shift();
+                _prevPlayerY = y;
+            }
+            
+            
+            if(_enemyPlatform != nullptr && abs(y - _enemyPlatform->getY() - 48) < 2){
+                _enemyPlatform->deleteEnemy();
+                _enemyPlatform = nullptr;
+            }
+            
+        }
+    }
     
+    if(_enemyPlatform != nullptr){
+        for(int i = 0; i < 14; i++){
+           // printf("%d %d %d \n", i, (int)_player->balls()[i]->getX(), (int) _player->balls()[i]->getY() );
+
+            if(_player->balls()[i]->isLoaded() && _player->balls()[i]->checkCollision(_enemyPlatform->Sprite::getX(), _enemyPlatform->getY() - 48)){
+                _enemyPlatform->deleteEnemy();
+                _enemyPlatform = nullptr;
+                break;
+            }
+               
+        }
+    }
   
     for(int i = 0; i < MAX_CLOUDS; i++){
         _clouds[i]->fixedUpdate(fixedTime);
@@ -289,8 +310,12 @@ Vector2<int> World::getNextPlatformPos(){
         randY = globals::randInt(world_constants::MIN_DISTANCE / 2, globals::randInt(1,6) == 1 ? world_constants::MAX_SPRING_DISTANCE * .7 : world_constants::MAX_DISTANCE * 1.4);
     
     } else{
-          //difficulty scaling
-        randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : world_constants::MIN_DISTANCE / 2, globals::randInt(0, 500 - _score / 60) <= 100 && _topPlatform->isReal() ? world_constants::MAX_DISTANCE : world_constants::MAX_DISTANCE / 2.5);
+        if(_topPlatform->hasEnemy())
+             randY = globals::randInt( world_constants::MIN_DISTANCE * 2,  world_constants::MAX_DISTANCE);
+        else{
+            //difficulty scaling
+            randY = globals::randInt(_topPlatform->isMoving() ? world_constants::MIN_DISTANCE : world_constants::MIN_DISTANCE / 2, globals::randInt(0, 500 - _score / 60) <= 100 && _topPlatform->isReal() ? world_constants::MAX_DISTANCE : world_constants::MAX_DISTANCE / 2.5);
+        }
     }
     
     int randX = _nPlatforms == 0 ? globals::randInt(globals::SCREEN_WIDTH / 2 - 40, globals::SCREEN_WIDTH / 2 + 40) : globals::randInt(0, globals::SCREEN_WIDTH -  64);
@@ -347,6 +372,9 @@ Vector2<int> World::getNextCloudPos() {
 }
 
 void World::resetPlatform(Platform* platform) {
+    if(platform->hasEnemy())
+        _enemyPlatform = nullptr;
+    
     platform->reset();
    
     Vector2<int> nextPos = getNextPlatformPos();
@@ -366,9 +394,9 @@ void World::resetPlatform(Platform* platform) {
        
     }
     
-    if(_existsEnemy == false && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE * .7 && globals::randInt(0, world_constants::ENEMY_PROBABILITY) == 1){
+    if(_enemyPlatform == nullptr && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE * .7 && globals::randInt(0, world_constants::ENEMY_PROBABILITY) == 1){
         platform->addEnemy(*_graphics);
-        _existsEnemy = true;
+        _enemyPlatform = platform;
     } else {
         if((!_topPlatform->hasSpring() || _topPlatform->getY() - platform->getY() > world_constants::MAX_DISTANCE * .7) && globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1){
             platform->addSpring(globals::randInt(0, 1), *_graphics);
@@ -404,7 +432,7 @@ void World::resetAll(){
         delete _clouds[i];
     }
     
-    _existsEnemy = false;
+    _enemyPlatform = nullptr;
     
     _scoreSprites.clear();
     

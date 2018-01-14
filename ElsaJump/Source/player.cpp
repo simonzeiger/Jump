@@ -164,7 +164,8 @@ void Player::fixedUpdate(float fixedTime){
         
         
         //Move by dy
-        _y += _dy * fixedTime;
+        if(!_isDead || _y < globals::SCREEN_HEIGHT)
+            _y += _dy * fixedTime;
             
         
         //Move by dx
@@ -201,6 +202,10 @@ bool Player::isDead() {
     return _isDead;
 }
 
+Projectile** Player::balls(){
+    return _balls;
+}
+
 int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
     if(!_isDead){
         for(int i = 0; i < nPlatforms; i++){
@@ -210,6 +215,9 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
                 
                 //return neg number if hit a spring
                 if(collision.first){
+                    //if collision.first is neg. than u actually jumped on a  monster
+                    if(collision.first < 0)
+                        printf("%f\n", platforms[i]->getY() - 48);
                     return !collision.second ? (collision.first > 0 ? platforms[i]->getY() : platforms[i]->getY() - 48): -platforms[i]->getY();
                 }
                 
@@ -224,7 +232,7 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
 }
 
 bool Player::checkEnemyCollision(Enemy* enemy){
-    return enemy->checkCollision(_x, _y);
+    return enemy->checkCollision( _x, _y);
 
 }
 

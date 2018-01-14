@@ -48,7 +48,8 @@ public:
     void deleteSpring();
     bool hasSpring();
 
-    void addEnemy(Graphics &graphics);
+    Enemy* addEnemy(Graphics &graphics);
+    Enemy& enemy();
     void deleteEnemy();
     bool hasEnemy();
     int checkEnemyCollision(float playerX, float playerY);
