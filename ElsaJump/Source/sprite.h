@@ -6,7 +6,6 @@
 //  Copyright © 2017 Simón Zeiger. All rights reserved.
 //
 
-//TODO: Figure out if a defualt constructor is necessary
 
 #ifndef sprite_h
 #define sprite_h
@@ -37,13 +36,13 @@ public:
     static void flush();
     
 protected:
-
     SDL_Rect _sourceRect;
     SDL_Texture* _spriteSheet;
     float _x, _y;
     int _width,  _height;
 private:
-     static std::map<std::string, SDL_Texture*> _spriteSheets;
+    static std::map<std::string, SDL_Texture*> _spriteSheets;
+
 };
 
 #endif /* sprite_hpp */

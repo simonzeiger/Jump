@@ -17,6 +17,7 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 
+
 using std::string;
 using std::vector;
 using std::pair;
@@ -27,27 +28,26 @@ namespace {
     const int MAX_FRAME_TIME = 1000 / FPS;
 }
 
-
-
+std::vector<std::pair<std::string, int> > Game::_highScores;
 
 Game::Game(){
    
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
+    
+    
     _graphics = new Graphics;
     
-    //TODO: Only add texture to corresponding sprite
     Sprite::addTexture("Elsa", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/ElsaChar.png")));
     Sprite::addTexture("Spring",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Spring.png")));
     Sprite::addTexture("Cloud",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Cloud.png")));
     Sprite::addTexture("Nums",  SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/NumSheet.png")));
     Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Platform.png")));
     Sprite::addTexture("Ball", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Ball.png")));
-    
-    _player = new Player(*_graphics, 150, 680);
-    _world = new World(_player, _graphics);
-    _playerName = "Elsa";
+    Sprite::addTexture("Enemy", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Enemy.png")));
+
+   
     
     for(int i = 0; i < _nNumSprites; i++){
         _numSprites[i] = new NumSprite(*_graphics, globals::SCREEN_WIDTH - 40 - 32 * i, 16);
@@ -55,6 +55,7 @@ Game::Game(){
         if(i == 0)
             _numSprites[i]->num = 0;
     }
+    
     
     char* temp = SDL_GetBasePath();
     _path = temp;
@@ -68,12 +69,21 @@ Game::Game(){
     while( load >> scoreString >> name){
         _highScores.push_back(pair<string, int>( name, stoi(scoreString)));
     }
-    std::sort(_highScores.begin(), _highScores.end());
+    std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
+            return (a.second < b.second);
+        }
+    );
+    
+              
     
     for(int i = 0; i < _highScores.size(); i++){
         printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
 
     }
+    
+    _player = new Player(*_graphics, 150, 680);
+    _world = new World(_player, _graphics);
+    _playerName = "Mynameissrimshady";
     
 
     gameLoop();
@@ -84,12 +94,11 @@ Game::~Game(){
     delete _world;
     delete _graphics;
     Sprite::flush();
+  
     SDL_Quit();
 }
 
 void Game::gameLoop(){
-    
-
 
     SDL_Event event;
     
@@ -101,6 +110,7 @@ void Game::gameLoop(){
      int frames = 0;
     
     bool ballLoaded = false;
+    
     
    // std::string inputText;
     //SDL_StartTextInput();
@@ -134,6 +144,8 @@ void Game::gameLoop(){
             //secondTimer += dt;
 
         }
+        
+        
         
         const Uint8* keystate = SDL_GetKeyboardState(NULL);
         
@@ -245,9 +257,11 @@ void Game::draw(){
         _numSprites[i]->draw(*_graphics);
     }
     
+   
     
     _graphics->flip();
 }
+
 
 void Game::update(){
     
@@ -258,6 +272,7 @@ void Game::update(){
         for (int i = 0; i < decimalPlaces; i++){
             _numSprites[i]->num = ((int)( _world->score() / pow(10 , i)) % 10);
         }
+        
     } else {
         for (int i = 0; i < _nNumSprites; i++){
             _numSprites[i]->num = -1;
@@ -267,16 +282,29 @@ void Game::update(){
         
         std::ofstream myfile (_path, std::ios_base::app);
         if (myfile.is_open()){
-            if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
+            if(_world->score() > 130 && std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
                 _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
                 myfile << _world->score() << " " << _playerName << "\n";
                 myfile.close();
+                
+              
+                std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
+                        return (a.second < b.second);
+                    }
+                );
+                
+                for(int i = 0; i < _highScores.size(); i++){
+                    printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
+                    
+                }
+                
+                
             }
         }
         else
             printf("Unable to open file\n");
         
-        _player->revive();
+       // _player->revive();
         _world->resetScore();
         
     }
@@ -290,9 +318,42 @@ void Game::update(){
 void Game::fixedUpdate(float fixedTime) {
     
     //SDL_Delay(10); //for reducing fps for testing
+    
+   
+    
     _world->fixedUpdate(fixedTime);
     
    
     
+}
+
+std::vector<std::pair<std::string, int> > Game::highScores() {
+    std::vector<std::pair<std::string, int> > copy;
+    std::vector<std::pair<std::string, int> > sorted;
+    for(int i = 0; i < _highScores.size(); i++){
+        float rounded =  (float)_highScores[i].second / 100;
+        rounded = std::round(rounded);
+        int finalRound = rounded * 100;
+        
+        if(sorted.size() == 0)
+            sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+
+        else if(finalRound != sorted.back().second){
+            for(int j = 0; j < sorted.size(); j++){
+                if(sorted[j].first != "")
+                    copy.push_back(sorted[j]);
+            }
+            sorted.clear();
+            sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        } else if(i == 0 || _highScores[i].first != sorted.back().first){
+            if (std::find(sorted.begin(), sorted.end(), std::pair<std::string, int> (_highScores[i].first, finalRound)) == sorted.end())
+                sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        }
+
+    }
+    
+    if(copy.size() == 0 || sorted.size() != 0)
+        copy.insert(copy.end(), sorted.begin(), sorted.end());
+    return copy;
 }
 

@@ -15,6 +15,7 @@
 
 class Graphics;
 class Projectile;
+class Enemy;
 
 class Player : public AnimatedSprite {
 public:
@@ -55,7 +56,9 @@ public:
     
     int checkPlatformCollisions(Platform** platforms, int nPlatforms);
     
-    void killed();
+    bool checkEnemyCollision(Enemy* enemy);
+    
+    void kill();
     
     void shift(float amt);
     

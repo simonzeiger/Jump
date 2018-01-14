@@ -20,7 +20,6 @@ public:
     Projectile(Graphics &graphics, Player* player);
     void fixedUpdate(float fixedTime);
     void draw(Graphics &graphics);
-    static void incrementTimer(float incr);
     void addTarget(int targetX, int targetY);
     void load();
     bool isLoaded();
@@ -31,7 +30,6 @@ private:
     float _x;
     float _y;
     bool _loaded;
-    static float timer;
     Player* _player;
     
 };

@@ -9,12 +9,35 @@
 /* Begin PBXBuildFile section */
 		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
 		F48F42AF2007673E0012621C /* projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F42AD2007673E0012621C /* projectile.cpp */; };
+		F48F42B7200928FB0012621C /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F42B6200928FB0012621C /* AppleScriptObjC.framework */; };
+		F48F42CB200929DB0012621C /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F42B6200928FB0012621C /* AppleScriptObjC.framework */; };
+		F48F431B200936030012621C /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F42B6200928FB0012621C /* AppleScriptObjC.framework */; };
+		F48F432A200937430012621C /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3761FF8A427009E9B3E /* game.cpp */; };
+		F48F432B200937430012621C /* world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38E1FFB4AB2009E9B3E /* world.cpp */; };
+		F48F432C200937430012621C /* graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD37A1FF8A5F5009E9B3E /* graphics.cpp */; };
+		F48F432D200937430012621C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD37F1FF8B150009E9B3E /* main.cpp */; };
+		F48F432E200937430012621C /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3851FF98E38009E9B3E /* sprite.cpp */; };
+		F48F432F200937430012621C /* animatedsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3881FF9AF99009E9B3E /* animatedsprite.cpp */; };
+		F48F4330200937430012621C /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD38B1FF9CA07009E9B3E /* player.cpp */; };
+		F48F4331200937430012621C /* collidables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3941FFB85A0009E9B3E /* collidables.cpp */; };
+		F48F4332200937430012621C /* projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F42AD2007673E0012621C /* projectile.cpp */; };
+		F48F4333200937430012621C /* cloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEC2004808000073BB0 /* cloud.cpp */; };
+		F48F4334200937430012621C /* numsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEF2005542C00073BB0 /* numsprite.cpp */; };
+		F48F4335200937430012621C /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
+		F48F4337200937620012621C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
+		F48F43382009379A0012621C /* Content in Resources */ = {isa = PBXBuildFile; fileRef = F4FCD36C1FF8A19D009E9B3E /* Content */; };
+		F48F433B20093A9C0012621C /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */; };
+		F48F433C20093AF40012621C /* Frameworks in CopyFiles */ = {isa = PBXBuildFile; fileRef = F4FCD36D1FF8A19D009E9B3E /* Frameworks */; };
+		F48F433D20093EE80012621C /* Frameworks in Resources */ = {isa = PBXBuildFile; fileRef = F4FCD36D1FF8A19D009E9B3E /* Frameworks */; };
+		F48F436C2009F7270012621C /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F436B2009F7270012621C /* SDL2_ttf.framework */; };
+		F48F436D2009F7310012621C /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F436B2009F7270012621C /* SDL2_ttf.framework */; };
+		F48F4370200AD3A60012621C /* enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F436E200AD3A60012621C /* enemy.cpp */; };
+		F48F4371200AD3A60012621C /* enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F436E200AD3A60012621C /* enemy.cpp */; };
 		F4D89BEE2004808000073BB0 /* cloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEC2004808000073BB0 /* cloud.cpp */; };
 		F4D89BF12005542C00073BB0 /* numsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4D89BEF2005542C00073BB0 /* numsprite.cpp */; };
 		F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36E1FF8A220009E9B3E /* SDL2.framework */; };
 		F4FCD3711FF8A220009E9B3E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */; };
 		F4FCD3721FF8A246009E9B3E /* Content in CopyFiles */ = {isa = PBXBuildFile; fileRef = F4FCD36C1FF8A19D009E9B3E /* Content */; };
-		F4FCD3731FF8A246009E9B3E /* Frameworks in CopyFiles */ = {isa = PBXBuildFile; fileRef = F4FCD36D1FF8A19D009E9B3E /* Frameworks */; };
 		F4FCD3781FF8A427009E9B3E /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD3761FF8A427009E9B3E /* game.cpp */; };
 		F4FCD37C1FF8A5F5009E9B3E /* graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD37A1FF8A5F5009E9B3E /* graphics.cpp */; };
 		F4FCD3801FF8B150009E9B3E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4FCD37F1FF8B150009E9B3E /* main.cpp */; };
@@ -32,15 +55,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				F48F433C20093AF40012621C /* Frameworks in CopyFiles */,
 				F4FCD3721FF8A246009E9B3E /* Content in CopyFiles */,
-				F4FCD3731FF8A246009E9B3E /* Frameworks in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F40FBD4E1FFF799700D403AC /* ElsaJump.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = ElsaJump.app; sourceTree = "<group>"; };
 		F40FBD4F20014AC800D403AC /* spring.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = spring.psd; sourceTree = "<group>"; };
 		F40FBD5020014AC800D403AC /* elsachar.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = elsachar.psd; sourceTree = "<group>"; };
 		F40FBD5120014AC800D403AC /* cloud.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud.psd; sourceTree = "<group>"; };
@@ -53,6 +75,15 @@
 		F48F42AC2006E7740012621C /* ThinPlatform.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThinPlatform.psd; sourceTree = "<group>"; };
 		F48F42AD2007673E0012621C /* projectile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = projectile.cpp; sourceTree = "<group>"; };
 		F48F42AE2007673E0012621C /* projectile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = projectile.h; sourceTree = "<group>"; };
+		F48F42B4200928FB0012621C /* Jordan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jordan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F48F42B6200928FB0012621C /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
+		F48F42CA200929DB0012621C /* JordanT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JordanT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F48F4314200935090012621C /* AppDelegate.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = AppDelegate.applescript; sourceTree = "<group>"; };
+		F48F4315200935710012621C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ElsaJump/Info.plist; sourceTree = "<group>"; };
+		F48F431A200936030012621C /* JordanTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JordanTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F48F436B2009F7270012621C /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		F48F436E200AD3A60012621C /* enemy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = enemy.cpp; sourceTree = "<group>"; };
+		F48F436F200AD3A60012621C /* enemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = enemy.h; sourceTree = "<group>"; };
 		F4D89BEC2004808000073BB0 /* cloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cloud.cpp; sourceTree = "<group>"; };
 		F4D89BED2004808000073BB0 /* cloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cloud.h; sourceTree = "<group>"; };
 		F4D89BEF2005542C00073BB0 /* numsprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = numsprite.cpp; sourceTree = "<group>"; };
@@ -82,10 +113,38 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F48F42B1200928FB0012621C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48F42B7200928FB0012621C /* AppleScriptObjC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F42C7200929DB0012621C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48F42CB200929DB0012621C /* AppleScriptObjC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F4317200936030012621C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48F436C2009F7270012621C /* SDL2_ttf.framework in Frameworks */,
+				F48F433B20093A9C0012621C /* SDL2_image.framework in Frameworks */,
+				F48F4337200937620012621C /* SDL2.framework in Frameworks */,
+				F48F431B200936030012621C /* AppleScriptObjC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4FCD35A1FF832F9009E9B3E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F48F436D2009F7310012621C /* SDL2_ttf.framework in Frameworks */,
 				F4FCD3701FF8A220009E9B3E /* SDL2.framework in Frameworks */,
 				F4FCD3711FF8A220009E9B3E /* SDL2_image.framework in Frameworks */,
 			);
@@ -109,14 +168,25 @@
 			path = PSD;
 			sourceTree = "<group>";
 		};
+		F48F42B5200928FB0012621C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F48F436B2009F7270012621C /* SDL2_ttf.framework */,
+				F48F42B6200928FB0012621C /* AppleScriptObjC.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F4FCD3541FF832F9009E9B3E = {
 			isa = PBXGroup;
 			children = (
-				F40FBD4E1FFF799700D403AC /* ElsaJump.app */,
+				F48F4315200935710012621C /* Info.plist */,
+				F48F4314200935090012621C /* AppDelegate.applescript */,
 				F4FCD36F1FF8A220009E9B3E /* SDL2_image.framework */,
 				F4FCD36E1FF8A220009E9B3E /* SDL2.framework */,
 				F4FCD37E1FF8AFFC009E9B3E /* Libraries */,
 				F4FCD35F1FF832F9009E9B3E /* ElsaJump */,
+				F48F42B5200928FB0012621C /* Frameworks */,
 				F4FCD35E1FF832F9009E9B3E /* Products */,
 				F4FCD36D1FF8A19D009E9B3E /* Frameworks */,
 			);
@@ -126,6 +196,9 @@
 			isa = PBXGroup;
 			children = (
 				F4FCD35D1FF832F9009E9B3E /* Elsa Jump */,
+				F48F42B4200928FB0012621C /* Jordan.app */,
+				F48F42CA200929DB0012621C /* JordanT.app */,
+				F48F431A200936030012621C /* JordanTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -161,6 +234,8 @@
 				F4FCD3941FFB85A0009E9B3E /* collidables.cpp */,
 				F48F42AE2007673E0012621C /* projectile.h */,
 				F48F42AD2007673E0012621C /* projectile.cpp */,
+				F48F436F200AD3A60012621C /* enemy.h */,
+				F48F436E200AD3A60012621C /* enemy.cpp */,
 				F4D89BED2004808000073BB0 /* cloud.h */,
 				F4D89BEC2004808000073BB0 /* cloud.cpp */,
 				F4D89BF02005542C00073BB0 /* numsprite.h */,
@@ -182,6 +257,57 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F48F42B3200928FB0012621C /* Jordan */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F48F42C3200928FB0012621C /* Build configuration list for PBXNativeTarget "Jordan" */;
+			buildPhases = (
+				F48F42B0200928FB0012621C /* Sources */,
+				F48F42B1200928FB0012621C /* Frameworks */,
+				F48F42B2200928FB0012621C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Jordan;
+			productName = Jordan;
+			productReference = F48F42B4200928FB0012621C /* Jordan.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F48F42C9200929DB0012621C /* JordanT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F48F42D7200929DB0012621C /* Build configuration list for PBXNativeTarget "JordanT" */;
+			buildPhases = (
+				F48F42C6200929DB0012621C /* Sources */,
+				F48F42C7200929DB0012621C /* Frameworks */,
+				F48F42C8200929DB0012621C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JordanT;
+			productName = JordanT;
+			productReference = F48F42CA200929DB0012621C /* JordanT.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F48F4319200936030012621C /* JordanTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F48F4327200936030012621C /* Build configuration list for PBXNativeTarget "JordanTest" */;
+			buildPhases = (
+				F48F4316200936030012621C /* Sources */,
+				F48F4317200936030012621C /* Frameworks */,
+				F48F4318200936030012621C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JordanTest;
+			productName = JordanTest;
+			productReference = F48F431A200936030012621C /* JordanTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 		F4FCD35C1FF832F9009E9B3E /* ElsaJump */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F4FCD3641FF832F9009E9B3E /* Build configuration list for PBXNativeTarget "ElsaJump" */;
@@ -208,6 +334,23 @@
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Simón Zeiger";
 				TargetAttributes = {
+					F48F42B3200928FB0012621C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					F48F42C9200929DB0012621C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					F48F4319200936030012621C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
 					F4FCD35C1FF832F9009E9B3E = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
@@ -220,6 +363,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = F4FCD3541FF832F9009E9B3E;
 			productRefGroup = F4FCD35E1FF832F9009E9B3E /* Products */;
@@ -227,11 +371,74 @@
 			projectRoot = "";
 			targets = (
 				F4FCD35C1FF832F9009E9B3E /* ElsaJump */,
+				F48F42B3200928FB0012621C /* Jordan */,
+				F48F42C9200929DB0012621C /* JordanT */,
+				F48F4319200936030012621C /* JordanTest */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		F48F42B2200928FB0012621C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F42C8200929DB0012621C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F4318200936030012621C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48F433D20093EE80012621C /* Frameworks in Resources */,
+				F48F43382009379A0012621C /* Content in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		F48F42B0200928FB0012621C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F42C6200929DB0012621C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F48F4316200936030012621C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F48F432A200937430012621C /* game.cpp in Sources */,
+				F48F432B200937430012621C /* world.cpp in Sources */,
+				F48F432C200937430012621C /* graphics.cpp in Sources */,
+				F48F4371200AD3A60012621C /* enemy.cpp in Sources */,
+				F48F432D200937430012621C /* main.cpp in Sources */,
+				F48F432E200937430012621C /* sprite.cpp in Sources */,
+				F48F432F200937430012621C /* animatedsprite.cpp in Sources */,
+				F48F4330200937430012621C /* player.cpp in Sources */,
+				F48F4331200937430012621C /* collidables.cpp in Sources */,
+				F48F4332200937430012621C /* projectile.cpp in Sources */,
+				F48F4333200937430012621C /* cloud.cpp in Sources */,
+				F48F4334200937430012621C /* numsprite.cpp in Sources */,
+				F48F4335200937430012621C /* input.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4FCD3591FF832F9009E9B3E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -239,6 +446,7 @@
 				F4FCD3781FF8A427009E9B3E /* game.cpp in Sources */,
 				F40FBD572003133400D403AC /* input.cpp in Sources */,
 				F4FCD3801FF8B150009E9B3E /* main.cpp in Sources */,
+				F48F4370200AD3A60012621C /* enemy.cpp in Sources */,
 				F4FCD38D1FF9CA07009E9B3E /* player.cpp in Sources */,
 				F48F42AF2007673E0012621C /* projectile.cpp in Sources */,
 				F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */,
@@ -254,6 +462,106 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		F48F42C4200928FB0012621C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Jordan/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.Jordan;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F48F42C5200928FB0012621C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Jordan/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.Jordan;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F48F42D8200929DB0012621C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = JordanT/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanT;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F48F42D9200929DB0012621C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = JordanT/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanT;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F48F4328200936030012621C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = ElsaJump/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Resources/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				NEW_SETTING = "";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_OSACOMPILEFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SEPARATE_SYMBOL_EDIT = NO;
+			};
+			name = Debug;
+		};
+		F48F4329200936030012621C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = ElsaJump/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Resources/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				NEW_SETTING = "";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_OSACOMPILEFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SEPARATE_SYMBOL_EDIT = NO;
+			};
+			name = Release;
+		};
 		F4FCD3621FF832F9009E9B3E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -369,10 +677,12 @@
 					"$(PROJECT_DIR)/Libraries",
 					"$(inherited)",
 				);
-				INSTALL_PATH = "@rpath";
+				INFOPLIST_FILE = ElsaJump/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/./Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = ElsaJump;
 				PRODUCT_NAME = "Elsa Jump";
 			};
 			name = Debug;
@@ -389,10 +699,12 @@
 					"$(PROJECT_DIR)/Libraries",
 					"$(inherited)",
 				);
-				INSTALL_PATH = "@rpath";
+				INFOPLIST_FILE = ElsaJump/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/./Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = ElsaJump;
 				PRODUCT_NAME = "Elsa Jump";
 			};
 			name = Release;
@@ -400,6 +712,33 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F48F42C3200928FB0012621C /* Build configuration list for PBXNativeTarget "Jordan" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F48F42C4200928FB0012621C /* Debug */,
+				F48F42C5200928FB0012621C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F48F42D7200929DB0012621C /* Build configuration list for PBXNativeTarget "JordanT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F48F42D8200929DB0012621C /* Debug */,
+				F48F42D9200929DB0012621C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F48F4327200936030012621C /* Build configuration list for PBXNativeTarget "JordanTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F48F4328200936030012621C /* Debug */,
+				F48F4329200936030012621C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F4FCD3581FF832F9009E9B3E /* Build configuration list for PBXProject "ElsaJump" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

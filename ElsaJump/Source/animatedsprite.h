@@ -35,7 +35,7 @@ public:
     /* void update
      * Updates the animated sprite (timer)
      */
-    void fixedUpdate(float elapsedTime); //TODO: figure out why is int and not float
+    void fixedUpdate(float elapsedTime); 
     
     /* void draw
      * Draws the sprite to the screen
@@ -80,7 +80,7 @@ protected:
     
     
 private:
-    static std::map<std::string, std::vector<SDL_Rect>> _animations;
+    static std::map<std::string, std::vector<SDL_Rect> > _animations;
     
     int _frameIndex;
     double _timeElapsed;

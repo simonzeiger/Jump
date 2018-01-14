@@ -15,6 +15,7 @@
 #include "graphics.h"
 #include <vector>
 
+
 class Graphics;
 
 class Game {
@@ -22,6 +23,7 @@ public:
     Game();
     ~Game();
     std::string _path;
+    static std::vector<std::pair<std::string, int> > highScores();
 private:
     void gameLoop();
     void draw();
@@ -33,7 +35,12 @@ private:
     std::string _playerName;
     static const int _nNumSprites = 10;
     NumSprite* _numSprites[_nNumSprites];
-    std::vector<std::pair<std::string, int>> _highScores;
+    static std::vector<std::pair<std::string, int> > _highScores;
+
+    // Driver function to sort the vector elements
+    // by second element of pairs
+   
+    
 };
 
 #endif /* game_hpp */

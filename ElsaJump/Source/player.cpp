@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "globals.h"
 #include "game.h"
+#include "enemy.h"
 #include "world.h"
 #include "projectile.h"
 #include <math.h>
@@ -167,7 +168,7 @@ void Player::fixedUpdate(float fixedTime){
             
         
         //Move by dx
-        _x += _dx * fixedTime;
+        if(!_isDead) _x += _dx * fixedTime;
     
         AnimatedSprite::fixedUpdate(fixedTime);
     
@@ -201,20 +202,36 @@ bool Player::isDead() {
 }
 
 int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
-    for(int i = 0; i < nPlatforms; i++){
-        if(platforms[i]->getY() > 0){
-            std::pair<bool, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
-            //return neg number if hit a spring
-            if(collision.first){
-                return !collision.second ? platforms[i]->getY() : -platforms[i]->getY();
+    if(!_isDead){
+        for(int i = 0; i < nPlatforms; i++){
+            
+            if(platforms[i]->getY() > 0){
+                std::pair<int, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
+                
+                //return neg number if hit a spring
+                if(collision.first){
+                    return !collision.second ? (collision.first > 0 ? platforms[i]->getY() : platforms[i]->getY() - 48): -platforms[i]->getY();
+                }
+                
             }
+            
+            int en = platforms[i]->checkEnemyCollision(_x, _y);
+            if(en == 1)
+                kill();
         }
     }
     return -10000;
 }
+
+bool Player::checkEnemyCollision(Enemy* enemy){
+    return enemy->checkCollision(_x, _y);
+
+}
+
    
-void Player::killed(){
+void Player::kill(){
     _isDead = true;
+    _dy = 0;
    
 }
 

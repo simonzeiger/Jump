@@ -14,6 +14,8 @@
 #include "player.h"
 #include "cloud.h"
 #include "globals.h"
+#include <vector>
+#include <SDL2_ttf/SDL_ttf.h>
 
 
 class World {
@@ -42,6 +44,9 @@ private:
     Platform* _platforms[MAX_PLATFORMS];
     static const int MAX_CLOUDS = 10;
     Cloud* _clouds[MAX_CLOUDS];
+    std::vector<Sprite> _scoreSprites;
+    bool _existsEnemy;
+
     
     float _score;
     int _nPlatforms;
@@ -54,6 +59,11 @@ private:
     Player* _player;
     Graphics* _graphics;
     
+    TTF_Font* _font;
+    int _highScoreCounter;
+    std::vector<std::pair<std::string, int> > _highScores;
+    
+
    
     
    

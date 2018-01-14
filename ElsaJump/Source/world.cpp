@@ -8,9 +8,13 @@
 
 #include "world.h"
 #include "globals.h"
+#include "game.h"
+#include "enemy.h"
 #include "cloud.h"
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2_ttf/SDL_ttf.h>
+
 
 namespace world_constants {
     const int SHIFT_DELAY = 3.5; // 3.5
@@ -19,9 +23,11 @@ namespace world_constants {
     const int MIN_DISTANCE = 35;
     const int SPRING_PROBABILITY = 10;
     const int ONLY_ONCE_PLAT_PROBABILITY = 14;
-    const int FAKE_PLAT_PROBABILITY = 4;
+    const int FAKE_PLAT_PROBABILITY = 2;
     const int MOVING_PLAT_PROBABILITY = 14;
+    const int ENEMY_PROBABILITY = 1;
 }
+
 
 
 //TODO: fix spring who is barely off screen
@@ -33,11 +39,23 @@ _graphics(graphics)
     _nPlatforms = 0;
     _shifting = false;
     _shiftCount = 0;
-    _shiftDistance = 100;
+    _shiftDistance = 0;
     _prevPlayerY = globals::SCREEN_HEIGHT;
     _topPlatform = nullptr;
     _topCloud = nullptr;
     _score = 0;
+    _highScoreCounter = 0;
+    _existsEnemy = false;
+    
+    TTF_Init();
+
+    _font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
+    
+    _highScores = Game::highScores();
+    
+    for(int i = 0; i < _highScores.size(); i++){
+        printf("%d\n", _highScores[i].second);
+    }
     
     initPlatforms();
     initClouds();
@@ -51,6 +69,9 @@ World::~World(){
     for(int i = 0; i < MAX_CLOUDS; i++){
         delete _clouds[i];
     }
+    
+    TTF_CloseFont(_font);
+    TTF_Quit();
  
 }
 
@@ -58,6 +79,7 @@ void World::update( ){
     
     
     _player->update();
+    
     
     if(!_player->isJumping()){
         int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
@@ -76,10 +98,43 @@ void World::update( ){
         }
     }
     
+    if(_highScoreCounter < _highScores.size() && score() + _player->getY() / 10 + 20 >= _highScores[_highScoreCounter].second){
+        
+        bool make = true;
+        for(int i = 0; i < _nPlatforms; i++){
+            if(_platforms[i]->getY() < 0 && _platforms[i]->getY() > -40 && _platforms[i]->Sprite::getX() < 80){
+                make = false;
+                _highScoreCounter++;
+            }
+        }
+        if(make){
+            std::string textureText = "- " + _highScores[_highScoreCounter].first.substr(0, 7);
+            
+            SDL_Surface* textSurface = TTF_RenderText_Solid( _font, textureText.c_str(), {255,255,255} );
+            SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+            
+            int width = textSurface->w;
+            int height = textSurface->h;
+            SDL_FreeSurface(textSurface);
+            Sprite::addTexture(textureText, texture);
+            
+            int y = -20;
+            bool same = _highScores[_highScoreCounter].second == _highScores[_highScoreCounter - 1].second;
+            if(_highScoreCounter > 0 && same){
+                
+                y = _scoreSprites[_highScoreCounter - 1].getY() - 20;
+            }
+            
+            _scoreSprites.push_back(Sprite(*_graphics, textureText, 0, 0, width, height,
+                                           0, y));
+            
+            _highScoreCounter++;
+        }
+    }
+    
     if(_player->getY() > globals::SCREEN_HEIGHT + 100){
-        _player->killed();
+        _player->kill();
         _prevPlayerY = globals::SCREEN_HEIGHT;
-        resetAll();
     }
   
 
@@ -105,10 +160,13 @@ void World::fixedUpdate(float fixedTime){
         
         
         _shiftCount += fixedTime;
-        _shiftDistance = -_player->getDY() * fixedTime;
+       _shiftDistance = -_player->getDY() * fixedTime;
+            
         _score += _shiftDistance / 10;
+        
+        
 
-        if(_shiftCount > _prevPlayerY / world_constants::SHIFT_DELAY){    //   if(_player->getY() <= globals::SCREEN_HEIGHT / 2){
+        if(_shiftCount > _prevPlayerY / world_constants::SHIFT_DELAY || _player->isDead()){    //   if(_player->getY() <= globals::SCREEN_HEIGHT / 2){
             
             
             for(int i = 0; i < _nPlatforms; i++){
@@ -116,6 +174,13 @@ void World::fixedUpdate(float fixedTime){
                 if(_platforms[i]->getY() > globals::SCREEN_HEIGHT + 50){
                     resetPlatform(_platforms[i]);
                 }
+            }
+            
+            
+            
+            for(int i = 0; i < _scoreSprites.size(); i++){
+                if( _scoreSprites[i].getY() < globals::SCREEN_HEIGHT)
+                    _scoreSprites[i].setY(_scoreSprites[i].getY() -_player->getDY() * fixedTime);
             }
             
             for(int i = 0; i < MAX_CLOUDS; i++){
@@ -142,6 +207,11 @@ void World::fixedUpdate(float fixedTime){
 }
 
 void World::draw(){
+    
+    for(int i = 0; i < _scoreSprites.size(); i++){
+        _scoreSprites[i].draw(*_graphics, _scoreSprites[i].getX(), _scoreSprites[i].getY(), 1);
+    }
+    
     for(int i = 0; i < MAX_CLOUDS; i++){
         _clouds[i]->draw(*_graphics);
     }
@@ -149,6 +219,7 @@ void World::draw(){
     for(int i = 0; i < _nPlatforms; i++){
         _platforms[i]->draw(*_graphics);
     }
+    
     
     _player->draw(*_graphics);
 
@@ -279,27 +350,36 @@ void World::resetPlatform(Platform* platform) {
     platform->reset();
    
     Vector2<int> nextPos = getNextPlatformPos();
+    
+   
+    
     platform->setX(nextPos.X);
+
     platform->setY(nextPos.Y);
     
     int scoreDifficult = _score / 30;
     if(scoreDifficult > 800)
         scoreDifficult = 800;
     //difficulty scaling
-    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(0, world_constants::MOVING_PLAT_PROBABILITY * 100 - scoreDifficult) <= 100 && _topPlatform->isReal())
-        platform->enableMoving(.08 + _score / 90000);
+    if(_topPlatform->getY() - platform->getY() > world_constants::MIN_DISTANCE && globals::randInt(0, world_constants::MOVING_PLAT_PROBABILITY * 100 - scoreDifficult) <= 100 && _topPlatform->isReal()){
+        platform->enableMoving(.08 + _score / 80000);
+       
+    }
     
-
-    if(globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1){
-        platform->addSpring(globals::randInt(0, 1), *_graphics);
+    if(_existsEnemy == false && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE * .7 && globals::randInt(0, world_constants::ENEMY_PROBABILITY) == 1){
+        platform->addEnemy(*_graphics);
+        _existsEnemy = true;
     } else {
-        //difficulty scaling
-        if(globals::randInt(0, world_constants::ONLY_ONCE_PLAT_PROBABILITY * 100 - scoreDifficult) <= 200)
-            platform->enableOnlyOnce();
-        else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
-             platform->makeFake();
+        if((!_topPlatform->hasSpring() || _topPlatform->getY() - platform->getY() > world_constants::MAX_DISTANCE * .7) && globals::randInt(1, world_constants::SPRING_PROBABILITY) == 1){
+            platform->addSpring(globals::randInt(0, 1), *_graphics);
+        } else {
+            //difficulty scaling
+            if(globals::randInt(0, world_constants::ONLY_ONCE_PLAT_PROBABILITY * 100 - scoreDifficult) <= 200)
+                platform->enableOnlyOnce();
+            else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
+                platform->makeFake();
             
-
+        }
     }
     
     _topPlatform = platform;
@@ -316,11 +396,22 @@ void World::resetCloud(Cloud* cloud) {
 void World::resetAll(){
     for(int i = 0; i < _nPlatforms; i++){
         _platforms[i]->deleteSpring();
+        _platforms[i]->deleteEnemy();
         delete _platforms[i];
     }
     
     for(int i = 0; i < MAX_CLOUDS; i++){
         delete _clouds[i];
+    }
+    
+    _existsEnemy = false;
+    
+    _scoreSprites.clear();
+    
+    _highScoreCounter = 0;
+    _highScores = Game::highScores();
+    for(int i = 0; i < _highScores.size(); i++){
+        printf("%d\n", _highScores[i].second);
     }
     
     _nPlatforms = 0;

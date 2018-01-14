@@ -6,7 +6,7 @@
  * Animates our sprites
  */
 
-std::map<std::string, std::vector<SDL_Rect>> AnimatedSprite::_animations;
+std::map<std::string, std::vector<SDL_Rect> > AnimatedSprite::_animations;
 
 
 AnimatedSprite::AnimatedSprite(Graphics &graphics, std::string name, int sourceX, int sourceY,

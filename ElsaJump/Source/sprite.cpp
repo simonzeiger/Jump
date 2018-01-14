@@ -42,7 +42,8 @@ void Sprite::addTexture(std::string name, SDL_Texture* texture){
 }
 
 void Sprite::draw(Graphics &graphics, int x, int y, int scale) {
-    if(_y + _height * scale > -20) {
+    if(_spriteSheets["Ball"] == _spriteSheet || (_y + _height * scale > -20 && _y < globals::SCREEN_HEIGHT + 20)) {
+        
         SDL_Rect destinationRectangle = { x, y, _sourceRect.w * scale,
             _sourceRect.h * scale };
         graphics.blitSurface(_spriteSheet, &_sourceRect, &destinationRectangle);

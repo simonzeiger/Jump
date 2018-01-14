@@ -11,7 +11,6 @@
 #include "graphics.h"
 #include "player.h"
 
-float Projectile::timer;
 
 Projectile::Projectile(Graphics &graphics, Player* player) :
 Sprite(graphics, "Ball", 0, 0, 16, 16, player->getX(), player->getY()),
@@ -53,12 +52,13 @@ void Projectile::fixedUpdate(float fixedTime){
 }
 
 void Projectile::draw(Graphics &graphics){
-    if(_loaded)
+    if(_loaded){
         Sprite::draw(graphics, _x, _y, 1);
-}
-
-void Projectile::incrementTimer(float incr) {
-    timer += incr;
+        if(_dx != 0 && _dy != 0){
+            
+        }
+            
+    }
 }
 
 void Projectile::addTarget(int targetX, int targetY){
