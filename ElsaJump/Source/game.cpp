@@ -14,9 +14,13 @@
 #include "input.h"
 #include "world.h"
 #include <cstring>
-#include <fstream>
+#include <cstring>
 #include <cstring>
 #include <SDL2/SDL.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 
 
 using std::string;
@@ -30,6 +34,36 @@ namespace {
 }
 
 std::vector<std::pair<std::string, int> > Game::_highScores;
+
+#ifdef __EMSCRIPTEN__
+SDL_Event event;
+
+int lastUpdateTime = SDL_GetTicks();
+
+bool ballLoaded = false;
+
+
+std::string inputText = "";
+#endif
+
+#ifdef __EMSCRIPTEN__
+extern "C" {
+    void main_loop(void* game){
+        class Game *gem = (Game*)game;
+        gem->gameLoop(event, lastUpdateTime, ballLoaded, inputText);
+    }
+}
+
+static void userdata_sync(){
+    EM_ASM(
+           FS.syncfs(function(error) {
+        if (error) {
+            console.log("Error while syncing", error);
+        }
+    });
+           );
+}
+#endif
 
 Game::Game(){
    
@@ -47,6 +81,7 @@ Game::Game(){
     Sprite::addTexture("Platform", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Platform.png")));
     Sprite::addTexture("Ball", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Ball.png")));
     Sprite::addTexture("Enemy", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Enemy.png")));
+    Sprite::addTexture("PlayAgain", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Playagainbutton.png")));
 
    
     
@@ -61,32 +96,61 @@ Game::Game(){
     char* temp = SDL_GetBasePath();
     _path = temp;
     SDL_free(temp);
-    _path += "Content/high_score.txt";
+    _path += "Content/";
     
-    std::ifstream load( _path);
-    string scoreString;
-    string name;
+    FILE * hSFile;
+    hSFile = fopen((_path + "high_score.txt").c_str(), "r");
     
-    while( load >> scoreString >> name){
-        _highScores.push_back(pair<string, int>( name, stoi(scoreString)));
+    char scoreString[12];
+    char name[8];
+    
+    while( fscanf(hSFile, "%s %s", scoreString, name) == 2){
+        _highScores.push_back(pair<string, int>( name, atoi(scoreString)));
     }
+    
+    fclose(hSFile);
+    
     std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
             return (a.second < b.second);
         }
     );
+    _playerName = "Elsa";
+    FILE * nameFile;
+    nameFile =  fopen((_path + "name.txt").c_str(), "r");
+    fscanf(nameFile, "%s", name);
+    _playerName = name;
     
-    
-    for(int i = 0; i < _highScores.size(); i++){
+  /*  for(int i = 0; i < _highScores.size(); i++){
         printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
 
-    }
+    }*/
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
-    _playerName = "Tiger";
+    _editTextTimer = 0;
+    _startEditing = false;
+    _textTimer = 0;
     
-
-    gameLoop();
+   
+    
+    #ifdef __EMSCRIPTEN__
+    inputText = _playerName;
+    emscripten_set_main_loop_arg(main_loop, this, 0 , 1);
+    #else
+    SDL_Event event;
+    
+    int lastUpdateTime = SDL_GetTicks();
+    
+    bool ballLoaded = false;
+    
+    
+    std::string inputText = _playerName;
+    
+    for(;;){
+        if(!gameLoop(event, lastUpdateTime, ballLoaded, inputText))
+           break;
+    }
+    #endif
 }
 
 Game::~Game(){
@@ -94,44 +158,65 @@ Game::~Game(){
     delete _world;
     delete _graphics;
     Sprite::flush();
-  
     SDL_Quit();
 }
 
-void Game::gameLoop(){
+bool Game::gameLoop(SDL_Event &event, int &lastUpdateTime, bool &ballLoaded, std::string &inputText){
 
-    SDL_Event event;
-    
-    int lastUpdateTime = SDL_GetTicks();
-    
-    int mouseX, mouseY;
-    
-     int secondTimer = 0;
-     int frames = 0;
-    
-    bool ballLoaded = false;
-    
-    
-   // std::string inputText;
-    //SDL_StartTextInput();
     
     //start game loop
-    for(;;){
+    
+        
+        if(_player->isDead())
+            SDL_StartTextInput();
+
+        int mouseX, mouseY;
+
         
         const int CURRENT_TIME = SDL_GetTicks();
         int elapsedTime = CURRENT_TIME - lastUpdateTime;
         
-      //  bool renderText = false;
+        bool renderText = false;
+    
+    
+    int maxRepeat = 8;
+    #ifdef __EMSCRIPTEN__
+    maxRepeat = 1;
+    #endif
         
-        for (int i = 0; i < 8 && elapsedTime > 0.0 ; i++ ){
+        for (int i = 0; i < maxRepeat && elapsedTime > 0.0 ; i++ ){
             
             SDL_PollEvent(&event);
             if (event.type == SDL_QUIT) {
-                return;
-            } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded  && !_player->isDead()){
-                _player->loadBall();
+                return false;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN){
+                if(_player->isDead()){
+                    SDL_GetMouseState(&mouseX, &mouseY);
+                    if(inputText == _playerName && checkSpriteClick(_endGameSprites[0], mouseX, mouseY)){
+                        _endGameSprites[0].setSpriteSheet(nullptr, 0, 0);
+                        _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2);
+                        _startEditing = true;
+                        inputText = "";
+                    }
+                    if(checkSpriteClick(_endGameSprites[_endGameSprites.size() - 1], mouseX, mouseY)){
+                        if (_player->isDead()){
+                            _world->resetScore();
+                            _player->revive();
+                            _startEditing = false;
+                            _endGameSprites.clear();
+                            if(inputText != "") _playerName = inputText;
+                            else
+                                inputText = _playerName;
+                            SDL_StopTextInput();
+
+                            
+                        }
+                    }
+                }
+                else if(!ballLoaded && _world->score() > 0)
+                    _player->loadBall();
                 ballLoaded = true;
-            } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded  && !_player->isDead()){
+            } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded  && !_player->isDead() && _world->score() > 0){
                 SDL_GetMouseState(&mouseX, &mouseY);
                 _player->throwBall(mouseX, mouseY);
                 ballLoaded = false;
@@ -141,6 +226,7 @@ void Game::gameLoop(){
             fixedUpdate(dt);
             elapsedTime -= dt;
             lastUpdateTime += dt;
+            _textTimer += dt;
             //secondTimer += dt;
 
         }
@@ -165,65 +251,126 @@ void Game::gameLoop(){
         
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
-            return;
-        } else if (event.type == SDL_MOUSEBUTTONDOWN && !ballLoaded){
-            _player->loadBall();
-            ballLoaded = true;
+            return false;
+        } else if (event.type == SDL_MOUSEBUTTONDOWN){
+            if(_player->isDead()){
+                SDL_GetMouseState(&mouseX, &mouseY);
+                if(inputText == _playerName && checkSpriteClick(_endGameSprites[0], mouseX, mouseY)){
+                    _endGameSprites[0].setSpriteSheet(nullptr, 0, 0);
+                    _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2);
+                    _startEditing = true;
+                    inputText = "";
+                }
+                if(checkSpriteClick(_endGameSprites[_endGameSprites.size() - 1], mouseX, mouseY)){
+                    if (_player->isDead()){
+                        _world->resetScore();
+                        _player->revive();
+                        _startEditing = false;
+                        _endGameSprites.clear();
+                        if(inputText != "") _playerName = inputText;
+                        else
+                            inputText = _playerName;
+                        SDL_StopTextInput();
+
+                        
+                    }
+                }
+            }
+            else if(!ballLoaded)
+                _player->loadBall();
+                ballLoaded = true;
+        } else if (!_startEditing && keystate[SDL_SCANCODE_BACKSPACE]) {
+            if(!_startEditing){
+                _endGameSprites[0].setSpriteSheet(nullptr, 0, 0);
+                _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2);
+                _startEditing = true;
+                inputText = "";
+            }
+            
         } else if(event.type == SDL_MOUSEBUTTONUP && ballLoaded && !_player->isDead()){
             SDL_GetMouseState(&mouseX, &mouseY);
             _player->throwBall(mouseX, mouseY);
             ballLoaded = false;
             printf("x %d y %d\n", mouseX, mouseY);
-        } else if (keystate[SDL_SCANCODE_SPACE] && !ballLoaded  && !_player->isDead()){
-            _player->loadBall();
-            ballLoaded = true;
-        } else if(event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_SPACE && ballLoaded  && !_player->isDead()){
+        } else if (keystate[SDL_SCANCODE_SPACE] || keystate[SDL_SCANCODE_RETURN]){
+            if(!ballLoaded  && !_player->isDead() && _world->score() > 10){
+                _player->loadBall();
+                ballLoaded = true;
+            }
+            if (_player->isDead()){
+                _world->resetScore();
+                _player->revive();
+                _startEditing = false;
+                _endGameSprites.clear();
+                if(inputText != "") _playerName = inputText;
+                else
+                    inputText = _playerName;
+                SDL_StopTextInput();
+
+                
+            }
+            
+        } else if(event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_SPACE && ballLoaded  && !_player->isDead() && _world->score() >= 19){
             _player->throwBall(_player->getX(), -300);
             ballLoaded = false;
         }
-        /*//Special key input
-        else if( event.type == SDL_KEYDOWN )
+        //Special key input
+        else if( _startEditing && event.type == SDL_KEYDOWN )
         {
             //Handle backspace
             if( event.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0 )
             {
-                //lop off character
-                inputText.pop_back();
-                renderText = true;
+                if(_textTimer > 100){
+                    //lop off character
+                    inputText.pop_back();
+                    renderText = true;
+                    _textTimer = 0;
 
-            }
-            //Handle copy
-            else if( event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
-            {
-                SDL_SetClipboardText( inputText.c_str() );
-            }
-            //Handle paste
-            else if( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
-            {
-                inputText = SDL_GetClipboardText();
-                renderText = true;
-
+                }
+            
             }
         }
         //Special text input event
-        else if( event.type == SDL_TEXTINPUT )
+        else if( _startEditing && event.type == SDL_TEXTINPUT )
         {
             //Not copy or pasting
-            if( !( ( event.text.text[ 0 ] == 'c' || event.text.text[ 0 ] == 'C' ) && ( event.text.text[ 0 ] == 'v' || event.text.text[ 0 ] == 'V' ) && SDL_GetModState() & KMOD_CTRL ) )
+            if(  event.text.text[ 0 ] != ' ' && event.text.text[ 0 ] != '\\' && event.text.text[ 0 ] != '\"' && event.text.text[ 0 ] != '\'' && event.text.text[ 0 ] != '%')
             {
-                //Append character
-                inputText += event.text.text;
-                renderText = true;
-
+                if(event.text.text[0] != inputText[inputText.size() - 1] || _textTimer > 200){
+                    //Append character
+                    inputText += event.text.text;
+                    renderText = true;
+                    _textTimer = 0;
+                }
+               
             }
         }
         
         //Rerender text if needed
         if( renderText )
         {
-            printf("%s \n", inputText.c_str());
+            if(inputText.size() > 0){
+                inputText = inputText.substr(0, 7);
+                TTF_CloseFont(font);
+                font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
+                
+                SDL_Surface* textSurface = TTF_RenderText_Solid( font, inputText.c_str(), {255,255,255} );
+                SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(), textSurface);
+                
+                int width = textSurface->w;
+                int height = textSurface->h;
+                SDL_FreeSurface(textSurface);
+                _endGameSprites[0].setSpriteSheet(texture, width, height);
+                _endGameSprites[0].setX(globals::SCREEN_WIDTH / 2 - width / 2);
+                _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2 + width / 2);
+                TTF_CloseFont(font);
+                font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
+            } else{
+                _endGameSprites[0].setSpriteSheet(nullptr, 0, 0);
+                _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2);
+            }
 
-        }*/
+        }
         
         update();
 
@@ -242,10 +389,8 @@ void Game::gameLoop(){
       
         
        
-    }
-    //TODO:
-    //  SDL_StopTextInput();
-
+    
+    return true;
 }
 
 void Game::draw(){
@@ -253,16 +398,23 @@ void Game::draw(){
 
     _world->draw();
     
-    for(int i = 0; i < _nNumSprites; i++){
-        _numSprites[i]->draw(*_graphics);
+    if(!_player->isDead()){
+        for(int i = 0; i < _nNumSprites; i++){
+            _numSprites[i]->draw(*_graphics);
+        }
+    } else {
+        for(int i = 0; i < _endGameSprites.size(); i++){
+            if(i == 1){
+                if(_editTextTimer < 600)
+                    _endGameSprites[1].draw(*_graphics, _endGameSprites[i].getX(), _endGameSprites[i].getY(), 1);
+
+            } else {
+                _endGameSprites[i].draw(*_graphics, _endGameSprites[i].getX(), _endGameSprites[i].getY(), 1);
+
+            }
+            
+        }
     }
-    
-    if(_player->isDead()){
-        for(int i = 0; i < _endGameSprites.size(); i++)
-            _endGameSprites[i].draw(*_graphics, _endGameSprites[i].getX(), _endGameSprites[i].getY(), 1);
-    }
-        
-   
     
     _graphics->flip();
 }
@@ -273,57 +425,70 @@ void Game::update(){
     
     
     if(!_player->isDead()){
-        int decimalPlaces = ((int)(log10(_world->score())+1));
+        int decimalPlaces = (static_cast<int>(log10(_world->score())+1));
         for (int i = 0; i < decimalPlaces; i++){
-            _numSprites[i]->num = ((int)( _world->score() / pow(10 , i)) % 10);
+            _numSprites[i]->num = (static_cast<int>( _world->score() / pow(10 , i)) % 10);
         }
         
     } else {
-        for (int i = 0; i < _nNumSprites; i++){
-            _numSprites[i]->num = -1;
-            if(i ==0)
-                _numSprites[i]->num = 0;
-        }
-        
-        std::ofstream myfile (_path, std::ios_base::app);
-        if (myfile.is_open()){
-            if(_world->score() > 130 && std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
-                _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
-                myfile << _world->score() << " " << _playerName << "\n";
-                myfile.close();
-                
-              
-                std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
-                        return (a.second < b.second);
-                    }
-                );
-                
-                for(int i = 0; i < _highScores.size(); i++){
-                    printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
+        if(_endGameSprites.empty()){
+            for (int i = 0; i < _nNumSprites; i++){
+                _numSprites[i]->num = -1;
+                if(i ==0)
+                    _numSprites[i]->num = 0;
+            }
+            
+             FILE * hSFile;
+             hSFile = fopen ((_path + + "high_score.txt").c_str(), "a");
+            if (hSFile != NULL){
+                if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
+                    
+                    _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
+                    fprintf(hSFile, "%d %s\n", _world->score(), _playerName.c_str());
+                    #ifdef __EMSCRIPTEN__
+                    userdata_sync();
+                    #endif
+                    fclose(hSFile);
+                    
+                    
+                    std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
+                            return (a.second < b.second);
+                        }
+                    );
+                    
+                    /*for(int i = 0; i < _highScores.size(); i++){
+                        printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
+                        
+                    }*/
+                    
                     
                 }
-                
-                
+            }
+            else
+                printf("Unable to open file\n");
+            
+            FILE * nameFile;
+            nameFile = fopen ((_path + + "name.txt").c_str(), "w");
+            if (nameFile != NULL){
+                fprintf(nameFile, "%s\n", _playerName.c_str());
+                #ifdef __EMSCRIPTEN__
+                userdata_sync();
+                #endif
+                fclose(hSFile);
+            }
+            
+            if(_endGameSprites.empty()){
+                displayEndGame();
             }
         }
-        else
-            printf("Unable to open file\n");
-        
-        if(_endGameSprites.empty()){
-            displayEndGame();
-        }
-        
      
         
         
-       // _player->revive();
-        //_world->resetScore();
+    
         
     }
     
-    if(_player->isDead()){
-        //update player text
-    }
+    
         
     
 
@@ -334,7 +499,7 @@ void Game::update(){
 
 void Game::displayEndGame() {
     TTF_CloseFont(font);
-    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 86);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
     
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, _playerName.c_str(), {255,255,255} );
     SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
@@ -344,13 +509,24 @@ void Game::displayEndGame() {
     SDL_FreeSurface(textSurface);
     Sprite::addTexture(_playerName, texture);
     
-    _endGameSprites.push_back(Sprite(*_graphics, _playerName, 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 40 * ((float)_playerName.size() / 2), 20));
+    _endGameSprites.push_back(Sprite(*_graphics, _playerName, 0, 0, width, height, globals::SCREEN_WIDTH / 2 - width/2, 20));
     
+    std::string str = "|";
+    textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+    texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    
+    int w = textSurface->w;
+    height = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    Sprite::addTexture("edit", texture);
+    
+    _endGameSprites.push_back(Sprite(*_graphics, "edit", 0, 0, w, height, globals::SCREEN_WIDTH / 2  + width/2, 12));
+
     
     TTF_CloseFont(font);
-    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 64);
     
-    std::string str = "got";
+    str = "got";
     textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
     texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
     
@@ -359,7 +535,7 @@ void Game::displayEndGame() {
     SDL_FreeSurface(textSurface);
     Sprite::addTexture("got", texture);
     
-    _endGameSprites.push_back(Sprite(*_graphics, "got", 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 53, 220));
+    _endGameSprites.push_back(Sprite(*_graphics, "got", 0, 0, width, height, globals::SCREEN_WIDTH / 2   - width/2, 100));
     
     str = std::to_string(_world->score());
     textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
@@ -370,21 +546,51 @@ void Game::displayEndGame() {
     SDL_FreeSurface(textSurface);
     Sprite::addTexture("score", texture);
     
-    _endGameSprites.push_back(Sprite(*_graphics, "score", 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 35* ((float)std::to_string(_world->score()).size() / 2), 320));
+    _endGameSprites.push_back(Sprite(*_graphics, "score", 0, 0, width, height, globals::SCREEN_WIDTH / 2 - width/2, 170));
     
-    str = "points";
-    textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
-    texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    if(!_highScores.empty()){
+        str = "Highscore:";
+        textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+        texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+        
+        width = textSurface->w;
+        height = textSurface->h;
+        SDL_FreeSurface(textSurface);
+        Sprite::addTexture("Highscore", texture);
+        
+        _endGameSprites.push_back(Sprite(*_graphics, "Highscore", 0, 0, width, height,  globals::SCREEN_WIDTH / 2  - width/2, 330));
+        
+        str = _highScores[_highScores.size() - 1].first;
+        textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+        texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+        
+        width = textSurface->w;
+        height = textSurface->h;
+        SDL_FreeSurface(textSurface);
+        Sprite::addTexture("Highname", texture);
+        
+        _endGameSprites.push_back(Sprite(*_graphics, "Highname", 0, 0, width, height,  globals::SCREEN_WIDTH / 2  - width/2, 400));
+        
+        str = std::to_string(_highScores[_highScores.size() - 1].second);
+        textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+        texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+        
+        width = textSurface->w;
+        height = textSurface->h;
+        SDL_FreeSurface(textSurface);
+        Sprite::addTexture("hs", texture);
+        
+        _endGameSprites.push_back(Sprite(*_graphics, "hs", 0, 0, width, height,  globals::SCREEN_WIDTH / 2  - width/2, 470));
+        _startEditing = true;
+        
+       
+    }
     
-    width = textSurface->w;
-    height = textSurface->h;
-    SDL_FreeSurface(textSurface);
-    Sprite::addTexture("points", texture);
-    
-    _endGameSprites.push_back(Sprite(*_graphics, "points", 0, 0, width, height,  globals::SCREEN_WIDTH / 2 - 105, 420));
-    
+    _endGameSprites.push_back(Sprite(*_graphics, "PlayAgain", 0, 0, 128, 64,  330, 555));
     TTF_CloseFont(font);
     font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
+    
+   
 }
 
 void Game::fixedUpdate(float fixedTime) {
@@ -394,9 +600,26 @@ void Game::fixedUpdate(float fixedTime) {
 
     _world->fixedUpdate(fixedTime);
     
-   
+    if(_player->isDead()){
+        _editTextTimer += fixedTime;
+        if(_editTextTimer >= 1200){
+            _editTextTimer = 0;
+        }
+            
+    }
     
 }
+
+bool Game::checkSpriteClick(const Sprite &sprite, int mouseX, int mouseY){
+    if (mouseX > sprite.getX() - 25 && mouseX < sprite.getX() + sprite.width() + 25
+        && mouseY > sprite.getY() - 10 && mouseY < sprite.getY() + sprite.height() + 10){
+        printf("click\n");
+        return true;
+    } else
+        return false;
+        
+}
+
 
 std::vector<std::pair<std::string, int> > Game::highScores() {
     std::vector<std::pair<std::string, int> > copy;
@@ -406,19 +629,20 @@ std::vector<std::pair<std::string, int> > Game::highScores() {
         rounded = std::round(rounded);
         int finalRound = rounded * 100;
         
-        if(bunch.size() == 0)
-            bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        if(bunch.size() == 0){
+            if(finalRound > 100)
+                bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        }
 
         else if(finalRound != bunch.back().second){
             std::random_shuffle(bunch.begin(), bunch.end());
             for(int j = 0; j < bunch.size(); j++){
-                if(bunch[j].first != "")
-                    copy.push_back(bunch[j]);
+                copy.push_back(bunch[j]);
             }
             bunch.clear();
             bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
         } else if(i == 0 || _highScores[i].first != bunch.back().first){
-            if (std::find(bunch.begin(), bunch.end(), std::pair<std::string, int> (_highScores[i].first, finalRound)) == bunch.end())
+            if (finalRound > 100 && std::find(bunch.begin(), bunch.end(), std::pair<std::string, int> (_highScores[i].first, finalRound)) == bunch.end())
                 bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
         }
 

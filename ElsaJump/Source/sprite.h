@@ -28,18 +28,20 @@ public:
     virtual ~Sprite();
     void draw(Graphics &graphics, int x, int y, int scale);
     static void addTexture(std::string name, SDL_Texture* texture);
-    int width();
+    int width() const;
+     int height() const;
     float getX() const;
     float getY() const;
     void setX(float x);
     void setY(float y);
     static void flush();
-    
+    void setSpriteSheet(SDL_Texture* texture, int width, int height);
 protected:
     SDL_Rect _sourceRect;
     SDL_Texture* _spriteSheet;
     float _x, _y;
     int _width,  _height;
+    
 private:
     static std::map<std::string, SDL_Texture*> _spriteSheets;
 

@@ -15,8 +15,11 @@
 #include "cloud.h"
 #include "globals.h"
 #include <vector>
+#ifdef __EMSCRIPTEN__
+#include <SDL/SDL_ttf.h>
+#else
 #include <SDL2_ttf/SDL_ttf.h>
-
+#endif
 class Enemy;
 
 class World {

@@ -7,8 +7,11 @@
 //
 
 #include "graphics.h"
+#ifdef __EMSCRIPTEN__
+#include <SDL2/SDL_image.h>
+#else
 #include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
+#endif
 #include "globals.h"
 
 
@@ -58,7 +61,7 @@ SDL_Surface* Graphics::loadImage(const std::string &filePath) {
 
 void Graphics::blitSurface(SDL_Texture* source, SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle){
     if(SDL_RenderCopy(_renderer, source, sourceRectangle, destinationRectangle) < 0){
-        printf("%p %s\n", source, SDL_GetError());
+       // printf("%p %s\n", source, SDL_GetError());
     }
     
     

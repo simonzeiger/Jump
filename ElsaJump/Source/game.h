@@ -23,13 +23,14 @@ public:
     Game();
     ~Game();
     std::string _path;
+    bool gameLoop(SDL_Event &event, int &lastUpdateTime, bool &ballLoaded, std::string &inputText);
     static std::vector<std::pair<std::string, int> > highScores();
 private:
-    void gameLoop();
     void draw();
     void update( );
     void fixedUpdate(float fixedTime);
     void displayEndGame();
+    bool checkSpriteClick(const Sprite &sprite, int mouseX, int mouseY);
     Player* _player;
     World* _world;
     Graphics* _graphics;
@@ -38,8 +39,9 @@ private:
     static std::vector<std::pair<std::string, int> > _highScores;
     std::string _playerName;
     std::vector<Sprite> _endGameSprites;
-    // Driver function to sort the vector elements
-    // by second element of pairs
+    int _editTextTimer;
+    bool _startEditing;
+    int _textTimer;
    
     
 };

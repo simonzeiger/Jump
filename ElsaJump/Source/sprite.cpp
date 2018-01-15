@@ -57,8 +57,32 @@ void Sprite::flush() {
         SDL_DestroyTexture(i->second);
 }
 
-int Sprite::width() {
+int Sprite::width() const{
     return _width;
+}
+
+int Sprite::height() const{
+    return _height;
+}
+
+void Sprite::setSpriteSheet(SDL_Texture* texture, int width, int height){
+    _width = width;
+    _height = height;
+    _sourceRect.w = width;
+    _sourceRect.h = height;
+    
+    for (auto &i : _spriteSheets) {
+        if (i.second == _spriteSheet) {
+            i.second = texture;
+            break; 
+        }
+    }
+
+    SDL_DestroyTexture(_spriteSheet);
+    _spriteSheet = texture;
+    
+   
+    
 }
 
 

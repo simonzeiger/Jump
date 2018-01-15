@@ -15,11 +15,16 @@
 #include "projectile.h"
 #include <iostream>
 #include <SDL2/SDL.h>
+#ifdef __EMSCRIPTEN__
+#include <SDL/SDL_ttf.h>
+#else
 #include <SDL2_ttf/SDL_ttf.h>
+#endif
+
 
 
 namespace world_constants {
-    const int SHIFT_DELAY = 3.5; // 3.5
+    const int SHIFT_DELAY = 3; // 3
     const int MAX_DISTANCE = 178    ;
     const int MAX_SPRING_DISTANCE = 600;
     const int MIN_DISTANCE = 35;
@@ -246,6 +251,8 @@ void World::fixedUpdate(float fixedTime){
 
 void World::draw(){
     
+    if(!_player->isDead()){
+    
     for(int i = 0; i < _scoreSprites.size(); i++){
         _scoreSprites[i].draw(*_graphics, _scoreSprites[i].getX(), _scoreSprites[i].getY(), 1);
     }
@@ -256,6 +263,7 @@ void World::draw(){
     
     for(int i = 0; i < _nPlatforms; i++){
         _platforms[i]->draw(*_graphics);
+    }
     }
     
     
@@ -324,7 +332,7 @@ Vector2<int> World::getNextPlatformPos(){
        /* if(globals::randInt(1, 12) == 1) //long distnat springs cool in theoru but annoying in practice
             randY = globals::randInt(world_constants::MAX_SPRING_DISTANCE * .6,world_constants:: MAX_SPRING_DISTANCE);
         else*/
-        randY = globals::randInt(world_constants::MIN_DISTANCE / 2, globals::randInt(1,6) == 1 ? world_constants::MAX_SPRING_DISTANCE * .7 : world_constants::MAX_DISTANCE * 1.4);
+        randY = globals::randInt(world_constants::MIN_DISTANCE / 2, globals::randInt(1,6) == 1 ? world_constants::MAX_SPRING_DISTANCE * .5 : world_constants::MAX_DISTANCE * 1.4);
     
     } else{
         if(_topPlatform->hasEnemy())
@@ -474,6 +482,7 @@ void World::shift(){
 }
 
 void World::resetScore() {
+    resetAll();
     _score = 0;
 }
 
