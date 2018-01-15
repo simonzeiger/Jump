@@ -12,6 +12,7 @@
 #include "globals.h"
 #include "projectile.h"
 #include "input.h"
+#include "world.h"
 #include <cstring>
 #include <fstream>
 #include <cstring>
@@ -74,7 +75,6 @@ Game::Game(){
         }
     );
     
-              
     
     for(int i = 0; i < _highScores.size(); i++){
         printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
@@ -83,7 +83,7 @@ Game::Game(){
     
     _player = new Player(*_graphics, 150, 680);
     _world = new World(_player, _graphics);
-    _playerName = "Mynameissrimshady";
+    _playerName = "Tiger";
     
 
     gameLoop();
@@ -257,6 +257,11 @@ void Game::draw(){
         _numSprites[i]->draw(*_graphics);
     }
     
+    if(_player->isDead()){
+        for(int i = 0; i < _endGameSprites.size(); i++)
+            _endGameSprites[i].draw(*_graphics, _endGameSprites[i].getX(), _endGameSprites[i].getY(), 1);
+    }
+        
    
     
     _graphics->flip();
@@ -304,10 +309,22 @@ void Game::update(){
         else
             printf("Unable to open file\n");
         
+        if(_endGameSprites.empty()){
+            displayEndGame();
+        }
+        
+     
+        
+        
        // _player->revive();
-        _world->resetScore();
+        //_world->resetScore();
         
     }
+    
+    if(_player->isDead()){
+        //update player text
+    }
+        
     
 
     _world->update();
@@ -315,12 +332,66 @@ void Game::update(){
     
 }
 
+void Game::displayEndGame() {
+    TTF_CloseFont(font);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 86);
+    
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, _playerName.c_str(), {255,255,255} );
+    SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    
+    int width = textSurface->w;
+    int height = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    Sprite::addTexture(_playerName, texture);
+    
+    _endGameSprites.push_back(Sprite(*_graphics, _playerName, 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 40 * ((float)_playerName.size() / 2), 20));
+    
+    
+    TTF_CloseFont(font);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
+    
+    std::string str = "got";
+    textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+    texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    
+    width = textSurface->w;
+    height = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    Sprite::addTexture("got", texture);
+    
+    _endGameSprites.push_back(Sprite(*_graphics, "got", 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 53, 220));
+    
+    str = std::to_string(_world->score());
+    textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+    texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    
+    width = textSurface->w;
+    height = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    Sprite::addTexture("score", texture);
+    
+    _endGameSprites.push_back(Sprite(*_graphics, "score", 0, 0, width, height, globals::SCREEN_WIDTH / 2 - 35* ((float)std::to_string(_world->score()).size() / 2), 320));
+    
+    str = "points";
+    textSurface = TTF_RenderText_Solid(font, str.c_str(), {255,255,255} );
+    texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+    
+    width = textSurface->w;
+    height = textSurface->h;
+    SDL_FreeSurface(textSurface);
+    Sprite::addTexture("points", texture);
+    
+    _endGameSprites.push_back(Sprite(*_graphics, "points", 0, 0, width, height,  globals::SCREEN_WIDTH / 2 - 105, 420));
+    
+    TTF_CloseFont(font);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
+}
+
 void Game::fixedUpdate(float fixedTime) {
     
     //SDL_Delay(10); //for reducing fps for testing
     
-   
-    
+
     _world->fixedUpdate(fixedTime);
     
    
@@ -329,31 +400,34 @@ void Game::fixedUpdate(float fixedTime) {
 
 std::vector<std::pair<std::string, int> > Game::highScores() {
     std::vector<std::pair<std::string, int> > copy;
-    std::vector<std::pair<std::string, int> > sorted;
+    std::vector<std::pair<std::string, int> > bunch;
     for(int i = 0; i < _highScores.size(); i++){
         float rounded =  (float)_highScores[i].second / 100;
         rounded = std::round(rounded);
         int finalRound = rounded * 100;
         
-        if(sorted.size() == 0)
-            sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        if(bunch.size() == 0)
+            bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
 
-        else if(finalRound != sorted.back().second){
-            for(int j = 0; j < sorted.size(); j++){
-                if(sorted[j].first != "")
-                    copy.push_back(sorted[j]);
+        else if(finalRound != bunch.back().second){
+            std::random_shuffle(bunch.begin(), bunch.end());
+            for(int j = 0; j < bunch.size(); j++){
+                if(bunch[j].first != "")
+                    copy.push_back(bunch[j]);
             }
-            sorted.clear();
-            sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
-        } else if(i == 0 || _highScores[i].first != sorted.back().first){
-            if (std::find(sorted.begin(), sorted.end(), std::pair<std::string, int> (_highScores[i].first, finalRound)) == sorted.end())
-                sorted.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+            bunch.clear();
+            bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
+        } else if(i == 0 || _highScores[i].first != bunch.back().first){
+            if (std::find(bunch.begin(), bunch.end(), std::pair<std::string, int> (_highScores[i].first, finalRound)) == bunch.end())
+                bunch.push_back(std::pair<std::string, int> (_highScores[i].first, finalRound));
         }
 
     }
     
-    if(copy.size() == 0 || sorted.size() != 0)
-        copy.insert(copy.end(), sorted.begin(), sorted.end());
+    if(copy.size() == 0 || bunch.size() != 0){
+        std::random_shuffle(bunch.begin(), bunch.end());
+        copy.insert(copy.end(), bunch.begin(), bunch.end());
+    }
     return copy;
 }
 

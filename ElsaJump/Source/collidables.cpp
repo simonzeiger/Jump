@@ -271,9 +271,11 @@ std::pair<int, bool> Platform::checkPlatformCollision(float playerX, float playe
         
         _prevPlayerY = playerY;
         
-        if(spring)
-            spring = _spring->checkCollision(playerX, playerY);
         if(platform){
+            if(spring){
+                spring = _spring->checkCollision(playerX, playerY);
+            }
+
             if (_fake){
                 playAnimation("Break");
                 _destroyOnce = true;
@@ -281,7 +283,8 @@ std::pair<int, bool> Platform::checkPlatformCollision(float playerX, float playe
                 return std::pair<int, bool> (false, false);
             } else if(_onlyOnce)
                 _destroyOnce = true;
-        }
+        } else
+            spring = false;
       
         return std::pair<int, bool> (platform, spring);
     }
@@ -351,7 +354,9 @@ void Spring::fixedUpdate(float fixedTime){
 }
 
 int Spring::checkCollision(float playerX, float playerY){
-    if(Collidable::checkCollision(playerX, playerY - 32)){
+    
+
+    if(playerX + 30 > Sprite::_x && playerX + 15 < Sprite::_x + Collidable::_width){
         playAnimation("Springy", false);
         return 1;
     }

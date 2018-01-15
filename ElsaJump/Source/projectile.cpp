@@ -61,22 +61,9 @@ void Projectile::draw(Graphics &graphics){
 }
 
 bool Projectile::checkCollision(float enemyX, float enemyY){
-    /*SDL_Rect rect1 = {(int)enemyX, (int) enemyY, 64, 48};
-    SDL_Rect rect2 = {(int)Sprite::_x, (int) Sprite::_y, 16, 16};
-    
-    printf("%f %f %f %f \n", _x, _y, enemyX, enemyY);
-    
-    if (rect1.x < rect2.x + rect2.w &&
-        rect1.x + rect1.w > rect2.x &&
-        rect1.y < rect2.y + rect2.h &&
-        rect1.h + rect1.y > rect2.y)
-        return 1;
-    
-    return 0; */
-    
-    if(_x + 16 > enemyX && _x < enemyX + 64){
-        printf("%f %f %f %f \n", _x, _y, enemyX, enemyY + 48);
-        if(_y < enemyY && _y + 16 < enemyY + 48){
+   
+    if(_x  > enemyX && _x < enemyX + 64){
+        if((_y > enemyY && _y < enemyY + 48) || (_y + 16 > enemyY && _y + 16 < enemyY + 48)){
             
             return true;
         }

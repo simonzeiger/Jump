@@ -34,17 +34,13 @@ void Enemy::fixedUpdate(float fixedTime){
 
 int Enemy::checkCollision( float playerX, float playerY){
     
-    
-
-    SDL_Rect rect1 = {(int)playerX + 15, (int) playerY, 28, 48};
-        SDL_Rect rect2 = {(int)Sprite::_x, (int) Sprite::_y, 64, 48};
-        if (rect1.x < rect2.x + rect2.w &&
-            rect1.x + rect1.w > rect2.x &&
-            rect1.y < rect2.y + rect2.h &&
-            rect1.h + rect1.y > rect2.y)
-                 return 1;
-
-        return 0;
+    if(playerX + 20 > Collidable::_x && playerX + 20 < Collidable::_x + 64){
+        if((playerY > Collidable::_y && playerY < Collidable::_y + 48) || (playerY + 32 > Collidable::_y && playerY + 32 < Collidable::_y + 48)){
+            
+            return true;
+        }
+    }
+    return false;
     
 }
 

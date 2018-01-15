@@ -29,14 +29,15 @@ private:
     void draw();
     void update( );
     void fixedUpdate(float fixedTime);
+    void displayEndGame();
     Player* _player;
     World* _world;
     Graphics* _graphics;
-    std::string _playerName;
-    static const int _nNumSprites = 10;
+   static const int _nNumSprites = 10;
     NumSprite* _numSprites[_nNumSprites];
     static std::vector<std::pair<std::string, int> > _highScores;
-
+    std::string _playerName;
+    std::vector<Sprite> _endGameSprites;
     // Driver function to sort the vector elements
     // by second element of pairs
    

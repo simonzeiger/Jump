@@ -60,13 +60,18 @@ private:
     Player* _player;
     Graphics* _graphics;
     
-    TTF_Font* _font;
+    
     int _highScoreCounter;
     std::vector<std::pair<std::string, int> > _highScores;
+    int _highScoreY;
+
     
 
    
     
    
 };
+
+extern TTF_Font* font;
+
 #endif /* background_hpp */

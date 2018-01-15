@@ -210,22 +210,22 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
     if(!_isDead){
         for(int i = 0; i < nPlatforms; i++){
             
-            if(platforms[i]->getY() > 0){
+            if(platforms[i]->getY() > 0 && !_isJumping){
                 std::pair<int, bool> collision = platforms[i]->checkPlatformCollision(_x, _y);
                 
                 //return neg number if hit a spring
                 if(collision.first){
-                    //if collision.first is neg. than u actually jumped on a  monster
-                    if(collision.first < 0)
-                        printf("%f\n", platforms[i]->getY() - 48);
+                    //if collision.first is neg. than u actually jumped on a monster
                     return !collision.second ? (collision.first > 0 ? platforms[i]->getY() : platforms[i]->getY() - 48): -platforms[i]->getY();
                 }
                 
             }
             
-            int en = platforms[i]->checkEnemyCollision(_x, _y);
-            if(en == 1)
-                kill();
+            if( platforms[i]->hasEnemy()){
+                int en = platforms[i]->checkEnemyCollision(_x, _y);
+                if(en == 1)
+                    kill();
+            }
         }
     }
     return -10000;

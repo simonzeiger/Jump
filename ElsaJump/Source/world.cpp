@@ -23,16 +23,18 @@ namespace world_constants {
     const int MAX_DISTANCE = 178    ;
     const int MAX_SPRING_DISTANCE = 600;
     const int MIN_DISTANCE = 35;
-    const int SPRING_PROBABILITY = 10;
+    const int SPRING_PROBABILITY = 10; //10
     const int ONLY_ONCE_PLAT_PROBABILITY = 14;
-    const int FAKE_PLAT_PROBABILITY = 2;
+    const int FAKE_PLAT_PROBABILITY = 3;
     const int MOVING_PLAT_PROBABILITY = 14;
-    const int ENEMY_PROBABILITY = 1;
+    const int ENEMY_PROBABILITY = 20;
 }
 
 
 
 //TODO: fix spring who is barely off screen
+
+TTF_Font* font;
 
 World::World(Player* player, Graphics* graphics) :
 _player(player),
@@ -48,10 +50,11 @@ _graphics(graphics)
     _score = 0;
     _highScoreCounter = 0;
     _enemyPlatform = nullptr;
+    _highScoreY = -20;
     
     TTF_Init();
 
-    _font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
+    font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 16);
     
     _highScores = Game::highScores();
     
@@ -72,10 +75,12 @@ World::~World(){
         delete _clouds[i];
     }
     
-    TTF_CloseFont(_font);
+    TTF_CloseFont(font);
     TTF_Quit();
  
 }
+
+
 
 void World::update( ){
     
@@ -95,25 +100,35 @@ void World::update( ){
             }
         }
         if(make){
-            std::string textureText = "- " + _highScores[_highScoreCounter].first.substr(0, 7);
             
-            SDL_Surface* textSurface = TTF_RenderText_Solid( _font, textureText.c_str(), {255,255,255} );
-            SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+            bool same = false;
+            if(_highScoreCounter > 0)
+                same = _highScores[_highScoreCounter].second == _highScores[_highScoreCounter - 1].second;
             
-            int width = textSurface->w;
-            int height = textSurface->h;
-            SDL_FreeSurface(textSurface);
-            Sprite::addTexture(textureText, texture);
+            if(!same)
+                _highScoreY = -20;
             
-            int y = -20;
-            bool same = _highScores[_highScoreCounter].second == _highScores[_highScoreCounter - 1].second;
-            if(_highScoreCounter > 0 && same){
+            if(_highScoreY > -80){
                 
-                y = _scoreSprites[_highScoreCounter - 1].getY() - 20;
+                std::string textureText = "- " + _highScores[_highScoreCounter].first.substr(0, 7);
+                
+                SDL_Surface* textSurface = TTF_RenderText_Solid( font, textureText.c_str(), {255,255,255} );
+                SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
+                
+                int width = textSurface->w;
+                int height = textSurface->h;
+                SDL_FreeSurface(textSurface);
+                Sprite::addTexture(textureText, texture);
+                
+                
+                
+                if(_highScoreCounter > 0 && same){
+                    _highScoreY -= 30;
+                }
+                
+                _scoreSprites.push_back(Sprite(*_graphics, textureText, 0, 0, width, height,
+                                               0, _highScoreY));
             }
-            
-            _scoreSprites.push_back(Sprite(*_graphics, textureText, 0, 0, width, height,
-                                           0, y));
             
             _highScoreCounter++;
         }
@@ -130,8 +145,8 @@ void World::update( ){
 void World::fixedUpdate(float fixedTime){
     
     //could go in update but seeing if this is more responsive
-    if(!_player->isJumping()){
-        int y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
+    if(!_player->isJumping() || _enemyPlatform != nullptr){
+        float y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
         if(y >= -globals::SCREEN_HEIGHT){
             _player->jump(y);
             if(y < 0){
@@ -143,8 +158,8 @@ void World::fixedUpdate(float fixedTime){
                 _prevPlayerY = y;
             }
             
-            
-            if(_enemyPlatform != nullptr && abs(y - _enemyPlatform->getY() - 48) < 2){
+           
+            if(_enemyPlatform != nullptr && abs(y - _enemyPlatform->getY() + 48) < 2){
                 _enemyPlatform->deleteEnemy();
                 _enemyPlatform = nullptr;
             }
@@ -225,6 +240,8 @@ void World::fixedUpdate(float fixedTime){
     
     _player->fixedUpdate(fixedTime);
     
+  
+    
 }
 
 void World::draw(){
@@ -279,7 +296,7 @@ void World::initPlatforms(){
         
         addPlatform(nextPos.X, nextPos.Y);
         _topPlatform = _platforms[_nPlatforms - 1];
-       
+
 
     }
 }
