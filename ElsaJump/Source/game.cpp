@@ -46,6 +46,9 @@ bool ballLoaded = false;
 
 std::string inputText = "Elsa";
 
+std::string _playerName = "Elsa";
+std::string _path = "";
+
 static void userdata_sync(){
     EM_ASM(
            FS.syncfs(false, function(error) {
@@ -135,13 +138,9 @@ extern "C" {
 }
 
 
-std::string _playerName = "Elsa";
-std::vector<std::pair<std::string, int> > _highScores;
-std::string _path = "";
-
 extern "C" {
     static void EMSCRIPTEN_KEEPALIVE finishedSync(void *){
-        readFiles(_playerName, _highScores, _path);
+        readFiles(_playerName, Game::_highScores, _path);
     }
 }
 
@@ -520,14 +519,16 @@ void Game::update(){
             if (hSFile != NULL){
                 if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
                     
+                    
+#ifdef __EMSCRIPTEN__
+                    _highScores.push_back(std::pair<string, int>(inputText, _world->score()));
+                    
+                    fprintf(hSFile, "%d %s\n", _world->score(), inputText.c_str());
+#else
                     _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
                     
-                    //using fwrite instead of fprintf cus i thought maybe it would play nicer with emscripten (i was wrong)
-                    fwrite(std::to_string(_world->score()).c_str(), sizeof(unsigned char), std::to_string(_world->score()).size(), hSFile);
-                    fwrite(" ", sizeof(unsigned char), 1, hSFile);
-                    fwrite(_playerName.c_str(), sizeof(unsigned char), _playerName.size(), hSFile);
-                    fwrite("\n", sizeof(unsigned char), 1, hSFile);
-                   // fprintf(hSFile, "%d %s\n", _world->score(), _playerName.c_str());
+                    fprintf(hSFile, "%d %s\n", _world->score(), _playerName.c_str());
+#endif
                     fclose(hSFile);
                     
                     
@@ -536,10 +537,10 @@ void Game::update(){
                         }
                     );
                     
-                    /*for(int i = 0; i < _highScores.size(); i++){
+                    for(int i = 0; i < _highScores.size(); i++){
                         printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
                         
-                    }*/
+                    }
                     
                     
                 }
@@ -584,10 +585,12 @@ void Game::displayEndGame() {
     font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
     
     
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, _playerName.c_str(), {255,255,255} );
 #ifdef __EMSCRIPTEN__
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255,255,255} );
+#else
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, _playerName.c_str(), {255,255,255} );
 #endif
+
     SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
     
     int width = textSurface->w;
