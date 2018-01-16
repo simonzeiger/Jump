@@ -17,6 +17,7 @@
 #include <cstring>
 #include <cstring>
 #include <SDL2/SDL.h>
+#include <stdio.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -43,8 +44,87 @@ int lastUpdateTime = SDL_GetTicks();
 bool ballLoaded = false;
 
 
-std::string inputText = "";
+std::string inputText = "Elsa";
+
+static void userdata_sync(){
+    EM_ASM(
+           FS.syncfs(false, function(error) {
+        if (error) {
+            console.log("Error while syncing", error);
+        }
+        console.log("Finished syncing");
+        
+    });
+           );
+}
+
+
+
 #endif
+
+
+
+void readFiles (std::string &_playerName, std::vector<std::pair<std::string, int> > &_highScores, std::string &_path) {
+    
+#ifndef __EMSCRIPTEN__
+    char* temp = SDL_GetBasePath();
+    _path = temp;
+    SDL_free(temp);
+#endif
+    
+    _path += "user_data/";
+    
+    FILE * hSFile;
+    hSFile = fopen((_path + "high_score.txt").c_str(), "r");
+    
+    int scoreString = 0;
+    char name[8];
+    
+    if(hSFile != NULL){
+        
+        
+        while(fscanf(hSFile, "%d %s", &scoreString, name) == 2){
+            printf("name %s hs %d\n", name, scoreString);
+            _highScores.push_back(pair<string, int>( name, scoreString));
+        }
+        
+        fclose(hSFile);
+
+    } else {
+        printf("HS File null\n");
+        
+    }
+    
+    std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
+        return (a.second < b.second);
+    }
+              );
+    char cName[8];
+    _playerName = "Elsa";
+    FILE * nameFile;
+    nameFile =  fopen((_path + "name.txt").c_str(), "r");
+    if(nameFile != NULL){
+        
+        if(fscanf(nameFile, "%s", cName) == 1)
+            _playerName = cName;
+       
+        
+         printf("Test 2 %s\n", cName);
+        
+        if(_playerName == "")
+            _playerName = "Elsa";
+        fclose(nameFile);
+
+    } else {
+        _playerName = "Elsa";
+        printf("Name File null\n");
+    }
+#ifdef __EMSCRIPTEN__
+    inputText = _playerName;
+#endif
+    
+}
+
 
 #ifdef __EMSCRIPTEN__
 extern "C" {
@@ -54,20 +134,34 @@ extern "C" {
     }
 }
 
-static void userdata_sync(){
-    EM_ASM(
-           FS.syncfs(function(error) {
-        if (error) {
-            console.log("Error while syncing", error);
-        }
-    });
-           );
+
+std::string _playerName = "Elsa";
+std::vector<std::pair<std::string, int> > _highScores;
+std::string _path = "";
+
+extern "C" {
+    static void EMSCRIPTEN_KEEPALIVE finishedSync(void *){
+        readFiles(_playerName, _highScores, _path);
+    }
 }
+
 #endif
 
 Game::Game(){
-   
-    if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
+#ifdef __EMSCRIPTEN__
+    EM_ASM(
+        FS.mkdir('/user_data');
+        FS.mount(IDBFS, {}, '/user_data');
+        FS.syncfs(true, function(err) {
+            if(err) console.log('ERROR!', err);
+            console.log('finished syncing..');
+            ccall('finishedSync', 'v');
+        });
+        
+   );
+#endif
+    
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
     }
     
@@ -84,7 +178,6 @@ Game::Game(){
     Sprite::addTexture("PlayAgain", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Playagainbutton.png")));
 
    
-    
     for(int i = 0; i < _nNumSprites; i++){
         _numSprites[i] = new NumSprite(*_graphics, globals::SCREEN_WIDTH - 40 - 32 * i, 16);
         _numSprites[i]->num = -1;
@@ -92,33 +185,12 @@ Game::Game(){
             _numSprites[i]->num = 0;
     }
     
+#ifndef __EMSCRIPTEN__
     
-    char* temp = SDL_GetBasePath();
-    _path = temp;
-    SDL_free(temp);
-    _path += "Content/";
+    readFiles(_playerName, _highScores, _path);
     
-    FILE * hSFile;
-    hSFile = fopen((_path + "high_score.txt").c_str(), "r");
-    
-    char scoreString[12];
-    char name[8];
-    
-    while( fscanf(hSFile, "%s %s", scoreString, name) == 2){
-        _highScores.push_back(pair<string, int>( name, atoi(scoreString)));
-    }
-    
-    fclose(hSFile);
-    
-    std::sort(_highScores.begin(), _highScores.end(), [] (const std::pair<std::string,int> &a, const std::pair<std::string,int> &b) {
-            return (a.second < b.second);
-        }
-    );
-    _playerName = "Elsa";
-    FILE * nameFile;
-    nameFile =  fopen((_path + "name.txt").c_str(), "r");
-    fscanf(nameFile, "%s", name);
-    _playerName = name;
+#endif
+  
     
   /*  for(int i = 0; i < _highScores.size(); i++){
         printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
@@ -135,6 +207,7 @@ Game::Game(){
     
     #ifdef __EMSCRIPTEN__
     inputText = _playerName;
+    printf("inputText %s\n", inputText.c_str());
     emscripten_set_main_loop_arg(main_loop, this, 0 , 1);
     #else
     SDL_Event event;
@@ -369,6 +442,7 @@ bool Game::gameLoop(SDL_Event &event, int &lastUpdateTime, bool &ballLoaded, std
                 _endGameSprites[0].setSpriteSheet(nullptr, 0, 0);
                 _endGameSprites[1].setX(globals::SCREEN_WIDTH / 2);
             }
+            renderText = false;
 
         }
         
@@ -437,17 +511,23 @@ void Game::update(){
                 if(i ==0)
                     _numSprites[i]->num = 0;
             }
-            
+#ifdef __EMSCRIPTEN__
+            _path = "user_data/";
+#endif
              FILE * hSFile;
-             hSFile = fopen ((_path + + "high_score.txt").c_str(), "a");
+            printf("%s", (_path + "high_score.txt").c_str());
+             hSFile = fopen ((_path + "high_score.txt").c_str(), "a");
             if (hSFile != NULL){
                 if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
                     
                     _highScores.push_back(std::pair<string, int>(_playerName, _world->score()));
-                    fprintf(hSFile, "%d %s\n", _world->score(), _playerName.c_str());
-                    #ifdef __EMSCRIPTEN__
-                    userdata_sync();
-                    #endif
+                    
+                    //using fwrite instead of fprintf cus i thought maybe it would play nicer with emscripten (i was wrong)
+                    fwrite(std::to_string(_world->score()).c_str(), sizeof(unsigned char), std::to_string(_world->score()).size(), hSFile);
+                    fwrite(" ", sizeof(unsigned char), 1, hSFile);
+                    fwrite(_playerName.c_str(), sizeof(unsigned char), _playerName.size(), hSFile);
+                    fwrite("\n", sizeof(unsigned char), 1, hSFile);
+                   // fprintf(hSFile, "%d %s\n", _world->score(), _playerName.c_str());
                     fclose(hSFile);
                     
                     
@@ -468,13 +548,15 @@ void Game::update(){
                 printf("Unable to open file\n");
             
             FILE * nameFile;
-            nameFile = fopen ((_path + + "name.txt").c_str(), "w");
+            nameFile = fopen ((_path  + "name.txt").c_str(), "w");
             if (nameFile != NULL){
-                fprintf(nameFile, "%s\n", _playerName.c_str());
+                fprintf(nameFile, "%s", _playerName.c_str());
+                fclose(nameFile);
                 #ifdef __EMSCRIPTEN__
                 userdata_sync();
                 #endif
-                fclose(hSFile);
+            } else {
+                printf("%s\n", (_path  + "name.txt").c_str());
             }
             
             if(_endGameSprites.empty()){
@@ -501,7 +583,11 @@ void Game::displayEndGame() {
     TTF_CloseFont(font);
     font = TTF_OpenFont("Content/Font/Ubuntu-Bold.ttf", 72);
     
+    
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, _playerName.c_str(), {255,255,255} );
+#ifdef __EMSCRIPTEN__
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255,255,255} );
+#endif
     SDL_Texture* texture =  SDL_CreateTextureFromSurface( _graphics->renderer(),textSurface);
     
     int width = textSurface->w;

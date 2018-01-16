@@ -22,7 +22,9 @@ class Game {
 public:
     Game();
     ~Game();
+#ifndef __EMSCRIPTEN__
     std::string _path;
+#endif
     bool gameLoop(SDL_Event &event, int &lastUpdateTime, bool &ballLoaded, std::string &inputText);
     static std::vector<std::pair<std::string, int> > highScores();
 private:
@@ -36,8 +38,10 @@ private:
     Graphics* _graphics;
    static const int _nNumSprites = 10;
     NumSprite* _numSprites[_nNumSprites];
+#ifndef __EMSCRIPTEN__
     static std::vector<std::pair<std::string, int> > _highScores;
     std::string _playerName;
+#endif
     std::vector<Sprite> _endGameSprites;
     int _editTextTimer;
     bool _startEditing;
