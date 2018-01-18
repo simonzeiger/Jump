@@ -9,10 +9,7 @@
 #ifndef background_h
 #define background_h
 
-#include "graphics.h"
-#include "collidables.h"
-#include "player.h"
-#include "cloud.h"
+#include "sprite.h"
 #include "globals.h"
 #include <vector>
 #ifdef __EMSCRIPTEN__
@@ -20,7 +17,12 @@
 #else
 #include <SDL2_ttf/SDL_ttf.h>
 #endif
+
 class Enemy;
+class Player;
+class Platform;
+class Cloud;
+class Powerup;
 
 class World {
 public:
@@ -50,6 +52,7 @@ private:
     Cloud* _clouds[MAX_CLOUDS];
     std::vector<Sprite> _scoreSprites;
     Platform* _enemyPlatform;
+    Powerup* _powerUp;
 
     
     float _score;

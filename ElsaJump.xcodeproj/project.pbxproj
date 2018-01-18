@@ -10,6 +10,8 @@
 		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
 		F4208114200D7A1A0053659E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4208112200D7A1A0053659E /* SDL2.framework */; };
 		F4208115200D7A1A0053659E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4208113200D7A1A0053659E /* SDL2_image.framework */; };
+		F420811F200EF9380053659E /* powerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F420811D200EF9380053659E /* powerup.cpp */; };
+		F4208120200EF9380053659E /* powerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F420811D200EF9380053659E /* powerup.cpp */; };
 		F48F42AF2007673E0012621C /* projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F48F42AD2007673E0012621C /* projectile.cpp */; };
 		F48F42B7200928FB0012621C /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F42B6200928FB0012621C /* AppleScriptObjC.framework */; };
 		F48F42CB200929DB0012621C /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F48F42B6200928FB0012621C /* AppleScriptObjC.framework */; };
@@ -72,6 +74,8 @@
 		F4208112200D7A1A0053659E /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		F4208113200D7A1A0053659E /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		F420811B200D80AE0053659E /* user_data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = user_data; sourceTree = "<group>"; };
+		F420811D200EF9380053659E /* powerup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = powerup.cpp; sourceTree = "<group>"; };
+		F420811E200EF9380053659E /* powerup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = powerup.h; sourceTree = "<group>"; };
 		F48F42AB2006E7670012621C /* PlatformSpriteSheet.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlatformSpriteSheet.psd; sourceTree = "<group>"; };
 		F48F42AC2006E7740012621C /* ThinPlatform.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThinPlatform.psd; sourceTree = "<group>"; };
 		F48F42AD2007673E0012621C /* projectile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = projectile.cpp; sourceTree = "<group>"; };
@@ -230,6 +234,8 @@
 				F4FCD38B1FF9CA07009E9B3E /* player.cpp */,
 				F4FCD3951FFB85A0009E9B3E /* collidables.h */,
 				F4FCD3941FFB85A0009E9B3E /* collidables.cpp */,
+				F420811E200EF9380053659E /* powerup.h */,
+				F420811D200EF9380053659E /* powerup.cpp */,
 				F48F42AE2007673E0012621C /* projectile.h */,
 				F48F42AD2007673E0012621C /* projectile.cpp */,
 				F48F436F200AD3A60012621C /* enemy.h */,
@@ -429,6 +435,7 @@
 				F48F432E200937430012621C /* sprite.cpp in Sources */,
 				F48F432F200937430012621C /* animatedsprite.cpp in Sources */,
 				F48F4330200937430012621C /* player.cpp in Sources */,
+				F4208120200EF9380053659E /* powerup.cpp in Sources */,
 				F48F4331200937430012621C /* collidables.cpp in Sources */,
 				F48F4332200937430012621C /* projectile.cpp in Sources */,
 				F48F4333200937430012621C /* cloud.cpp in Sources */,
@@ -449,6 +456,7 @@
 				F48F42AF2007673E0012621C /* projectile.cpp in Sources */,
 				F4FCD3871FF98E38009E9B3E /* sprite.cpp in Sources */,
 				F4FCD38A1FF9AF99009E9B3E /* animatedsprite.cpp in Sources */,
+				F420811F200EF9380053659E /* powerup.cpp in Sources */,
 				F4FCD3901FFB4AB2009E9B3E /* world.cpp in Sources */,
 				F4D89BF12005542C00073BB0 /* numsprite.cpp in Sources */,
 				F4D89BEE2004808000073BB0 /* cloud.cpp in Sources */,

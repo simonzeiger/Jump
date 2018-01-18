@@ -12,7 +12,10 @@
 #include "enemy.h"
 #include "cloud.h"
 #include "enemy.h"
+#include "player.h"
+#include "powerup.h"
 #include "projectile.h"
+#include "graphics.h"
 #include <iostream>
 #include <SDL2/SDL.h>
 #ifdef __EMSCRIPTEN__
@@ -25,14 +28,15 @@
 
 namespace world_constants {
     const int SHIFT_DELAY = 3; // 3
-    const int MAX_DISTANCE = 178    ;
+    const int MAX_DISTANCE = 175;
     const int MAX_SPRING_DISTANCE = 600;
     const int MIN_DISTANCE = 35;
     const int SPRING_PROBABILITY = 10; //10
     const int ONLY_ONCE_PLAT_PROBABILITY = 14;
     const int FAKE_PLAT_PROBABILITY = 3;
     const int MOVING_PLAT_PROBABILITY = 14;
-    const int ENEMY_PROBABILITY = 20;
+    const int ENEMY_PROBABILITY = 25;  //25
+    const int POWER_UP_PROBABILITY = 1; //25
 }
 
 
@@ -56,6 +60,7 @@ _graphics(graphics)
     _highScoreCounter = 0;
     _enemyPlatform = nullptr;
     _highScoreY = -20;
+    _powerUp = nullptr;
     
     TTF_Init();
 
@@ -91,8 +96,6 @@ void World::update( ){
     
     
     _player->update();
-    
-    
     
     
     if(_highScoreCounter < _highScores.size() && score() + _player->getY() / 10 + 20 >= _highScores[_highScoreCounter].second){
@@ -173,7 +176,7 @@ void World::fixedUpdate(float fixedTime){
     }
     
     if(_enemyPlatform != nullptr){
-        for(int i = 0; i < 14; i++){
+        for(int i = 0; i < 20; i++){
            // printf("%d %d %d \n", i, (int)_player->balls()[i]->getX(), (int) _player->balls()[i]->getY() );
 
             if(_player->balls()[i]->isLoaded() && _player->balls()[i]->checkCollision(_enemyPlatform->Sprite::getX(), _enemyPlatform->getY() - 48)){
@@ -196,6 +199,10 @@ void World::fixedUpdate(float fixedTime){
         _platforms[i]->fixedUpdate(fixedTime);
     }
     
+     if(_powerUp != nullptr){
+         _powerUp->fixedUpdate(fixedTime);
+     }
+    
     //lerpy but actually simple
     if(_shifting){
         
@@ -217,7 +224,13 @@ void World::fixedUpdate(float fixedTime){
                 }
             }
             
-            
+            if(_powerUp != nullptr){
+                _powerUp->shift(_shiftDistance);
+                if(_powerUp->getY() > globals::SCREEN_HEIGHT + 50){
+                    delete _powerUp;
+                    _powerUp = nullptr;
+                }
+            }
             
             for(int i = 0; i < _scoreSprites.size(); i++){
                 if( _scoreSprites[i].getY() < globals::SCREEN_HEIGHT)
@@ -245,25 +258,26 @@ void World::fixedUpdate(float fixedTime){
     
     _player->fixedUpdate(fixedTime);
     
-  
-    
 }
 
 void World::draw(){
     
     if(!_player->isDead()){
     
-    for(int i = 0; i < _scoreSprites.size(); i++){
-        _scoreSprites[i].draw(*_graphics, _scoreSprites[i].getX(), _scoreSprites[i].getY(), 1);
-    }
-    
-    for(int i = 0; i < MAX_CLOUDS; i++){
-        _clouds[i]->draw(*_graphics);
-    }
-    
-    for(int i = 0; i < _nPlatforms; i++){
-        _platforms[i]->draw(*_graphics);
-    }
+        for(int i = 0; i < _scoreSprites.size(); i++){
+            _scoreSprites[i].draw(*_graphics, _scoreSprites[i].getX(), _scoreSprites[i].getY(), 1);
+        }
+        
+        for(int i = 0; i < MAX_CLOUDS; i++){
+            _clouds[i]->draw(*_graphics);
+        }
+        
+        for(int i = 0; i < _nPlatforms; i++){
+            _platforms[i]->draw(*_graphics);
+        }
+        
+        if(_powerUp != nullptr)
+            _powerUp->draw(*_graphics);
     }
     
     
@@ -404,8 +418,6 @@ void World::resetPlatform(Platform* platform) {
    
     Vector2<int> nextPos = getNextPlatformPos();
     
-   
-    
     platform->setX(nextPos.X);
 
     platform->setY(nextPos.Y);
@@ -431,6 +443,9 @@ void World::resetPlatform(Platform* platform) {
                 platform->enableOnlyOnce();
             else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
                 platform->makeFake();
+            else if(_powerUp == nullptr && !_topPlatform->isMoving() && globals::randInt(1, world_constants::POWER_UP_PROBABILITY) == 1){
+                _powerUp = new Powerup(platform->AnimatedSprite::getX(), platform->getY() - 26,  *_graphics);
+            }
             
         }
     }

@@ -11,11 +11,12 @@
 
 #include "animatedsprite.h"
 #include "globals.h"
-#include "collidables.h"
 
 class Graphics;
 class Projectile;
 class Enemy;
+class Platform;
+
 
 class Player : public AnimatedSprite {
 public:
@@ -80,7 +81,7 @@ private:
     bool _maxJumpHeightReached;
     bool _isDead;
     bool _isJumping;
-    static const int MAX_BALLS = 14;
+    static const int MAX_BALLS = 20;
     Projectile* _balls[MAX_BALLS];
     
     

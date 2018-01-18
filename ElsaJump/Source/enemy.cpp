@@ -11,7 +11,7 @@
 
 Enemy::Enemy(float x, float y, Graphics &graphics) :
 Collidable(x, y, 64, 48),
-AnimatedSprite(graphics, "Enemy", 0, 0, 64, 48, x, y, 50)
+AnimatedSprite(graphics, "Enemy", 0, 0, 32, 24, x, y, 200)
 {
     Collidable::_x = x;
     Collidable::_y = y;
@@ -22,7 +22,7 @@ AnimatedSprite(graphics, "Enemy", 0, 0, 64, 48, x, y, 50)
 
 
 void Enemy::draw(Graphics &graphics){
-    AnimatedSprite::draw(graphics, Collidable::_x, Collidable::_y, 1);
+    AnimatedSprite::draw(graphics, Collidable::_x, Collidable::_y, 2);
     
 }
 
@@ -45,7 +45,7 @@ int Enemy::checkCollision( float playerX, float playerY){
 }
 
 void Enemy::setupAnimations() {
-    addAnimation(1, 0, 0, "EnemyNorm", 64, 48);
+    addAnimation(4, 0, 0, "EnemyNorm", 32, 24);
 }
 
 void Enemy::shift(float y){

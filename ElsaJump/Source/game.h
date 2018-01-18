@@ -9,14 +9,16 @@
 #ifndef game_h
 #define game_h
 
-#include "player.h"
-#include "numsprite.h"
-#include "world.h"
-#include "graphics.h"
-#include <vector>
 
+#include <vector>
+#include <string>
+#include <SDL2/SDL.h>
 
 class Graphics;
+class NumSprite;
+class Player;
+class Sprite;
+class World;
 
 class Game {
 public:

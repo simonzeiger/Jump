@@ -13,6 +13,8 @@
 #include "projectile.h"
 #include "input.h"
 #include "world.h"
+#include "player.h"
+#include "numsprite.h"
 #include <cstring>
 #include <cstring>
 #include <cstring>
@@ -175,6 +177,7 @@ Game::Game(){
     Sprite::addTexture("Ball", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Ball.png")));
     Sprite::addTexture("Enemy", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Enemy.png")));
     Sprite::addTexture("PlayAgain", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Playagainbutton.png")));
+    Sprite::addTexture("PowerUp", SDL_CreateTextureFromSurface(_graphics->renderer(), _graphics->loadImage( "Content/Sprites/Powerup.png")));
 
    
     for(int i = 0; i < _nNumSprites; i++){
@@ -206,7 +209,6 @@ Game::Game(){
     
     #ifdef __EMSCRIPTEN__
     inputText = _playerName;
-    printf("inputText %s\n", inputText.c_str());
     emscripten_set_main_loop_arg(main_loop, this, 0 , 1);
     #else
     SDL_Event event;

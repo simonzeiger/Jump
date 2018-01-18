@@ -27,6 +27,11 @@ enum Direction {
     DOWN
 };
 
+enum PowerupType {
+    JetPack,
+    GoldSpring
+};
+
 
 template<typename T>
 class Vector2 {

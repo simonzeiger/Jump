@@ -9,7 +9,8 @@
 #ifndef collidable_h
 #define collidable_h
 
-#include "graphics.h"
+class Graphics;
+
 class Collidable {
 public:
     Collidable(float x, float y, int width, int height);
@@ -90,8 +91,6 @@ private:
 };
 
 
-
-#include "animatedsprite.h"
 
 class Spring: public Collidable, public AnimatedSprite {
 public:
