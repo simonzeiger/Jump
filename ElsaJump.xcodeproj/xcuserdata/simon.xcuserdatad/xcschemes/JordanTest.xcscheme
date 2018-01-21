@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F48F4319200936030012621C"
-               BuildableName = "JordanTest.app"
+               BuildableName = "Elsa Jump.app"
                BlueprintName = "JordanTest"
                ReferencedContainer = "container:ElsaJump.xcodeproj">
             </BuildableReference>
@@ -34,7 +34,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F48F4319200936030012621C"
-            BuildableName = "JordanTest.app"
+            BuildableName = "Elsa Jump.app"
             BlueprintName = "JordanTest"
             ReferencedContainer = "container:ElsaJump.xcodeproj">
          </BuildableReference>
@@ -58,7 +58,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F48F4319200936030012621C"
-            BuildableName = "JordanTest.app"
+            BuildableName = "Elsa Jump.app"
             BlueprintName = "JordanTest"
             ReferencedContainer = "container:ElsaJump.xcodeproj">
          </BuildableReference>
@@ -83,7 +83,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F48F4319200936030012621C"
-            BuildableName = "JordanTest.app"
+            BuildableName = "Elsa Jump.app"
             BlueprintName = "JordanTest"
             ReferencedContainer = "container:ElsaJump.xcodeproj">
          </BuildableReference>

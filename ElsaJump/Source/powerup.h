@@ -26,6 +26,9 @@ public:
     void setX(float x);
     void setY(float y);
     void shift(float y);
+    PowerupType type();
+    void extend();
+    void shrink();
     
     void setupAnimations();
     void animationDone(std::string currentAnimation);    

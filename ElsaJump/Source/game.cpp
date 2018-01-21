@@ -89,7 +89,6 @@ void readFiles (std::string &_playerName, std::vector<std::pair<std::string, int
         
         
         while(fscanf(hSFile, "%d %s", &scoreString, name) == 2){
-            printf("name %s hs %d\n", name, scoreString);
             _highScores.push_back(pair<string, int>( name, scoreString));
         }
         
@@ -114,7 +113,6 @@ void readFiles (std::string &_playerName, std::vector<std::pair<std::string, int
             _playerName = cName;
        
         
-         printf("Test 2 %s\n", cName);
         
         if(_playerName == "")
             _playerName = "Elsa";
@@ -365,7 +363,6 @@ bool Game::gameLoop(SDL_Event &event, int &lastUpdateTime, bool &ballLoaded, std
             SDL_GetMouseState(&mouseX, &mouseY);
             _player->throwBall(mouseX, mouseY);
             ballLoaded = false;
-            printf("x %d y %d\n", mouseX, mouseY);
         } else if (keystate[SDL_SCANCODE_SPACE] || keystate[SDL_SCANCODE_RETURN]){
             if(!ballLoaded  && !_player->isDead() && _world->score() > 10){
                 _player->loadBall();
@@ -516,7 +513,6 @@ void Game::update(){
             _path = "user_data/";
 #endif
              FILE * hSFile;
-            printf("%s", (_path + "high_score.txt").c_str());
              hSFile = fopen ((_path + "high_score.txt").c_str(), "a");
             if (hSFile != NULL){
                 if(std::find(_highScores.begin(), _highScores.end(), std::pair<string, int>(_playerName, _world->score())) == _highScores.end()){
@@ -539,11 +535,7 @@ void Game::update(){
                         }
                     );
                     
-                    for(int i = 0; i < _highScores.size(); i++){
-                        printf("%s %s\n", _highScores[i].first.c_str(), std::to_string(_highScores[i].second).c_str());
-                        
-                    }
-                    
+                 
                     
                 }
             }
@@ -558,8 +550,6 @@ void Game::update(){
                 #ifdef __EMSCRIPTEN__
                 userdata_sync();
                 #endif
-            } else {
-                printf("%s\n", (_path  + "name.txt").c_str());
             }
             
             if(_endGameSprites.empty()){
@@ -704,7 +694,6 @@ void Game::fixedUpdate(float fixedTime) {
 bool Game::checkSpriteClick(const Sprite &sprite, int mouseX, int mouseY){
     if (mouseX > sprite.getX() - 25 && mouseX < sprite.getX() + sprite.width() + 25
         && mouseY > sprite.getY() - 10 && mouseY < sprite.getY() + sprite.height() + 10){
-        printf("click\n");
         return true;
     } else
         return false;

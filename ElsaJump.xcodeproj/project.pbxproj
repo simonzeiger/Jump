@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F40FBD572003133400D403AC /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F40FBD552003133400D403AC /* input.cpp */; };
-		F4208114200D7A1A0053659E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4208112200D7A1A0053659E /* SDL2.framework */; };
+		F4208114200D7A1A0053659E /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4208112200D7A1A0053659E /* SDL2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F4208115200D7A1A0053659E /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4208113200D7A1A0053659E /* SDL2_image.framework */; };
 		F420811F200EF9380053659E /* powerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F420811D200EF9380053659E /* powerup.cpp */; };
 		F4208120200EF9380053659E /* powerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F420811D200EF9380053659E /* powerup.cpp */; };
@@ -85,7 +85,7 @@
 		F48F42CA200929DB0012621C /* JordanT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JordanT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48F4314200935090012621C /* AppDelegate.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = AppDelegate.applescript; sourceTree = "<group>"; };
 		F48F4315200935710012621C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ElsaJump/Info.plist; sourceTree = "<group>"; };
-		F48F431A200936030012621C /* JordanTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JordanTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F48F431A200936030012621C /* Elsa Jump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Elsa Jump.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48F436B2009F7270012621C /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		F48F436E200AD3A60012621C /* enemy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = enemy.cpp; sourceTree = "<group>"; };
 		F48F436F200AD3A60012621C /* enemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = enemy.h; sourceTree = "<group>"; };
@@ -200,7 +200,7 @@
 				F4FCD35D1FF832F9009E9B3E /* Elsa Jump */,
 				F48F42B4200928FB0012621C /* Jordan.app */,
 				F48F42CA200929DB0012621C /* JordanT.app */,
-				F48F431A200936030012621C /* JordanTest.app */,
+				F48F431A200936030012621C /* Elsa Jump.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -309,7 +309,7 @@
 			);
 			name = JordanTest;
 			productName = JordanTest;
-			productReference = F48F431A200936030012621C /* JordanTest.app */;
+			productReference = F48F431A200936030012621C /* Elsa Jump.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F4FCD35C1FF832F9009E9B3E /* ElsaJump */ = {
@@ -538,8 +538,8 @@
 				NEW_SETTING = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_OSACOMPILEFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanTest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.ElsaTest;
+				PRODUCT_NAME = "Elsa Jump";
 				SEPARATE_SYMBOL_EDIT = NO;
 			};
 			name = Debug;
@@ -562,8 +562,8 @@
 				NEW_SETTING = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_OSACOMPILEFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = szeiger.JordanTest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = szeiger.ElsaTest;
+				PRODUCT_NAME = "Elsa Jump";
 				SEPARATE_SYMBOL_EDIT = NO;
 			};
 			name = Release;

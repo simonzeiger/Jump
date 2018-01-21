@@ -61,14 +61,11 @@ SDL_Surface* Graphics::loadImage(const std::string &filePath) {
 
 void Graphics::blitSurface(SDL_Texture* source, SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle){
     if(SDL_RenderCopy(_renderer, source, sourceRectangle, destinationRectangle) < 0){
-       // printf("%p %s\n", source, SDL_GetError());
+        //printf("%p %s\n", source, SDL_GetError());
     }
     
     
 }
-
-
-
 
 void Graphics::flip() {
     SDL_RenderPresent(_renderer);

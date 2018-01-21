@@ -20,7 +20,12 @@ namespace player_constants {
     const float GRAVITY = .0008f * MULTI; //.0008
     const float JUMP_SPEED = 0.55  * MULTI; //.55
     const float SPRING_SPEED = 1  * MULTI;
+    const float ENEMY_JUMP_SPEED = .7 * MULTI;
     const float MOVE_SPEED = .28f  * MULTI;
+    const float JETPACK_SPEED = 1.35;
+    const float JETPACK_HORIZ_SPEED = .35f;
+    const int SPRING_TIMES = 3;
+    const int JETPACK_TIME = 4000;
 }
 
 
@@ -33,7 +38,11 @@ _hasShield(false),
 _isJumping(true),
 _maxJumpHeightReached(false),
 _facing(RIGHT),
-_isDead(false)
+_isDead(false),
+_hasSpring(false),
+_hasJetPack(false),
+_jetPackTimer(0),
+_springCounter(0)
 {
     setupAnimations();
     playAnimation("JumpRight");
@@ -62,13 +71,20 @@ void Player::setupAnimations() {
 void Player::animationDone(std::string currentAnimation) {}
 
 void Player::moveLeft() {
-    _dx = -player_constants::MOVE_SPEED;
+    if(_hasJetPack)
+        _dx = -player_constants::JETPACK_HORIZ_SPEED;
+    else
+        _dx = -player_constants::MOVE_SPEED;
+
     _facing = LEFT;
    
 }
 
 void Player::moveRight() {
-    _dx = player_constants::MOVE_SPEED;
+    if(_hasJetPack)
+        _dx = player_constants::JETPACK_HORIZ_SPEED;
+    else
+        _dx = player_constants::MOVE_SPEED;
     _facing = RIGHT;
 }
 
@@ -77,13 +93,33 @@ void Player::stopMoving() {
     _dx = 0;
 }
 
-void Player::jump(float y) {
+void Player::jetPack(){
+    if(_jetPackTimer < player_constants::JETPACK_TIME){
+        _dy = -player_constants::JETPACK_SPEED;
+        _isJumping = true;
+        _hasJetPack = true;
+    }
+}
+
+
+void Player::jump(float y, std::string jumpMode) {
+    if(_hasSpring){
+        _springCounter++;
+        if(_springCounter == player_constants::SPRING_TIMES){
+            _springCounter = 0;
+            _hasSpring = false;
+        }
+    }
     _isJumping = true;
-    if(y < 0){
-        y = -y;
+    if(jumpMode == "Spring"){
         _dy = -player_constants::SPRING_SPEED;
-    } else {
+    } else if(jumpMode == "Normal"){
+        
+        
         _dy = -player_constants::JUMP_SPEED;
+        
+    } else if (jumpMode == "Enemy"){
+        _dy = -player_constants::ENEMY_JUMP_SPEED;
     }
      _y = y - 16 * globals::SPRITE_SCALE;
     
@@ -136,6 +172,10 @@ void Player::update( ) {
     
     
     if(_dy > 0){
+        if(_jetPackTimer != 0){
+            _jetPackTimer = 0;
+            _hasJetPack = false;
+        }
         _isJumping = false;
         
     }
@@ -155,28 +195,31 @@ void Player::update( ) {
 
 void Player::fixedUpdate(float fixedTime){
     
-
+    if(_hasJetPack){
+        jetPack();
+        _jetPackTimer += fixedTime;
+    }
     
     
-        //Apply gravity
-        _dy += player_constants::GRAVITY * fixedTime;
-        
-        
-        
-        //Move by dy
-        if(!_isDead || _y < globals::SCREEN_HEIGHT)
-            _y += _dy * fixedTime;
-            
-        
-        //Move by dx
-        if(!_isDead) _x += _dx * fixedTime;
+    //Apply gravity
+    _dy += player_constants::GRAVITY * fixedTime;
     
-        AnimatedSprite::fixedUpdate(fixedTime);
     
-        for(int i = 0; i < MAX_BALLS; i++)
-            if(_balls[i]->isLoaded())
-                _balls[i]->fixedUpdate(fixedTime);
-
+    
+    //Move by dy
+    if(!_isDead || _y < globals::SCREEN_HEIGHT)
+        _y += _dy * fixedTime;
+    
+    
+    //Move by dx
+    if(!_isDead) _x += _dx * fixedTime;
+    
+    AnimatedSprite::fixedUpdate(fixedTime);
+    
+    for(int i = 0; i < MAX_BALLS; i++)
+        if(_balls[i]->isLoaded())
+            _balls[i]->fixedUpdate(fixedTime);
+    
     
     
 }
@@ -216,14 +259,21 @@ int Player::checkPlatformCollisions(Platform** platforms, int nPlatforms){
                 //return neg number if hit a spring
                 if(collision.first){
                     //if collision.first is neg. than u actually jumped on a monster
-                    return !collision.second ? (collision.first > 0 ? platforms[i]->getY() : platforms[i]->getY() - 48): -platforms[i]->getY();
+                    float y = !collision.second && !_hasSpring ? (collision.first > 0 ? platforms[i]->getY() : platforms[i]->getY() - 48) : -platforms[i]->getY();
+                    if(y < 0)
+                        jump(-y, "Spring");
+                    else if(collision.first < 0 )
+                        jump(y, "Enemy");
+                    else
+                        jump(y);
+                    return y;
                 }
                 
             }
             
             if( platforms[i]->hasEnemy()){
                 int en = platforms[i]->checkEnemyCollision(_x, _y);
-                if(en == 1)
+                if(en == 1 && !_hasJetPack)
                     kill();
             }
         }
@@ -240,7 +290,18 @@ bool Player::checkEnemyCollision(Enemy* enemy){
 void Player::kill(){
     _isDead = true;
     _dy = 0;
+    _hasJetPack = false;
+    _hasSpring = false;
    
+}
+
+void Player::goldSpring() {
+    _hasSpring = true;
+}
+
+bool Player::hasJetPack(){
+
+    return _jetPackTimer < player_constants::JETPACK_TIME && _jetPackTimer != 0;
 }
 
 
@@ -251,6 +312,10 @@ void Player::shift(float amt){
 
 float Player::getDY() const{
     return _dy;
+}
+
+bool Player::hasSpring(){
+    return _hasSpring;
 }
 
 void Player::revive(){

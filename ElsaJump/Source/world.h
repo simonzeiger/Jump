@@ -53,6 +53,7 @@ private:
     std::vector<Sprite> _scoreSprites;
     Platform* _enemyPlatform;
     Powerup* _powerUp;
+    bool _enablePowerUp;
 
     
     float _score;

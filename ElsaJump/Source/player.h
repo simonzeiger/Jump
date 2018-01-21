@@ -44,7 +44,7 @@ public:
     /* void jump
      * Starts jumping
      */
-    void jump(float y);
+    void jump(float y, std::string jumpMode = "Normal");
     
     void animationDone(std::string currentAnimation);
     void setupAnimations(); 
@@ -65,6 +65,10 @@ public:
     
     void shift(float amt);
     
+    void jetPack();
+    
+    void goldSpring();
+    
     void animationStateMachine();
     
     bool isDead();
@@ -72,6 +76,12 @@ public:
     void revive();
     
     void loadBall();
+    
+    bool hasJetPack();
+    
+    bool hasSpring();
+    
+    
     
     void throwBall(int mouseX, int mouseY);
     
@@ -81,7 +91,11 @@ private:
     bool _maxJumpHeightReached;
     bool _isDead;
     bool _isJumping;
-    static const int MAX_BALLS = 20;
+    bool _hasSpring;
+    int _springCounter;
+    bool _hasJetPack;
+    int _jetPackTimer;
+    static const int MAX_BALLS = 25;
     Projectile* _balls[MAX_BALLS];
     
     

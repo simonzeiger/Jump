@@ -27,7 +27,7 @@
 
 
 namespace world_constants {
-    const int SHIFT_DELAY = 3; // 3
+    const float SHIFT_DELAY = 3.3; // 3
     const int MAX_DISTANCE = 175;
     const int MAX_SPRING_DISTANCE = 600;
     const int MIN_DISTANCE = 35;
@@ -36,7 +36,7 @@ namespace world_constants {
     const int FAKE_PLAT_PROBABILITY = 3;
     const int MOVING_PLAT_PROBABILITY = 14;
     const int ENEMY_PROBABILITY = 25;  //25
-    const int POWER_UP_PROBABILITY = 1; //25
+    const int POWER_UP_PROBABILITY = 15; //15
 }
 
 
@@ -61,6 +61,7 @@ _graphics(graphics)
     _enemyPlatform = nullptr;
     _highScoreY = -20;
     _powerUp = nullptr;
+    _enablePowerUp = false;
     
     TTF_Init();
 
@@ -68,9 +69,7 @@ _graphics(graphics)
     
     _highScores = Game::highScores();
     
-    for(int i = 0; i < _highScores.size(); i++){
-        printf("%d\n", _highScores[i].second);
-    }
+    
     
     initPlatforms();
     initClouds();
@@ -152,15 +151,18 @@ void World::update( ){
 
 void World::fixedUpdate(float fixedTime){
     
+    
+
     //could go in update but seeing if this is more responsive
-    if(!_player->isJumping() || _enemyPlatform != nullptr){
+    if((!_player->isJumping() || _enemyPlatform != nullptr) && !_player->hasJetPack()){
         float y  = _player->checkPlatformCollisions(_platforms, _nPlatforms);
         if(y >= -globals::SCREEN_HEIGHT){
-            _player->jump(y);
             if(y < 0){
                 y*= -1;
                 shift();
                 _prevPlayerY = y;
+                if(_enablePowerUp && _powerUp->type() == GoldSpring)
+                    _powerUp->shrink();
             } else if(static_cast<int>(_prevPlayerY) > y) {
                 shift();
                 _prevPlayerY = y;
@@ -176,7 +178,7 @@ void World::fixedUpdate(float fixedTime){
     }
     
     if(_enemyPlatform != nullptr){
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < 25; i++){
            // printf("%d %d %d \n", i, (int)_player->balls()[i]->getX(), (int) _player->balls()[i]->getY() );
 
             if(_player->balls()[i]->isLoaded() && _player->balls()[i]->checkCollision(_enemyPlatform->Sprite::getX(), _enemyPlatform->getY() - 48)){
@@ -186,6 +188,7 @@ void World::fixedUpdate(float fixedTime){
             }
                
         }
+        
     }
   
     for(int i = 0; i < MAX_CLOUDS; i++){
@@ -197,10 +200,48 @@ void World::fixedUpdate(float fixedTime){
     
     for(int i = 0; i < _nPlatforms; i++){
         _platforms[i]->fixedUpdate(fixedTime);
+        
     }
     
+    _player->fixedUpdate(fixedTime);
+
+    
      if(_powerUp != nullptr){
-         _powerUp->fixedUpdate(fixedTime);
+         
+         if(_enablePowerUp && _powerUp->type() == JetPack && !_player->hasJetPack()){
+             delete _powerUp;
+             _powerUp = nullptr;
+             _enablePowerUp = false;
+         } else if (_enablePowerUp && _powerUp->type() == GoldSpring && !_player->hasSpring()){
+             delete _powerUp;
+             _powerUp = nullptr;
+             _enablePowerUp = false;
+         } else {
+             if(!_enablePowerUp && _powerUp->checkCollision(_player->getX(), _player->getY())){
+                 _enablePowerUp = true;
+                 if(_powerUp->type() == JetPack){
+                     shift();
+                     _player->jetPack();
+                     _prevPlayerY = _player->getY();
+                 } else if (_powerUp->type() == GoldSpring)
+                     _player->goldSpring();
+                 
+             }
+             if(_enablePowerUp){
+                 _powerUp->setX(_player->getX() - 10);
+                 if(_powerUp->type() == JetPack)
+                     _powerUp->setY(_player->getY() + 20);
+                 else if (_powerUp->type() == GoldSpring)
+                     _powerUp->setY(_player->getY() + 45);
+                 if(_powerUp->type() == GoldSpring)
+                     if(_player->getDY() > -.83)
+                         _powerUp->extend();
+
+
+             }
+             _powerUp->fixedUpdate(fixedTime);
+         }
+         
      }
     
     //lerpy but actually simple
@@ -213,7 +254,6 @@ void World::fixedUpdate(float fixedTime){
         _score += _shiftDistance / 10;
         
         
-
         if(_shiftCount > _prevPlayerY / world_constants::SHIFT_DELAY || _player->isDead()){    //   if(_player->getY() <= globals::SCREEN_HEIGHT / 2){
             
             
@@ -221,6 +261,7 @@ void World::fixedUpdate(float fixedTime){
                 _platforms[i]->shift(_shiftDistance);
                 if(_platforms[i]->getY() > globals::SCREEN_HEIGHT + 50){
                     resetPlatform(_platforms[i]);
+                    
                 }
             }
             
@@ -256,7 +297,6 @@ void World::fixedUpdate(float fixedTime){
         
     }
     
-    _player->fixedUpdate(fixedTime);
     
 }
 
@@ -371,22 +411,15 @@ Vector2<int> World::getNextPlatformPos(){
         
         if(globals::SCREEN_WIDTH - prevX < 2 * _topPlatform->getCollidableWidth()){
            randX = globals::randInt(0, prevX - _topPlatform->getCollidableWidth() - 10);
-            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0)
-                printf("1 Bad plat: Randx %d prevX %d\n", randX, prevX);
+            
             
         }else if(prevX < _topPlatform->getCollidableWidth() + 13){
             randX = globals::randInt(prevX + _topPlatform->getCollidableWidth()  + 10, globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth() - 10);
-            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0)
-                printf("2 Bad plat: Randx %d prevX %d\n", randX, prevX);
+           
             
         }else{
             bool isLeft = globals::randInt(0, 1);
             randX = isLeft ?  globals::randInt(0, prevX - _topPlatform->getCollidableWidth() -11) : globals::randInt(prevX + _topPlatform->getCollidableWidth() + 10, globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth() - 10);
-            if(randX > globals::SCREEN_WIDTH - _topPlatform->getCollidableWidth()  || randX < 0){
-               if(isLeft) printf("3L Bad plat: Randx %d prevX %d\n", randX, prevX);
-               else
-                   printf("3L Bad plat: Randx %d prevX %d\n", randX, prevX);
-            }
            
         }
         
@@ -431,7 +464,7 @@ void World::resetPlatform(Platform* platform) {
        
     }
     
-    if(_enemyPlatform == nullptr && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE * .7 && globals::randInt(0, world_constants::ENEMY_PROBABILITY) == 1){
+    if(_enemyPlatform == nullptr && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE * .7 && globals::randInt(1, world_constants::ENEMY_PROBABILITY) == 1){
         platform->addEnemy(*_graphics);
         _enemyPlatform = platform;
     } else {
@@ -443,8 +476,19 @@ void World::resetPlatform(Platform* platform) {
                 platform->enableOnlyOnce();
             else if (globals::randInt(1, world_constants::FAKE_PLAT_PROBABILITY) == 1 && _topPlatform->isReal() && !_topPlatform->isMoving() && _topPlatform->getY() - platform->getY() < world_constants::MAX_DISTANCE / 2)
                 platform->makeFake();
-            else if(_powerUp == nullptr && !_topPlatform->isMoving() && globals::randInt(1, world_constants::POWER_UP_PROBABILITY) == 1){
-                _powerUp = new Powerup(platform->AnimatedSprite::getX(), platform->getY() - 26,  *_graphics);
+            else if(_powerUp == nullptr && !platform->isMoving() && globals::randInt(1, world_constants::POWER_UP_PROBABILITY) == 1){
+                _powerUp = new Powerup( 0, platform->getY() - 26,  *_graphics);
+                if(_powerUp->type() == GoldSpring){
+                    _powerUp->setX(platform->AnimatedSprite::getX());
+                } else {
+                    printf("ya\n");
+
+                    if(platform->AnimatedSprite::getX() < globals::SCREEN_WIDTH / 2){
+                        _powerUp->setX(platform->AnimatedSprite::getX() + globals::randInt(48, globals::SCREEN_WIDTH / 2 - 48));
+                    }else {
+                        _powerUp->setX(platform->AnimatedSprite::getX() - globals::randInt(48, globals::SCREEN_WIDTH / 2 - 48));
+                    }
+                }
             }
             
         }
@@ -471,16 +515,17 @@ void World::resetAll(){
     for(int i = 0; i < MAX_CLOUDS; i++){
         delete _clouds[i];
     }
-    
+    _enablePowerUp = false;
     _enemyPlatform = nullptr;
     
+    delete _powerUp;
+    _powerUp = nullptr;
     _scoreSprites.clear();
     
     _highScoreCounter = 0;
     _highScores = Game::highScores();
-    for(int i = 0; i < _highScores.size(); i++){
-        printf("%d\n", _highScores[i].second);
-    }
+    
+    _prevPlayerY = globals::SCREEN_HEIGHT;
     
     _nPlatforms = 0;
     initPlatforms();
