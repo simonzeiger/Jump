@@ -13,21 +13,27 @@
             margin-right: auto;
             display: block;
         }
+
         textarea.emscripten {
             font-family: monospace;
             width: 80%;
         }
+
         div.emscripten {
             text-align: center;
         }
+
         div.emscripten_border {
             border: 1px solid black;
         }
+
         /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+
         canvas.emscripten {
             border: 0px none;
             background-color: black;
         }
+
         .spinner {
             height: 50px;
             width: 50px;
@@ -43,6 +49,7 @@
             border-radius: 100%;
             background-color: rgb(200, 100, 250);
         }
+
         @-webkit-keyframes rotation {
             from {
                 -webkit-transform: rotate(0deg);
@@ -51,6 +58,7 @@
                 -webkit-transform: rotate(360deg);
             }
         }
+
         @-moz-keyframes rotation {
             from {
                 -moz-transform: rotate(0deg);
@@ -59,6 +67,7 @@
                 -moz-transform: rotate(360deg);
             }
         }
+
         @-o-keyframes rotation {
             from {
                 -o-transform: rotate(0deg);
@@ -67,6 +76,7 @@
                 -o-transform: rotate(360deg);
             }
         }
+
         @keyframes rotation {
             from {
                 transform: rotate(0deg);
@@ -96,15 +106,18 @@
         var statusElement = document.getElementById('status');
         var progressElement = document.getElementById('progress');
         var spinnerElement = document.getElementById('spinner');
+
         var Module = {
             preRun: [],
             postRun: [],
             canvas: (function () {
                 var canvas = document.getElementById('canvas');
+
                 // As a default initial behavior, pop up an alert when webgl context is lost. To make your
                 // application robust, you may want to override this behavior before shipping!
                 // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
                 canvas.addEventListener("webglcontextlost", function (e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+
                 return canvas;
             })(),
             setStatus: function (text) {
